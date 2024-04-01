@@ -9,7 +9,7 @@ abstract class AuthService {
 
   Future<void> login();
 
-  Future<void> logout(BuildContext? context);
+  Future<void> logout({BuildContext? context});
 
   Future<User?> getUser();
 

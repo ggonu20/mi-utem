@@ -80,7 +80,7 @@ class AuthServiceImplementation implements AuthService {
   }
 
   @override
-  Future<void> logout(BuildContext? context) async {
+  Future<void> logout({BuildContext? context}) async {
     setUser(null);
     _credentialsService.setCredentials(null);
     _preferencesRepository.setOnboardingStep(null);

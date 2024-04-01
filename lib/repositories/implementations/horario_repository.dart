@@ -1,26 +1,15 @@
-import 'dart:convert';
-
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/http_clients.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/repositories/interfaces/horario_repository.dart';
+import 'package:mi_utem/utils/http/http_client.dart';
 
 class HorarioRepositoryImplementation implements HorarioRepository {
+  final _authClient = HttpClient.authClient;
+
   @override
   Future<Horario?> getHorario(String carreraId, {bool forceRefresh = false}) async {
-    final response = await authClient.get(Uri.parse("$apiUrl/v1/carreras/$carreraId/horarios"));
-
-    final json = jsonDecode(response.body);
-
-    if(response.statusCode != 200) {
-      if(json is Map && json.containsKey("error")) {
-        throw CustomException.fromJson(json as Map<String, dynamic>);
-      }
-
-      throw CustomException.custom(response.reasonPhrase);
-    }
-
-    return Horario.fromJson(json);
+    final response = await _authClient.get("$apiUrl/v1/carreras/$carreraId/horarios", options: buildCacheOptions(Duration(days: 7), forceRefresh: forceRefresh, subKey: "carreras/$carreraId/horarios"));
+    return Horario.fromJson(response.data);
   }
 }

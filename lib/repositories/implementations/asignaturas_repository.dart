@@ -1,13 +1,13 @@
-import 'dart:convert';
-
+import 'package:dio/dio.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/http_clients.dart';
-import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
+import 'package:mi_utem/utils/http/http_client.dart';
 
 class AsignaturasRepositoryImplementation implements AsignaturasRepository {
+
+  final _authClient = HttpClient.authClient;
 
   @override
   Future<List<Asignatura>?> getAsignaturas(String? carreraId, {bool forceRefresh = false}) async {
@@ -15,19 +15,14 @@ class AsignaturasRepositoryImplementation implements AsignaturasRepository {
       return null;
     }
 
-    final response = await authClient.get(Uri.parse('$apiUrl/v1/carreras/$carreraId/asignaturas'));
+    final _cacheOptions = buildCacheOptions(Duration(days: 7),
+      forceRefresh: forceRefresh,
+      subKey: 'carreras/$carreraId/asignaturas',
+    );
 
-    final json = jsonDecode(response.body);
+    final Response response = await _authClient.get('$apiUrl/v1/carreras/$carreraId/asignaturas', options: _cacheOptions);
 
-    if(response.statusCode != 200) {
-      if(json is Map && json.containsKey("error")) {
-        throw CustomException.fromJson(json as Map<String, dynamic>);
-      }
-
-      throw CustomException.custom(response.reasonPhrase);
-    }
-
-    return Asignatura.fromJsonList(json);
+    return Asignatura.fromJsonList(response.data);
   }
 
   @override
@@ -36,17 +31,13 @@ class AsignaturasRepositoryImplementation implements AsignaturasRepository {
       return null;
     }
 
-    final response = await authClient.get(Uri.parse('$apiUrl/v1/asignaturas/${asignatura.codigo}'));
+    final _cacheOptions = buildCacheOptions(Duration(days: 7),
+      forceRefresh: forceRefresh,
+      subKey: 'asignaturas/${asignatura.codigo}',
+    );
 
-    final json = jsonDecode(response.body);
-    if(response.statusCode != 200) {
-      logger.e("Error al obtener detalle de asignatura: ${response.reasonPhrase}", json);
-      if(json is Map && json.containsKey("error")) {
-        throw CustomException.fromJson(json as Map<String, dynamic>);
-      }
-
-      throw CustomException.custom(response.reasonPhrase);
-    }
+    final response = await _authClient.get('$apiUrl/v1/asignaturas/${asignatura.codigo}', options: _cacheOptions);
+    final json = response.data as Map<String, dynamic>;
 
     // Por ahora solo se actualizan los estudiantes
     return Asignatura.fromJson({

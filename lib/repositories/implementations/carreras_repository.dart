@@ -1,27 +1,17 @@
-import 'dart:convert';
-
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/repositories/interfaces/carreras_repository.dart';
+import 'package:mi_utem/utils/http/http_client.dart';
 
 class CarrerasRepositoryImplementation extends CarrerasRepository {
 
+  final _authClient = HttpClient.authClient;
+
   @override
-  Future<List<Carrera>> getCarreras() async {
-    final response = await authClient.get(Uri.parse("$apiUrl/v1/carreras"));
-
-    final json = jsonDecode(response.body);
-    if(response.statusCode != 200) {
-      if(json is Map && json.containsKey("error")) {
-        throw CustomException.fromJson(json as Map<String, dynamic>);
-      }
-
-      throw CustomException.custom(response.reasonPhrase);
-    }
-
-    return Carrera.fromJsonList(json as List<dynamic>);
+  Future<List<Carrera>> getCarreras({ bool forceRefresh = false }) async {
+    final response = await _authClient.get("$apiUrl/v1/carreras", options: buildCacheOptions(Duration(days: 7), forceRefresh: forceRefresh, subKey: '/carreras'));
+    return Carrera.fromJsonList(response.data as List<dynamic>);
   }
 
 }

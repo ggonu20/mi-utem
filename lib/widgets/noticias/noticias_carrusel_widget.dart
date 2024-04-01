@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/noticia.dart';
 import 'package:mi_utem/repositories/interfaces/noticias_repository.dart';
@@ -33,6 +34,7 @@ class NoticiasCarruselWidget extends StatelessWidget {
         builder: (context, AsyncSnapshot<List<Noticia>?> snapshot) {
           if (snapshot.hasError) {
             final error = snapshot.error is CustomException ? (snapshot.error as CustomException) : CustomException.custom("No pudimos obtener las noticias.");
+            logger.d("[NoticiasCarruselWidget] ${error.message} (${error.statusCode})", snapshot.error);
 
             return CustomErrorWidget(
               title: "Ocurrió un error al obtener las noticias",

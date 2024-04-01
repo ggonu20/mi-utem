@@ -6,7 +6,6 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
-import "package:mi_utem/config/logger.dart";
 import "package:mi_utem/models/user/user.dart";
 import "package:mi_utem/repositories/interfaces/preferences_repository.dart";
 import "package:mi_utem/services/interfaces/auth_service.dart";
@@ -63,10 +62,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> loadData() async {
-    setState(() {
-      _banners = RemoteConfigService.banners;
-      logger.d("Banners: $_banners");
-    });
+    setState(() => _banners = RemoteConfigService.banners);
   }
 
   String get _greetingText {

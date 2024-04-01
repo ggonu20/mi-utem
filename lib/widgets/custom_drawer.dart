@@ -148,7 +148,7 @@ class CustomDrawer extends StatelessWidget {
                               ListTile(
                                 leading: const Icon(Mdi.closeCircle),
                                 title: const Text('Cerrar sesión'),
-                                onTap: () async => await _authService.logout(context),
+                                onTap: () async => await _authService.logout(context: context),
                               ),
                             ],
                           ),

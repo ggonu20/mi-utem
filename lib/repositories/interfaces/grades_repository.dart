@@ -6,5 +6,6 @@ abstract class GradesRepository {
   Future<Grades> getGrades({
     required String carreraId,
     required String asignaturaId,
+    bool forceRefresh = false,
   });
 }
