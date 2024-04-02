@@ -621,6 +621,8 @@ PODS:
     - firebase_core
     - Flutter
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - Firebase (10.7.0):
+    - Firebase/Core (= 10.7.0)
   - Firebase/Analytics (10.7.0):
     - Firebase/Core
   - Firebase/Core (10.7.0):
@@ -906,6 +908,11 @@ PODS:
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
+  - Sentry (8.20.0):
+    - Sentry/Core (= 8.20.0)
+    - SentryPrivate (= 8.20.0)
+  - Sentry/Core (8.20.0):
+    - SentryPrivate (= 8.20.0)
   - Sentry/HybridSDK (8.20.0):
     - SentryPrivate (= 8.20.0)
   - sentry_flutter (0.0.1):
@@ -923,7 +930,7 @@ PODS:
     - FMDB (>= 2.7.5)
   - url_launcher_ios (0.0.1):
     - Flutter
-  - UXCam (3.6.6)
+  - UXCam (3.6.11)
   - video_player_avfoundation (0.0.1):
     - Flutter
 
@@ -933,6 +940,7 @@ DEPENDENCIES:
   - awesome_notifications_fcm (from `.symlinks/plugins/awesome_notifications_fcm/ios`)
   - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
+  - Firebase (from `https://github.com/firebase/firebase-ios-sdk.git`, tag `10.7.0`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -941,13 +949,14 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_uxcam (from `.symlinks/plugins/flutter_uxcam/ios`)
-  - GoogleUtilities
+  - GoogleUtilities (from `https://github.com/google/GoogleUtilities.git`, tag `7.13.0`)
   - image_editor_common (from `.symlinks/plugins/image_editor_common/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - Sentry (from `https://github.com/getsentry/sentry-cocoa.git`, tag `8.20.0`)
   - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
@@ -959,7 +968,6 @@ SPEC REPOS:
   trunk:
     - abseil
     - BoringSSL-GRPC
-    - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
     - FirebaseCore
@@ -975,7 +983,6 @@ SPEC REPOS:
     - FMDB
     - GoogleAppMeasurement
     - GoogleDataTransport
-    - GoogleUtilities
     - "gRPC-C++"
     - gRPC-Core
     - IosAwnCore
@@ -985,7 +992,6 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - PromisesSwift
-    - Sentry
     - SentryPrivate
     - UXCam
 
@@ -1000,6 +1006,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/background_fetch/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
+  Firebase:
+    :git: https://github.com/firebase/firebase-ios-sdk.git
+    :tag: 10.7.0
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
@@ -1016,6 +1025,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_uxcam:
     :path: ".symlinks/plugins/flutter_uxcam/ios"
+  GoogleUtilities:
+    :git: https://github.com/google/GoogleUtilities.git
+    :tag: 7.13.0
   image_editor_common:
     :path: ".symlinks/plugins/image_editor_common/ios"
   image_picker_ios:
@@ -1028,6 +1040,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
+  Sentry:
+    :git: https://github.com/getsentry/sentry-cocoa.git
+    :tag: 8.20.0
   sentry_flutter:
     :path: ".symlinks/plugins/sentry_flutter/ios"
   share_plus:
@@ -1040,6 +1055,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/ios"
+
+CHECKOUT OPTIONS:
+  Firebase:
+    :git: https://github.com/firebase/firebase-ios-sdk.git
+    :tag: 10.7.0
+  GoogleUtilities:
+    :git: https://github.com/google/GoogleUtilities.git
+    :tag: 7.13.0
+  Sentry:
+    :git: https://github.com/getsentry/sentry-cocoa.git
+    :tag: 8.20.0
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
@@ -1096,9 +1122,9 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
-  UXCam: 7f200dd8f0829ae92a2ef82cadbb35dadff6108d
+  UXCam: 73a2718c84c547012c5bd47959179d900b1948c2
   video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
 
-PODFILE CHECKSUM: ae166eb081d1fe0b450a3271d7130468d146603c
+PODFILE CHECKSUM: 6fb22b937e4fec334b715ea2295056c707e48f36
 
 COCOAPODS: 1.15.2
