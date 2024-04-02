@@ -89,6 +89,7 @@ class _MainScreenState extends State<MainScreen> {
     body: PullToRefresh(
       onRefresh: loadData,
       child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
