@@ -908,11 +908,6 @@ PODS:
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
-  - Sentry (8.20.0):
-    - Sentry/Core (= 8.20.0)
-    - SentryPrivate (= 8.20.0)
-  - Sentry/Core (8.20.0):
-    - SentryPrivate (= 8.20.0)
   - Sentry/HybridSDK (8.20.0):
     - SentryPrivate (= 8.20.0)
   - sentry_flutter (0.0.1):
@@ -956,7 +951,6 @@ DEPENDENCIES:
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - Sentry (from `https://github.com/getsentry/sentry-cocoa.git`, tag `8.20.0`)
   - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
@@ -992,6 +986,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - PromisesSwift
+    - Sentry
     - SentryPrivate
     - UXCam
 
@@ -1040,9 +1035,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
-  Sentry:
-    :git: https://github.com/getsentry/sentry-cocoa.git
-    :tag: 8.20.0
   sentry_flutter:
     :path: ".symlinks/plugins/sentry_flutter/ios"
   share_plus:
@@ -1063,9 +1055,6 @@ CHECKOUT OPTIONS:
   GoogleUtilities:
     :git: https://github.com/google/GoogleUtilities.git
     :tag: 7.13.0
-  Sentry:
-    :git: https://github.com/getsentry/sentry-cocoa.git
-    :tag: 8.20.0
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
@@ -1125,6 +1114,6 @@ SPEC CHECKSUMS:
   UXCam: 73a2718c84c547012c5bd47959179d900b1948c2
   video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
 
-PODFILE CHECKSUM: 6fb22b937e4fec334b715ea2295056c707e48f36
+PODFILE CHECKSUM: 9287638659646e3d02f76f057c40ab838e669b0e
 
 COCOAPODS: 1.15.2
