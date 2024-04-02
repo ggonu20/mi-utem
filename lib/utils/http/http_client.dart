@@ -31,12 +31,16 @@ class HttpClient {
 
   static InterceptorsWrapper _errorInterceptor = InterceptorsWrapper(
     onError: (DioError err, ErrorInterceptorHandler handler) {
-      final json = err.response?.data ?? {};
-      if(json is Map && json.containsKey("error")) {
-        throw CustomException.fromJson(json as Map<String, dynamic>);
+      if(err.response?.statusCode == 401) {
+        return handler.next(err);
       }
 
-      throw CustomException.custom(err.response?.statusMessage);
+      final json = err.response?.data ?? {};
+      if(json is Map && json.containsKey("error")) {
+        return handler.reject(DioError(requestOptions: err.requestOptions, error: CustomException.fromJson(json as Map<String, dynamic>)));
+      }
+
+      return handler.reject(DioError(requestOptions: err.requestOptions, error: CustomException.custom(err.response?.statusMessage)));
     },
   );
 

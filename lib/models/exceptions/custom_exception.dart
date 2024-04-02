@@ -20,7 +20,7 @@ class CustomException implements Exception {
     message: json['mensaje'] as String,
     error: json['error'] as String?,
     statusCode: json['codigoHttp'] as int?,
-    internalCode: json['codigoInterno'] as double?,
+    internalCode: json['codigoInterno'] is num ? double.tryParse("${json['codigoInterno']}") : json['codigoInterno'] as double?,
   );
 
   toJson() => {

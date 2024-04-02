@@ -6,18 +6,20 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
+import "package:mi_utem/models/novedades/ibanner.dart";
 import "package:mi_utem/models/user/user.dart";
+import "package:mi_utem/repositories/interfaces/noticias_repository.dart";
+import "package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart";
 import "package:mi_utem/repositories/interfaces/preferences_repository.dart";
 import "package:mi_utem/services/interfaces/auth_service.dart";
 import "package:mi_utem/services/interfaces/grades_service.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
 import "package:mi_utem/services/review_service.dart";
-import "package:mi_utem/widgets/banner.dart";
-import 'package:mi_utem/widgets/banners_section.dart';
 import "package:mi_utem/widgets/custom_app_bar.dart";
 import "package:mi_utem/widgets/custom_drawer.dart";
+import "package:mi_utem/widgets/main_screen/novedades/banners_section.dart";
+import "package:mi_utem/widgets/main_screen/permisos/permisos_section.dart";
 import "package:mi_utem/widgets/noticias/noticias_carrusel_widget.dart";
-import "package:mi_utem/widgets/permisos_section.dart";
 import "package:mi_utem/widgets/pull_to_refresh.dart";
 import "package:mi_utem/widgets/quick_menu_section.dart";
 
@@ -62,7 +64,10 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> loadData() async {
-    setState(() => _banners = RemoteConfigService.banners);
+    await RemoteConfigService.update();
+    await Get.find<PermisoIngresoRepository>().getPermisos(forceRefresh: true); // Forzar re-descarga de los permisos
+    await Get.find<NoticiasRepository>().getNoticias(forceRefresh: true); // Forzar re-descarga de las noticias
+    setState(() => _banners = RemoteConfigService.banners); // Actualizar los banners y se re-renderiza
   }
 
   String get _greetingText {
@@ -101,7 +106,7 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(height: 20),
             PermisosCovidSection(),
             const SizedBox(height: 20),
-            QuickMenuSection(),
+            const QuickMenuSection(),
             const SizedBox(height: 20),
             if (_banners.isNotEmpty) ...[
               BannersSection(banners: _banners),

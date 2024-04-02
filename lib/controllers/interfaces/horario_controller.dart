@@ -11,9 +11,6 @@ abstract class HorarioController {
   abstract Duration periodDuration;
   abstract Duration periodGap;
 
-  abstract Rx<Horario?> horario;
-  abstract RxBool loadingHorario;
-
   abstract List<Color> usedColors;
   abstract RxDouble zoom;
   abstract RxBool indicatorIsOpen;
@@ -34,7 +31,7 @@ abstract class HorarioController {
 
   void init(BuildContext context);
 
-  Future<void> getHorarioData({ bool forceRefresh = false });
+  Future<Horario?> getHorario({ bool forceRefresh = false });
 
   void moveViewportToCurrentPeriodAndDay(BuildContext context);
 

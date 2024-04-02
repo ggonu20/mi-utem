@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingIndicator extends StatelessWidget {
@@ -36,4 +35,13 @@ class LoadingIndicator extends StatelessWidget {
       ),
     ),
   );
+
+  static Widget centered({required String message}) => Center(
+    child: LoadingIndicator(
+      message: message,
+    ),
+  );
+
+  static Widget centeredDefault() => centered(message: "Esto tardará un poco, paciencia...");
+
 }

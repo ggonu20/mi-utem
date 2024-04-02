@@ -17,9 +17,9 @@ class CarrerasServiceImplementation implements CarrerasService {
   Carrera? selectedCarrera;
 
   @override
-  Future<void> getCarreras() async {
+  Future<void> getCarreras({ bool forceRefresh = false }) async {
     logger.d("[CarrerasService#getCarreras]: Obteniendo carreras...");
-    final _carreras = await _carrerasRepository.getCarreras();
+    final _carreras = await _carrerasRepository.getCarreras(forceRefresh: forceRefresh);
 
     carreras.clear();
     carreras.addAll(_carreras);

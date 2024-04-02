@@ -4,7 +4,7 @@ import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/permiso_ingreso.dart';
 import 'package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/permiso_card.dart';
+import 'package:mi_utem/widgets/main_screen/permisos/permiso_card.dart';
 
 class PermisosCovidSection extends StatelessWidget {
 
@@ -35,9 +35,7 @@ class PermisosCovidSection extends StatelessWidget {
           future: Get.find<PermisoIngresoRepository>().getPermisos(),
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.waiting) {
-              return LoadingIndicator(
-                message: "Esto tardará un poco, paciencia...",
-              );
+              return LoadingIndicator.centeredDefault();
             }
 
             if(snapshot.hasError) {

@@ -32,12 +32,6 @@ class HorarioControllerImplementation implements HorarioController {
   Duration periodGap = Duration(minutes: 5);
 
   @override
-  Rx<Horario?> horario = Rx(Horario());
-
-  @override
-  RxBool loadingHorario = false.obs;
-
-  @override
   List<Color> usedColors = [];
 
   @override
@@ -96,37 +90,21 @@ class HorarioControllerImplementation implements HorarioController {
   }
 
   @override
-  Future<void> getHorarioData({ bool forceRefresh = false }) async {
-    loadingHorario.value = true;
-    final now = DateTime.now();
-    final lastUpdate = _storage.read("last_update_horario") ?? "${now.toIso8601String()}";
-    final lastUpdateDate = DateTime.parse(lastUpdate);
-    final difference = now.difference(lastUpdateDate).inMinutes;
-    if(difference < 15 && forceRefresh == false && horario.value != null && lastUpdate != now.toIso8601String()) {
-      loadingHorario.value = false;
-      return;
-    }
-
-
-    horario.value = null;
-
+  Future<Horario?> getHorario({ bool forceRefresh = false }) async {
     final carrerasService = Get.find<CarrerasService>();
     Carrera? carrera = carrerasService.selectedCarrera;
-    if (carrera == null) {
-      await carrerasService.getCarreras();
+    if (carrera == null || forceRefresh) {
+      await carrerasService.getCarreras(forceRefresh: forceRefresh);
     }
     carrera = carrerasService.selectedCarrera;
 
     final carreraId = carrera?.id;
     if(carreraId == null) {
-      loadingHorario.value = false;
-      return;
+      return null;
     }
-    horario.value = await Get.find<HorarioRepository>().getHorario(carreraId);
-    _setRandomColorsByHorario();
-
-    loadingHorario.value = false;
-    _storage.write("last_update_horario", DateTime.now().toIso8601String());
+    final horario = await Get.find<HorarioRepository>().getHorario(carreraId, forceRefresh: forceRefresh);
+    if(horario != null) _setRandomColorsByHorario(horario);
+    return horario;
   }
 
   @override
@@ -209,21 +187,14 @@ class HorarioControllerImplementation implements HorarioController {
     indicatorIsOpen.value = isOpen;
   }
 
-  void _setRandomColorsByHorario() {
-    final _horario = horario.value?.horario;
-    if (_horario == null) {
+  void _setRandomColorsByHorario(Horario horario) => horario.horario?.forEach((dia) => dia.forEach((bloque) {
+    final _asignatura = bloque.asignatura;
+    if (_asignatura == null) {
       return;
     }
 
-    _horario.forEach((dia) => dia.forEach((bloque) {
-      final _asignatura = bloque.asignatura;
-      if (_asignatura == null) {
-        return;
-      }
-
-      addAsignaturaAndSetColor(bloque.asignatura!);
-    }));
-  }
+    addAsignaturaAndSetColor(bloque.asignatura!);
+  }));
 
   void _onChangeAnyController() {
     setIndicatorIsOpen(true);

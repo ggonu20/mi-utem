@@ -3,10 +3,10 @@ import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/interfaces/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 import 'package:mi_utem/widgets/asignatura/lista/lista_asignaturas.dart';
 import 'package:mi_utem/widgets/asignatura/lista/sin_asignaturas_mensaje.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -22,6 +22,7 @@ class AsignaturasListaScreen extends StatefulWidget {
 
 class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
   final _asignaturasService = Get.find<AsignaturasRepository>();
+  bool _forceRefresh = false;
 
   bool get _mostrarCalculadora => RemoteConfigService.calculadoraMostrar;
 
@@ -38,9 +39,7 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
       ] : [],
     ),
     body: PullToRefresh(
-      onRefresh: () async {
-        setState(() => {});
-      },
+      onRefresh: () async => setState(() => _forceRefresh = true),
       child: FutureBuilder<List<Asignatura>?>(
         future: () async {
           final carrerasService = Get.find<CarrerasService>();
@@ -49,8 +48,9 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
           }
 
           final selectedCarrera = carrerasService.selectedCarrera;
-
-          return await _asignaturasService.getAsignaturas(selectedCarrera?.id);
+          final data = await _asignaturasService.getAsignaturas(selectedCarrera?.id, forceRefresh: _forceRefresh);
+          _forceRefresh = false;
+          return data;
         }(),
         builder: (context, snapshot) {
           if(snapshot.hasError) {

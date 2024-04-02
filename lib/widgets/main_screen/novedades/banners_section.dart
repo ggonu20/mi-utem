@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/widgets/banner.dart';
+import 'package:mi_utem/models/novedades/ibanner.dart';
+import 'package:mi_utem/widgets/main_screen/novedades/banner.dart';
 
 class BannersSection extends StatelessWidget {
   final List<IBanner> banners;
 
   const BannersSection({
-    Key? key,
+    super.key,
     required this.banners,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +22,7 @@ class BannersSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            "Novedades".toUpperCase(),
+          Text("Novedades".toUpperCase(),
             textAlign: TextAlign.left,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
               fontWeight: FontWeight.bold,
@@ -32,8 +32,7 @@ class BannersSection extends StatelessWidget {
           ListView.separated(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) =>
-                MiUtemBanner(banner: banners[index]),
+            itemBuilder: (context, index) => MiUtemBanner(banner: banners[index]),
             separatorBuilder: (context, index) => Container(height: 10),
             itemCount: banners.length,
           ),
