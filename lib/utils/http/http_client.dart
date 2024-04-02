@@ -11,7 +11,6 @@ class HttpClient {
   static String debugUrl = dotenv.env['MI_UTEM_API_DEBUG'] ?? 'https://api.exdev.cl/';
   static const String productionUrl = 'https://api.exdev.cl/';
   static String url = isProduction ? productionUrl : debugUrl;
-  static Dio get initDio => Dio(BaseOptions(baseUrl: url));
 
   static CacheConfig cacheConfig = CacheConfig(
     baseUrl: url,
@@ -28,7 +27,7 @@ class HttpClient {
     dioCacheManager.interceptor,
   ]);
 
-  static Dio get authClient => initDio..interceptors.add(AuthInterceptor());
+  static Dio get authClient => httpClient..interceptors.add(AuthInterceptor());
 
   static InterceptorsWrapper _errorInterceptor = InterceptorsWrapper(
     onError: (DioError err, ErrorInterceptorHandler handler) {
