@@ -2,7 +2,10 @@
 Aplicación multiplataforma hecha por estudiantes de la [Universidad Tecnológica Metropolitana de Chile](https://www.utem.cl/) enfocada en adaptar la [plataforma académica Mi.UTEM](https://mi.utem.cl/) de la institución a dispositivos móviles.
 
 ## Requisitos técnicos
-- Flutter 3.13.6
+- Flutter 3.7.12
+- macOS + XCode (para compilar en iOS)
+- Android Studio (para compilar en Android)
+- ruby 3.3.0 (para compilar y subir app a App Store y Google Play)
 
 ## Organización de carpetas
 ```
