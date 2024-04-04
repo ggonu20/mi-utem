@@ -40,48 +40,22 @@ class HorarioMainScroller extends StatefulWidget {
   static double get totalWidth => daysWidth + periodWidth;
   static double get totalHeight => periodsHeight + dayHeight;
 
-  Widget get _horarioBlocksContent => HorarioBlocksContent(
-    horario: horario,
-    blockHeight: blockHeight,
-    blockWidth: blockWidth,
-    blockInternalMargin: blockInternalMargin,
-  );
-
-  Widget get _horarioDaysHeader => HorarioDaysHeader(
-    horario: horario,
-    height: dayHeight,
-    dayWidth: dayWidth,
-    showActiveDay: showActive,
-  );
-
-  Widget get _horarioPeriodsHeader => HorarioPeriodsHeader(
-    horario: horario,
-    width: periodWidth,
-    periodHeight: periodHeight,
-    showActivePeriod: showActive,
-  );
-
-  Widget get _horarioCorner => HorarioCorner(
-    height: dayHeight,
-    width: periodWidth,
-  );
-
+  Widget get _horarioBlocksContent => HorarioBlocksContent(horario: horario, blockHeight: blockHeight, blockWidth: blockWidth, blockInternalMargin: blockInternalMargin);
+  Widget get _horarioDaysHeader => HorarioDaysHeader(horario: horario, height: dayHeight, dayWidth: dayWidth, showActiveDay: showActive);
+  Widget get _horarioPeriodsHeader => HorarioPeriodsHeader(horario: horario, width: periodWidth, periodHeight: periodHeight, showActivePeriod: showActive);
+  Widget get _horarioCorner => HorarioCorner(height: dayHeight, width: periodWidth);
   Widget get basicHorario => Container(
     color: Colors.white,
     child: Column(
       children: [
-        Row(
-          children: [
-            _horarioCorner,
-            _horarioDaysHeader,
-          ],
-        ),
-        Row(
-          children: [
-            _horarioPeriodsHeader,
-            _horarioBlocksContent,
-          ],
-        )
+        Row(children: [
+          _horarioCorner,
+          _horarioDaysHeader,
+        ]),
+        Row(children: [
+          _horarioPeriodsHeader,
+          _horarioBlocksContent,
+        ])
       ],
     ),
   );
@@ -90,10 +64,23 @@ class HorarioMainScroller extends StatefulWidget {
 class _HorarioMainScrollerState extends State<HorarioMainScroller> {
 
   @override
-  Widget build(BuildContext context) => Container(
+  void initState() {
+    widget.controller.setOnUpdate(() => setState(() {}));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.controller.setOnUpdate(null);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Obx(() => Container(
     color: Colors.white,
     child: Stack(
       children: [
+        /* Bloques del Horario */
         Container(
           height: HorarioMainScroller.periodsHeight,
           width: HorarioMainScroller.daysWidth,
@@ -114,6 +101,7 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             ),
           ),
         ),
+        /* Lista de Días */
         Container(
           width: HorarioMainScroller.daysWidth,
           height: HorarioMainScroller.dayHeight,
@@ -132,6 +120,7 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             ),
           ),
         ),
+        /* Esquina del Horario */
         Container(
           width: HorarioMainScroller.periodWidth,
           height: HorarioMainScroller.dayHeight,
@@ -150,6 +139,7 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             ),
           ),
         ),
+        /* Lista de Horas */
         Container(
           width: HorarioMainScroller.periodWidth,
           height: HorarioMainScroller.periodsHeight,
@@ -182,5 +172,5 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
         ),
       ],
     ),
-  );
+  ));
 }

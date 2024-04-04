@@ -47,4 +47,6 @@ abstract class HorarioController {
 
   void setIndicatorIsOpen(bool isOpen);
 
+  void setOnUpdate(Function? onUpdate);
+
 }

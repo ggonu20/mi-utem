@@ -2,7 +2,11 @@ import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
+import 'package:mi_utem/repositories/interfaces/carreras_repository.dart';
+import 'package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
+import 'package:mi_utem/services/interfaces/carreras_service.dart';
 import 'package:mi_utem/services/interfaces/grades_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -38,10 +42,8 @@ class BackgroundController {
 class BackgroundService {
 
   static Future<void> initAndStart() async {
-    BackgroundFetch.registerHeadlessTask(
-        BackgroundController.backgroundFetchHeadlessTask);
-    await BackgroundFetch.configure(
-        _backgroundFetchConfig, _onFetch, _onTimeout);
+    BackgroundFetch.registerHeadlessTask(BackgroundController.backgroundFetchHeadlessTask);
+    await BackgroundFetch.configure(_backgroundFetchConfig, _onFetch, _onTimeout);
 
     BackgroundFetch.start().then((_) {}).catchError((e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);
@@ -49,11 +51,32 @@ class BackgroundService {
   }
 
   static _onFetch(String taskId) async {
-    // Refresca el token de autenticación
-    await Get.find<AuthService>().isLoggedIn(forceRefresh: true);
+    await Get.find<AuthService>().isLoggedIn(forceRefresh: true); // Refresca el token de autenticación
+    await Get.find<CarrerasRepository>().getCarreras(forceRefresh: true); // Refresca las carreras
+    await Get.find<GradesService>().lookForGradeUpdates(); // Revisa si hubo un cambio en las notas
 
-    // Revisa si hubo un cambio en las notas
-    await Get.find<GradesService>().lookForGradeUpdates();
+    // Actualiza los permisos de ingreso
+    try {
+      PermisoIngresoRepository permisoIngresoRepository = Get.find<PermisoIngresoRepository>();
+      final permisos = await permisoIngresoRepository.getPermisos(forceRefresh: true);
+      for(final permiso in permisos) {
+        final id = permiso.id;
+        if(id == null) continue;
+        await permisoIngresoRepository.getDetallesPermiso(id, forceRefresh: true);
+      }
+    } catch (_){}
+
+    // Actualiza los datos de las carreras y asignaturas
+    try {
+      final carreraId = Get.find<CarrerasService>().selectedCarrera?.id;
+      if(carreraId != null) {
+        AsignaturasRepository asignaturasRepository = Get.find<AsignaturasRepository>();
+        final asignaturas = await asignaturasRepository.getAsignaturas(carreraId, forceRefresh: true) ?? [];
+        for(final asignatura in asignaturas) {
+          await asignaturasRepository.getDetalleAsignatura(asignatura, forceRefresh: true);
+        }
+      }
+    } catch(_){}
 
     // Termina la tarea de segundo plano
     BackgroundFetch.finish(taskId);

@@ -55,6 +55,8 @@ class HorarioControllerImplementation implements HorarioController {
   @override
   TransformationController cornerController = TransformationController();
 
+  Function? _onUpdate;
+
   @override
   List<Color> get unusedColors {
     List<Color> availableColors = [..._randomColors].where((Color color) => !usedColors.contains(color)).toList();
@@ -187,6 +189,9 @@ class HorarioControllerImplementation implements HorarioController {
     indicatorIsOpen.value = isOpen;
   }
 
+  @override
+  void setOnUpdate(Function? onUpdate) => _onUpdate = onUpdate;
+
   void _setRandomColorsByHorario(Horario horario) => horario.horario?.forEach((dia) => dia.forEach((bloque) {
     final _asignatura = bloque.asignatura;
     if (_asignatura == null) {
@@ -199,6 +204,7 @@ class HorarioControllerImplementation implements HorarioController {
   void _onChangeAnyController() {
     setIndicatorIsOpen(true);
     isCenteredInCurrentPeriodAndDay.value = false;
+    _onUpdate?.call();
   }
 
   void _setScrollControllerListeners() {
@@ -207,12 +213,12 @@ class HorarioControllerImplementation implements HorarioController {
       final yPosition = blockContentController.value.getTranslation().y;
       final currentZoom = blockContentController.value.getMaxScaleOnAxis();
 
-      daysHeaderController.value = daysHeaderController.value..setTranslationRaw(xPosition, 0, 0);
-      periodHeaderController.value = periodHeaderController.value..setTranslationRaw(0, yPosition, 0);
+      daysHeaderController.value.setTranslationRaw(xPosition, 0, 0);
+      periodHeaderController.value.setTranslationRaw(0, yPosition, 0);
 
-      daysHeaderController.value = daysHeaderController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1),);
-      periodHeaderController.value = periodHeaderController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      cornerController.value = cornerController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      daysHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1),);
+      periodHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      cornerController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
 
       zoom.value = currentZoom;
       _onChangeAnyController();
@@ -223,11 +229,11 @@ class HorarioControllerImplementation implements HorarioController {
       final xPosition = daysHeaderController.value.getTranslation().x;
       final contentYPosition = blockContentController.value.getTranslation().y;
 
-      blockContentController.value = blockContentController.value..setTranslationRaw(xPosition, contentYPosition, 0);
+      blockContentController.value.setTranslationRaw(xPosition, contentYPosition, 0);
 
-      blockContentController.value = blockContentController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      periodHeaderController.value = periodHeaderController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      cornerController.value = cornerController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      blockContentController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      periodHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      cornerController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
 
       zoom.value = currentZoom;
       _onChangeAnyController();
@@ -239,13 +245,13 @@ class HorarioControllerImplementation implements HorarioController {
 
       final contentXPosition = blockContentController.value.getTranslation().x;
 
-      periodHeaderController.value = periodHeaderController.value..setTranslationRaw(0, yPosition, 0);
+      periodHeaderController.value.setTranslationRaw(0, yPosition, 0);
 
-      blockContentController.value = blockContentController.value..setTranslationRaw(contentXPosition, yPosition, 0);
+      blockContentController.value.setTranslationRaw(contentXPosition, yPosition, 0);
 
-      blockContentController.value = blockContentController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      daysHeaderController.value = daysHeaderController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      cornerController.value = cornerController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      blockContentController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      daysHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      cornerController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
 
       zoom.value = currentZoom;
       _onChangeAnyController();
