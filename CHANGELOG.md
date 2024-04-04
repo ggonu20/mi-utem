@@ -28,18 +28,20 @@ Tipos de cambios
 
 ## [Unreleased]
 
-## [3.0.0] - 2024-04-01Z
+## [3.0.0] - 2024-04-04Z
 
 ### Added
-- Se agrega "apodo" para permitir a los usuarios personalizar la aplicación.
-- Se agregó lista de estudiantes al resumen de asignatura.
-- Se agregó una vista previa de los datos de los estudiantes y profesores.
+
+- Apodo para personalizar la aplicación.
+- Lista de estudiantes al resumen de asignatura.
+- Vista previa de estudiantes y profesores.
+- Acceso rápido a la asignatura desde el horario
+- Vista previa de la asignatura al mantenerla presionada en horario 
 
 ### Changed
 
 - Se actualizaron algunas dependencias.
 - Se mejora el rendimiento de la aplicación.
-- Mejor orden en el backend.
 
 ### Removed
 
@@ -147,6 +149,7 @@ Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se 
 ### Removed
 
 - Lista de estudiantes en la pantalla de asignatura
+- Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores

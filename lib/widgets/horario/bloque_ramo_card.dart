@@ -1,10 +1,13 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/controllers/interfaces/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
+import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/themes/theme.dart';
+import 'package:mi_utem/services/interfaces/carreras_service.dart';
+import 'package:mi_utem/widgets/horario/bloque_clase.dart';
+import 'package:mi_utem/widgets/horario/bloque_vacio.dart';
+import 'package:mi_utem/widgets/horario/modals/asignatura_vista_previa_modal.dart';
 
 class ClassBlockCard extends StatelessWidget {
   final BloqueHorario? block;
@@ -29,31 +32,35 @@ class ClassBlockCard extends StatelessWidget {
       width: width,
       child: Padding(
         padding: EdgeInsets.all(internalMargin),
-        child: block?.asignatura == null ? _EmptyBlock() : _ClassBlock(
+        child: block?.asignatura == null ? BloqueVacio() : BloqueClase(
           block: block!,
           width: width,
           height: height,
           textColor: textColor,
-          onTap: _onTap,
-          onLongPress: _onLongPress,
+          onTap: (block) => _onTap(block, context),
+          onLongPress: (block) => _onLongPress(block, context),
         ),
       ),
     );
   }
 
-  _onTap(BloqueHorario block) {
+  _onTap(BloqueHorario block, BuildContext context) async {
+    final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas((Get.find<CarrerasService>().selectedCarrera)?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
+    if(asignatura == null) return;
     AnalyticsService.logEvent(
       "horario_class_block_tap",
       parameters: {
-        "asignatura": block.asignatura?.nombre,
-        "codigo": block.asignatura?.codigo,
+        "asignatura": asignatura.nombre,
+        "codigo": asignatura.codigo,
       },
     );
 
-    // TODO: Navegar a la asignatura
+    Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(asignatura: asignatura)));
   }
 
-  _onLongPress(BloqueHorario block) {
+  _onLongPress(BloqueHorario block, BuildContext context) async {
+    final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas((Get.find<CarrerasService>().selectedCarrera)?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
+    if(asignatura == null) return;
     AnalyticsService.logEvent(
       "horario_class_block_long_press",
       parameters: {
@@ -62,85 +69,6 @@ class ClassBlockCard extends StatelessWidget {
       },
     );
 
-    // TODO: Acá podríamos agregar una vista "rápida" como: Hora, Sala y Profesor.
-  }
-}
-
-class _EmptyBlock extends StatelessWidget {
-  const _EmptyBlock({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: MainTheme.lightGrey,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: DottedBorder(
-        strokeWidth: 2,
-        color: MainTheme.grey,
-        borderType: BorderType.RRect,
-        radius: Radius.circular(15),
-        child: Container(),
-      ),
-    );
-  }
-}
-
-class _ClassBlock extends StatelessWidget {
-  final BloqueHorario block;
-  final double width;
-  final double height;
-  final Color textColor;
-  final Color? color;
-  final void Function(BloqueHorario)? onTap;
-  final void Function(BloqueHorario)? onLongPress;
-
-  const _ClassBlock({
-    super.key,
-    required this.block,
-    required this.width,
-    required this.height,
-    required this.textColor,
-    this.color = Colors.teal,
-    this.onTap,
-    this.onLongPress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    HorarioController _controller = Get.find<HorarioController>();
-
-    return Container(
-      decoration: BoxDecoration(
-        color: _controller.getColor(block.asignatura!) ?? this.color,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(15),
-          onTap: onTap != null ? () => onTap?.call(block) : null,
-          onLongPress: onLongPress != null ? () => onLongPress?.call(block) : null,
-          child: Column(
-            children: <Widget>[
-              HorarioText.classCode(
-                block.codigo!,
-                color: textColor,
-              ),
-              HorarioText.className(
-                block.asignatura!.nombre!.toUpperCase(),
-                color: textColor,
-              ),
-              HorarioText.classLocation(
-                block.sala ?? "Sin sala",
-                color: textColor,
-              ),
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          ),
-        ),
-      ),
-    );
+    showModalBottomSheet(context: context, builder: (ctx) => AsignaturaVistaPreviaModal(asignatura: asignatura, bloque: block));
   }
 }

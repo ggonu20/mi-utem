@@ -8,6 +8,7 @@ import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_resumen_tab.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
+import 'package:mi_utem/services/interfaces/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -50,7 +51,9 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
         child: AsignaturaNotasTab(
           asignatura: asignatura,
           onRefresh: () async {
-            final asignatura = await _asignaturasRepository.getDetalleAsignatura(this.asignatura);
+            final carrera = Get.find<CarrerasService>().selectedCarrera;
+            final asignaturaBase = (await _asignaturasRepository.getAsignaturas(carrera?.id))?.firstWhere((asignatura) => asignatura.codigo == this.asignatura.codigo && asignatura.id == this.asignatura.id);
+            final asignatura = await _asignaturasRepository.getDetalleAsignatura(asignaturaBase);
             if (asignatura != null) {
               setState(() => this.asignatura = asignatura);
             }

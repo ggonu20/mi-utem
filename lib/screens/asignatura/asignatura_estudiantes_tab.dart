@@ -5,10 +5,10 @@ import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 import 'package:mi_utem/services/analytics_service.dart';
+import 'package:mi_utem/widgets/asignatura/modals/user_modal.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/modals/user_modal.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 
