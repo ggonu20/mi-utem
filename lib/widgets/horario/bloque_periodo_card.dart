@@ -10,8 +10,8 @@ class BloquePeriodoCard extends StatelessWidget {
   final bool active;
   final Color backgroundColor;
 
-  BloquePeriodoCard({
-    Key? key,
+  const BloquePeriodoCard({
+    super.key,
     required this.inicio,
     required this.intermedio,
     required this.fin,
@@ -19,51 +19,44 @@ class BloquePeriodoCard extends StatelessWidget {
     required this.width,
     this.backgroundColor = MainTheme.lightGrey,
     this.active = false,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-      ),
-      height: height,
-      width: width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            inicio!,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black54,
-              fontSize: 18,
-              fontWeight: active ? FontWeight.bold : FontWeight.normal,
-            ),
+  Widget build(BuildContext context) => Container(
+    decoration: BoxDecoration(color: backgroundColor),
+    height: height,
+    width: width,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(inicio!,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black54,
+            fontSize: 18,
+            fontWeight: active ? FontWeight.bold : FontWeight.normal,
           ),
-          Text(
-            intermedio!,
-            maxLines: 3,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              letterSpacing: 0.5,
-              wordSpacing: 1,
-              color: Colors.black54,
-              fontSize: 14,
-              fontWeight: active ? FontWeight.bold : FontWeight.normal,
-            ),
+        ),
+        Text(intermedio!,
+          maxLines: 3,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            letterSpacing: 0.5,
+            wordSpacing: 1,
+            color: Colors.black54,
+            fontSize: 14,
+            fontWeight: active ? FontWeight.bold : FontWeight.normal,
           ),
-          Text(
-            fin!,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black54,
-              fontSize: 18,
-              fontWeight: active ? FontWeight.bold : FontWeight.normal,
-            ),
-          )
-        ],
-      ),
-    );
-  }
+        ),
+        Text(fin!,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black54,
+            fontSize: 18,
+            fontWeight: active ? FontWeight.bold : FontWeight.normal,
+          ),
+        )
+      ],
+    ),
+  );
 }

@@ -26,23 +26,21 @@ class ClassBlockCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: width,
-      child: Padding(
-        padding: EdgeInsets.all(internalMargin),
-        child: block?.asignatura == null ? BloqueVacio() : BloqueClase(
-          block: block!,
-          width: width,
-          height: height,
-          textColor: textColor,
-          onTap: (block) => _onTap(block, context),
-          onLongPress: (block) => _onLongPress(block, context),
-        ),
+  Widget build(BuildContext context) => Container(
+    height: height,
+    width: width,
+    child: Padding(
+      padding: EdgeInsets.all(internalMargin),
+      child: block?.asignatura == null ? BloqueVacio() : BloqueClase(
+        block: block!,
+        width: width,
+        height: height,
+        textColor: textColor,
+        onTap: (block) => _onTap(block, context),
+        onLongPress: (block) => _onLongPress(block, context),
       ),
-    );
-  }
+    ),
+  );
 
   _onTap(BloqueHorario block, BuildContext context) async {
     final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas((Get.find<CarrerasService>().selectedCarrera)?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
