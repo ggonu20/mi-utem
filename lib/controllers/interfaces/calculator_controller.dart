@@ -73,7 +73,8 @@ abstract class CalculatorController {
 
   void clearExamGrade();
 
-  void setExamGrade(num? grade);
+  /* Actualiza la nota del examen, y si es verdadero también el controlador de texto */
+  void setExamGrade(num? grade, { bool updateTextController = true });
 
   void addGrade(IEvaluacion grade);
 

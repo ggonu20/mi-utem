@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/scheduler.dart';
-import 'package:in_app_update/in_app_update.dart';
 
 /*
  * Clase que se encarga de verificar si hay una nueva versión de la aplicación

@@ -103,7 +103,6 @@ class CalculatorControllerImplementation implements CalculatorController {
     }
 
     setExamGrade(grades.notaExamen);
-    _updateCalculations();
   }
 
   @override
@@ -163,16 +162,16 @@ class CalculatorControllerImplementation implements CalculatorController {
   @override
   void clearExamGrade() {
     examGrade.value = null;
-    final examGradeTextFieldController = this.examGradeTextFieldController.value;
-    examGradeTextFieldController.updateText("");
-    this.examGradeTextFieldController.value = examGradeTextFieldController;
+    examGradeTextFieldController.value.updateText("");
     _updateCalculations();
   }
 
   @override
-  void setExamGrade(num? grade) {
+  void setExamGrade(num? grade, { bool updateTextController = true }) {
     examGrade.value = grade?.toDouble();
-    examGradeTextFieldController.value.updateText(grade?.toDouble().toStringAsFixed(1) ?? "");
+    if(updateTextController) {
+      examGradeTextFieldController.value.updateText(grade?.toStringAsFixed(1) ?? "--");
+    }
     _updateCalculations();
   }
 
