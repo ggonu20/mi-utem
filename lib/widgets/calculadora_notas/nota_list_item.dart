@@ -2,8 +2,8 @@ import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
+import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class NotaListItem extends StatelessWidget {
@@ -68,12 +68,12 @@ class NotaListItem extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: showSuggestedGrade ? (calculatorController.suggestedGrade.value?.toStringAsFixed(0) ?? "--") : "--",
                 disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: Colors.transparent,
                   ),
                 ),
               ),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
                 TextInputFormatter.withFunction((prev, input) {
                   final val = input.text;

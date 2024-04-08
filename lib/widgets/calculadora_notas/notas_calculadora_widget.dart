@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/widgets/nota_list_item.dart';
+import 'package:mi_utem/widgets/calculadora_notas/nota_list_item.dart';
 
 class NotasCalculadoraWidget extends StatelessWidget {
 
