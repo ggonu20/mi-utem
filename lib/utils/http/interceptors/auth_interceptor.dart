@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
@@ -20,8 +21,13 @@ class AuthInterceptor extends QueuedInterceptor {
       if(!options.headers.containsKey("authorization")) {
         final user = await _authService.getUser();
         final token = user?.token;
-        if(user != null && token != null) {
+        if(token != null) {
           options._setAuthenticationHeader(token);
+        }
+
+        final rut = user?.rut;
+        if(rut != null) {
+          options.extra[DIO_CACHE_KEY_PRIMARY_KEY] = rut.toString();
         }
       }
 
