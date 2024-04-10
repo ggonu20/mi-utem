@@ -1,7 +1,7 @@
-import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 import 'package:mi_utem/repositories/interfaces/carreras_repository.dart';
 import 'package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart';
@@ -11,7 +11,7 @@ import 'package:mi_utem/services/interfaces/grades_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 final _backgroundFetchConfig = BackgroundFetchConfig(
-  minimumFetchInterval: 30,
+  minimumFetchInterval: 15,
   startOnBoot: true,
   stopOnTerminate: false,
   enableHeadless: true,
@@ -40,7 +40,6 @@ class BackgroundController {
 }
 
 class BackgroundService {
-
   static Future<void> initAndStart() async {
     BackgroundFetch.registerHeadlessTask(BackgroundController.backgroundFetchHeadlessTask);
     await BackgroundFetch.configure(_backgroundFetchConfig, _onFetch, _onTimeout);
@@ -51,9 +50,24 @@ class BackgroundService {
   }
 
   static _onFetch(String taskId) async {
-    await Get.find<AuthService>().isLoggedIn(forceRefresh: true); // Refresca el token de autenticación
-    await Get.find<CarrerasRepository>().getCarreras(forceRefresh: true); // Refresca las carreras
-    await Get.find<GradesService>().lookForGradeUpdates(); // Revisa si hubo un cambio en las notas
+    final init = DateTime.now();
+    var now = init;
+    logger.d("[BackgroundFetch]: Se ejecutó la tarea 'refreshTask' (${now.toIso8601String()})");
+
+    // Refresca el token de autenticación
+    await Get.find<AuthService>().isLoggedIn(forceRefresh: true);
+    logger.d("[BackgroundFetch]: Se refrescó el token de autenticación, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+    now = DateTime.now();
+
+    // Refresca las carreras
+    await Get.find<CarrerasRepository>().getCarreras(forceRefresh: true);
+    logger.d("[BackgroundFetch]: Se refrescaron las carreras, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+    now = DateTime.now();
+
+    // Revisa si hubo un cambio en las notas
+    await Get.find<GradesService>().lookForGradeUpdates();
+    logger.d("[BackgroundFetch]: Se revisaron las notas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+    now = DateTime.now();
 
     // Actualiza los permisos de ingreso
     try {
@@ -65,6 +79,8 @@ class BackgroundService {
         await permisoIngresoRepository.getDetallesPermiso(id, forceRefresh: true);
       }
     } catch (_){}
+    logger.d("[BackgroundFetch]: Se refrescaron los permisos de ingreso, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+    now = DateTime.now();
 
     // Actualiza los datos de las carreras y asignaturas
     try {
@@ -77,15 +93,18 @@ class BackgroundService {
         }
       }
     } catch(_){}
+    logger.d("[BackgroundFetch]: Se refrescaron los datos de las carreras y asignaturas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+    now = DateTime.now();
 
-    // Termina la tarea de segundo plano
-    BackgroundFetch.finish(taskId);
+    logger.d("[BackgroundFetch]: Se terminó la tarea 'refreshTask', tomó ${DateTime.now().difference(init).inMilliseconds} ms");
   }
 
   static _onTimeout(String taskId) async {
+    logger.w("Se agotó el tiempo de espera para la tarea '$taskId'");
     Sentry.captureMessage("Se agotó el tiempo de espera para la tarea '$taskId'",
       level: SentryLevel.warning,
     );
     BackgroundFetch.finish(taskId);
   }
 }
+
