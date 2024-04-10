@@ -38,6 +38,7 @@ class _SetAliasScreenState extends State<SetAliasScreen> {
 
   @override
   Widget build(BuildContext context) => GradientBackground(
+    resizeToAvoidBottomInset: false,
     child: Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
