@@ -12,7 +12,7 @@ class HorarioBlocksContent extends StatelessWidget {
   final double borderWidth;
 
   const HorarioBlocksContent({
-    Key? key,
+    super.key,
     required this.horario,
     required this.blockHeight,
     required this.blockWidth,
@@ -46,22 +46,21 @@ class HorarioBlocksContent extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Table(
-      defaultColumnWidth: FixedColumnWidth(blockWidth),
-      border: TableBorder(
-        horizontalInside: BorderSide(
-          color: borderColor,
-          style: BorderStyle.solid,
-          width: borderWidth,
-        ),
-        verticalInside: BorderSide(
-          color: borderColor,
-          style: BorderStyle.solid,
-          width: borderWidth,
-        ),
+  Widget build(BuildContext context) => Table(
+    defaultColumnWidth: FixedColumnWidth(blockWidth),
+    border: TableBorder(
+      horizontalInside: BorderSide(
+        color: borderColor,
+        style: BorderStyle.solid,
+        width: borderWidth,
       ),
-      children: _children,
-    );
-  }
+      verticalInside: BorderSide(
+        color: borderColor,
+        style: BorderStyle.solid,
+        width: borderWidth,
+      ),
+    ),
+    children: _children,
+  );
+
 }
