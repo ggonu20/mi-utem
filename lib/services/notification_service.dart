@@ -37,8 +37,7 @@ class NotificationService {
           channelGroupKey: 'grade_changes',
           channelKey: gradeChangesChannelKey,
           channelName: 'Grades changes',
-          channelDescription:
-              'Notification channel to notify you when your grades change',
+          channelDescription: 'Notification channel to notify you when your grades change',
           channelShowBadge: true,
           importance: NotificationImportance.High,
         ),

@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
@@ -95,6 +96,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     }
                     await _preferencesRepository.setOnboardingStep("complete");
                     Navigator.popUntil(context, (route) => route.isFirst);
+                    final alias = await _preferencesRepository.getAlias();
+                    AwesomeNotifications().createNotification(content: NotificationContent(
+                      id: 1,
+                      channelKey: NotificationService.announcementsChannelKey,
+                      actionType: ActionType.Default,
+                      title: '¡Hola $alias! 🎉',
+                      body: '¡Te damos la bienvenida a la aplicación Mi UTEM! 🚀',
+                    ));
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
                   },
                   style: ElevatedButton.styleFrom(
