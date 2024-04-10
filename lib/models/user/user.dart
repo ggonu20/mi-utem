@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:mi_utem/models/user/rut.dart';
+import 'package:mi_utem/utils/string_utils.dart';
 
 class User {
 
@@ -20,8 +21,8 @@ class User {
   String? username;
   String? fotoUrl;
 
-  get nombreCompletoCapitalizado => nombreCompleto.toLowerCase().split(' ').map((it) => it[0].toUpperCase() + it.substring(1)).join(' ');
-  get nombreDisplayCapitalizado => "${nombres?.split(' ')[0]} $apellidos".toLowerCase().split(' ').map((it) => it[0].toUpperCase() + it.substring(1)).join(' ');
+  get nombreCompletoCapitalizado => capitalize(nombreCompleto);
+  get nombreDisplayCapitalizado => capitalize("${nombres?.split(' ')[0]} $apellidos");
   get primerNombre => nombreCompletoCapitalizado.split(' ')[0];
   get iniciales => nombreCompletoCapitalizado.split(' ').map((it) => it[0].toUpperCase()).join('');
 
