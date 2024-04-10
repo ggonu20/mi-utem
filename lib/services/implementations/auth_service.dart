@@ -13,6 +13,7 @@ import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
+import 'package:mi_utem/utils/http/http_client.dart';
 
 class AuthServiceImplementation implements AuthService {
 
@@ -81,12 +82,13 @@ class AuthServiceImplementation implements AuthService {
 
   @override
   Future<void> logout({BuildContext? context}) async {
+    await HttpClient.dioCacheManager.clearAll();
     setUser(null);
     _credentialsService.setCredentials(null);
     _preferencesRepository.setOnboardingStep(null);
     _preferencesRepository.setLastLogin(null);
     _preferencesRepository.setAlias(null);
-    
+
     if(context != null) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => LoginScreen()));
     }
