@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/widgets/quick_menu_card.dart';
+import 'package:mi_utem/widgets/quick_access/quick_menu_card.dart';
 
 class QuickMenuSection extends StatelessWidget {
   const QuickMenuSection({

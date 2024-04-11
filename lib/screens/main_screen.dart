@@ -21,7 +21,7 @@ import "package:mi_utem/widgets/main_screen/novedades/banners_section.dart";
 import "package:mi_utem/widgets/main_screen/permisos/permisos_section.dart";
 import "package:mi_utem/widgets/noticias/noticias_carrusel_widget.dart";
 import "package:mi_utem/widgets/pull_to_refresh.dart";
-import "package:mi_utem/widgets/quick_menu_section.dart";
+import 'package:mi_utem/widgets/quick_access/quick_menu_section.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({
