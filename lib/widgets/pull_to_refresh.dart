@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
-
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
+import 'package:mi_utem/widgets/loading/loading_indicator.dart';
 
 class PullToRefresh extends StatelessWidget {
   final Widget? child;

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/permiso_ingreso.dart';
 import 'package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
+import 'package:mi_utem/widgets/loading/loading_indicator.dart';
 import 'package:mi_utem/widgets/main_screen/permisos/permiso_card.dart';
 
 class PermisosCovidSection extends StatelessWidget {

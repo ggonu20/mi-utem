@@ -11,7 +11,7 @@ import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/monkey_error_dialog.dart';
-import 'package:mi_utem/widgets/loading_dialog.dart';
+import 'package:mi_utem/widgets/loading/loading_dialog.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 
 

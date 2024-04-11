@@ -5,7 +5,7 @@ import 'package:mi_utem/services/docentes_service.dart';
 import 'package:mi_utem/utils/debounce.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
+import 'package:mi_utem/widgets/loading/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
 class DocentesScreen extends StatefulWidget {

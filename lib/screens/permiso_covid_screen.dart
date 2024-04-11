@@ -6,7 +6,7 @@ import 'package:mi_utem/models/permiso_ingreso.dart';
 import 'package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
+import 'package:mi_utem/widgets/loading/loading_indicator.dart';
 import 'package:mi_utem/widgets/permiso_ingreso/qr_card.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 

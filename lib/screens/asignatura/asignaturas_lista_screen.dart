@@ -10,7 +10,7 @@ import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/asignatura/lista/lista_asignaturas.dart';
 import 'package:mi_utem/widgets/asignatura/lista/sin_asignaturas_mensaje.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
+import 'package:mi_utem/widgets/loading/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class AsignaturasListaScreen extends StatefulWidget {

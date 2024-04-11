@@ -12,7 +12,7 @@ import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/onboarding/welcome_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
-import 'package:mi_utem/widgets/loading_dialog.dart';
+import 'package:mi_utem/widgets/loading/loading_dialog.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
