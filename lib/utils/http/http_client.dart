@@ -12,17 +12,18 @@ class HttpClient {
   static const String productionUrl = 'https://api.exdev.cl/';
   static String url = isProduction ? productionUrl : debugUrl;
 
-  static DioCacheManager dioCacheManager = DioCacheManager(CacheConfig(
+  static DioCacheManager _dioCacheManager = DioCacheManager(CacheConfig(
     baseUrl: url,
     defaultMaxAge: Duration(days: 7),
     defaultMaxStale: Duration(days: 60),
+    databaseName: 'mi_utem_cache',
   ));
 
   static Dio httpClient = Dio(BaseOptions(baseUrl: url))..interceptors.addAll([
     HeadersInterceptor(),
     _errorInterceptor,
     _logInterceptor,
-    dioCacheManager.interceptor,
+    _dioCacheManager.interceptor,
   ]);
 
   static Dio authClient = httpClient..interceptors.add(AuthInterceptor());
@@ -58,4 +59,8 @@ class HttpClient {
       return handler.next(response);
     },
   );
+  
+  static Future<void> clearCache() async{
+    await _dioCacheManager.clearAll();
+  }
 }

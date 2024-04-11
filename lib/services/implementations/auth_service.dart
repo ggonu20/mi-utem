@@ -82,7 +82,7 @@ class AuthServiceImplementation implements AuthService {
 
   @override
   Future<void> logout({BuildContext? context}) async {
-    await HttpClient.dioCacheManager.clearAll();
+    await HttpClient.clearCache();
     setUser(null);
     _credentialsService.setCredentials(null);
     _preferencesRepository.setOnboardingStep(null);
