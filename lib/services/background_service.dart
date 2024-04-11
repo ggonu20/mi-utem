@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 import 'package:mi_utem/repositories/interfaces/carreras_repository.dart';
+import 'package:mi_utem/repositories/interfaces/horario_repository.dart';
 import 'package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/interfaces/carreras_service.dart';
@@ -99,6 +100,16 @@ class BackgroundService {
       }
     } catch(_){}
     logger.d("[BackgroundFetch]: Se refrescaron los datos de las carreras y asignaturas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+    now = DateTime.now();
+
+    // Actualiza el horario
+    try {
+      final carreraId = Get.find<CarrerasService>().selectedCarrera?.id;
+      if(carreraId != null) {
+        await Get.find<HorarioRepository>().getHorario(carreraId, forceRefresh: true);
+      }
+    } catch(_){}
+    logger.d("[BackgroundFetch]: Se refrescó el horario, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
     now = DateTime.now();
 
     logger.d("[BackgroundFetch]: Se terminó la tarea 'refreshTask', tomó ${DateTime.now().difference(init).inMilliseconds} ms");
