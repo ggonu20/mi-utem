@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:community_charts_flutter/community_charts_flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/models/asignaturas/asistencia.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 extension StringExtension on Color {
@@ -71,37 +71,41 @@ class AsistenciaChart extends StatelessWidget {
               height: 15,
               width: 15,
             ),
-            Container(width: 10),
+            const SizedBox(width: 10),
             Text("Asistidos (${asistencia!.asistidos})"),
           ],
         ),
-        Container(height: 5),
+        const SizedBox(height: 5),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-                decoration: BoxDecoration(
-                    color: MainTheme.reprobadoColor,
-                    borderRadius: BorderRadius.circular(15)),
-                height: 15,
-                width: 15),
-            Container(width: 10),
+              decoration: BoxDecoration(
+                color: MainTheme.reprobadoColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              height: 15,
+              width: 15,
+            ),
+            const SizedBox(width: 10),
             Text("No asistidos (${asistencia!.noAsistidos})"),
           ],
         ),
-        Container(height: 5),
+        const SizedBox(height: 5),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-                decoration: BoxDecoration(
-                    color: MainTheme.disabledColor,
-                    borderRadius: BorderRadius.circular(15)),
-                height: 15,
-                width: 15),
-            Container(width: 10),
+              decoration: BoxDecoration(
+                color: MainTheme.disabledColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              height: 15,
+              width: 15,
+            ),
+            const SizedBox(width: 10),
             Text("Sin registro (${asistencia!.sinRegistro})"),
           ],
         ),
