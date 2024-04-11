@@ -55,7 +55,12 @@ class BackgroundService {
     logger.d("[BackgroundFetch]: Se ejecutó la tarea 'refreshTask' (${now.toIso8601String()})");
 
     // Refresca el token de autenticación
-    await Get.find<AuthService>().isLoggedIn(forceRefresh: true);
+    bool loggedIn = await Get.find<AuthService>().isLoggedIn(forceRefresh: true);
+    if(!loggedIn) {
+      logger.d("[BackgroundFetch]: No se pudo refrescar el token de autenticación");
+      BackgroundFetch.finish(taskId);
+      return;
+    }
     logger.d("[BackgroundFetch]: Se refrescó el token de autenticación, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
     now = DateTime.now();
 
