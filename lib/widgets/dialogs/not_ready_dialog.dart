@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/acerca/acerca_screen.dart';
-import 'package:mi_utem/widgets/error_dialog.dart';
+import 'package:mi_utem/widgets/dialogs/error_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotReadyDialog extends StatelessWidget {
