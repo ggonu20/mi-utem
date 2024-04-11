@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/widgets/default_network_image.dart';
+import 'package:mi_utem/widgets/image/default_network_image.dart';
 
 import 'acerca_club_redes.dart';
 

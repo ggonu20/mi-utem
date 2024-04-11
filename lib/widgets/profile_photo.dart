@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/imagen_editor_modal.dart';
+import 'package:mi_utem/widgets/image/imagen_editor_modal.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 
 class ProfilePhoto extends StatefulWidget {

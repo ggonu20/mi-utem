@@ -11,7 +11,7 @@ import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
-import 'package:mi_utem/widgets/image_view_screen.dart';
+import 'package:mi_utem/widgets/image/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';

@@ -7,7 +7,7 @@ import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
 import 'package:mi_utem/models/permiso_ingreso.dart';
-import 'package:mi_utem/widgets/image_view_screen.dart';
+import 'package:mi_utem/widgets/image/image_view_screen.dart';
 import 'package:mi_utem/widgets/permiso_ingreso/detalles_permiso.dart';
 import 'package:mi_utem/widgets/permiso_ingreso/usuario_detalle.dart';
 

@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/widgets/image_view_screen.dart';
+import 'package:mi_utem/widgets/image/image_view_screen.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:url_launcher/url_launcher.dart';
 
