@@ -9,7 +9,7 @@ import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/interfaces/carreras_service.dart';
 import 'package:mi_utem/services/review_service.dart';
-import 'package:mi_utem/widgets/credencial_card.dart';
+import 'package:mi_utem/widgets/credencial/credencial_card.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/flip_widget.dart';
