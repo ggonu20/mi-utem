@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
@@ -91,24 +90,22 @@ class NotificationService {
     return isAllowed;
   }
 
-  static void showGradeChangeNotification(
-    String title,
-    String body,
-    Asignatura asignatura,
-  ) {
+  static void showGradeChangeNotification({
+    required String title,
+    required String body,
+    required Asignatura asignatura,
+  }) {
     final Map<String, String?> payload = {
       'type': 'grade_change',
       'asignatura': jsonEncode(asignatura.toJson()),
     };
 
-    notifications.createNotification(
-      content: NotificationContent(
-        id: Random().nextInt(1000000),
-        channelKey: gradeChangesChannelKey,
-        title: title,
-        body: body,
-        payload: payload,
-      ),
-    );
+    notifications.createNotification(content: NotificationContent(
+      id: asignatura.hashCode,
+      channelKey: gradeChangesChannelKey,
+      title: title,
+      body: body,
+      payload: payload,
+    ));
   }
 }

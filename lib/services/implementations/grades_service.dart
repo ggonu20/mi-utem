@@ -9,6 +9,7 @@ import 'package:mi_utem/repositories/interfaces/grades_repository.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/interfaces/carreras_service.dart';
 import 'package:mi_utem/services/interfaces/grades_service.dart';
+import 'package:mi_utem/services/notification_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class GradesServiceImplementation implements GradesService {
@@ -209,7 +210,11 @@ class GradesServiceImplementation implements GradesService {
         }
       );
 
-      // NotificationService.showGradeChangeNotification(title, body, asignatura);
+      NotificationService.showGradeChangeNotification(
+        title: title,
+        body: body,
+        asignatura: asignatura,
+      );
     } else if(changeType != GradeChangeType.noChange) {
       Sentry.captureMessage("Asignatura ha cambiado pero no notificado",
         level: SentryLevel.debug,
