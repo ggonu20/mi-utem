@@ -5,7 +5,7 @@ import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/controllers/notification_controller.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/widgets/custom_alert_dialog.dart';
+import 'package:mi_utem/widgets/dialogs/custom_alert_dialog.dart';
 
 class NotificationService {
   static const announcementsChannelKey = 'announcements_channel';
