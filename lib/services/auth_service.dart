@@ -7,15 +7,14 @@ import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/user/credential.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/repositories/interfaces/auth_repository.dart';
-import 'package:mi_utem/repositories/interfaces/credentials_repository.dart';
-import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
+import 'package:mi_utem/repositories/auth_repository.dart';
+import 'package:mi_utem/repositories/credentials_repository.dart';
+import 'package:mi_utem/repositories/preferences_repository.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
-import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/utils/http/http_client.dart';
 
-class AuthServiceImplementation implements AuthService {
+class AuthService {
 
   PreferencesRepository _preferencesRepository = Get.find<PreferencesRepository>();
   AuthRepository _authRepository = Get.find<AuthRepository>();

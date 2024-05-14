@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/repositories/interfaces/credentials_repository.dart';
+import 'package:mi_utem/repositories/credentials_repository.dart';
 import 'package:mi_utem/services/update_service.dart';
 import 'package:mi_utem/widgets/login_screen/creditos_app.dart';
 import 'package:mi_utem/widgets/login_screen/formulario_credenciales.dart';

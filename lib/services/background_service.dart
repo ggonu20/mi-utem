@@ -2,13 +2,13 @@
 import 'package:background_fetch/background_fetch.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
-import 'package:mi_utem/repositories/interfaces/carreras_repository.dart';
-import 'package:mi_utem/repositories/interfaces/horario_repository.dart';
-import 'package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart';
-import 'package:mi_utem/services/interfaces/auth_service.dart';
-import 'package:mi_utem/services/interfaces/carreras_service.dart';
-import 'package:mi_utem/services/interfaces/grades_service.dart';
+import 'package:mi_utem/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/repositories/carreras_repository.dart';
+import 'package:mi_utem/repositories/horario_repository.dart';
+import 'package:mi_utem/repositories/permiso_ingreso_repository.dart';
+import 'package:mi_utem/services/auth_service.dart';
+import 'package:mi_utem/services/carreras_service.dart';
+import 'package:mi_utem/services/grades_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 final _backgroundFetchConfig = BackgroundFetchConfig(

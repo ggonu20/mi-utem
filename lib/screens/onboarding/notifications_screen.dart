@@ -1,7 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
+import 'package:mi_utem/repositories/preferences_repository.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/themes/theme.dart';

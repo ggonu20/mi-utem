@@ -4,20 +4,18 @@ import 'package:get/get.dart';
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
-import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
-import 'package:mi_utem/repositories/interfaces/grades_repository.dart';
-import 'package:mi_utem/services/interfaces/auth_service.dart';
-import 'package:mi_utem/services/interfaces/carreras_service.dart';
-import 'package:mi_utem/services/interfaces/grades_service.dart';
+import 'package:mi_utem/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/repositories/grades_repository.dart';
+import 'package:mi_utem/services/auth_service.dart';
+import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-class GradesServiceImplementation implements GradesService {
+class GradesService {
   static const savedGradesPrefix = 'savedGrades_';
   static const subscribedAsignaturasPrefix = 'subscribedAsignaturas_';
   GradesRepository _gradesRepository = Get.find<GradesRepository>();
 
-  @override
   Future<Grades?> getGrades(String carreraId, String asignaturaId, {bool forceRefresh = false, bool saveGrades = true}) async {
     final grades = await _gradesRepository.getGrades(carreraId: carreraId, asignaturaId: asignaturaId);
 
@@ -28,14 +26,12 @@ class GradesServiceImplementation implements GradesService {
     return grades;
   }
 
-  @override
   Future<void> saveGrades(String asignaturaId, Grades grades) {
     final jsonGrades = grades.toJson();
     jsonGrades['lastUpdate'] = DateTime.now().toIso8601String();
     return secureStorage.write(key: '$savedGradesPrefix$asignaturaId', value: jsonEncode(jsonGrades));
   }
 
-  @override
   Future<Map<String, GradeChangeType>> lookForGradeUpdates() async {
     final isLoggedIn = await Get.find<AuthService>().isLoggedIn();
 
@@ -87,7 +83,6 @@ class GradesServiceImplementation implements GradesService {
     return response;
   }
 
-  @override
   Future<GradeChangeType> compareGrades(String asignaturaId, Grades grades) async {
     final prevGradesJson = await secureStorage.read(key: '$savedGradesPrefix$asignaturaId');
     if(prevGradesJson == null) {
@@ -227,4 +222,14 @@ class GradesServiceImplementation implements GradesService {
     }
   }
 
+}
+
+enum GradeChangeType {
+  weightingsSet,
+  weightingsUpdated,
+  weightingsDeleted,
+  gradeSet,
+  gradeUpdated,
+  gradeDeleted,
+  noChange
 }

@@ -6,13 +6,13 @@ import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/pair.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
+import 'package:mi_utem/repositories/preferences_repository.dart';
 import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
-import 'package:mi_utem/screens/usuario_screen.dart';
-import 'package:mi_utem/services/interfaces/auth_service.dart';
+import 'package:mi_utem/screens/perfil/perfil_screen.dart';
+import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -28,7 +28,7 @@ class CustomDrawer extends StatelessWidget {
   Widget? _getRoute(String? name) {
     switch (name) {
       case "Perfil":
-        return UsuarioScreen();
+        return PerfilScreen();
       case "Asignaturas":
         return AsignaturasListaScreen();
       case "Horario":

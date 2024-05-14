@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/noticia.dart';
-import 'package:mi_utem/repositories/interfaces/noticias_repository.dart';
+import 'package:mi_utem/repositories/noticias_repository.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading/loading_indicator.dart';
 import 'package:mi_utem/widgets/noticias/noticia_card_widget.dart';

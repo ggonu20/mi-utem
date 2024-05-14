@@ -1,12 +1,12 @@
 import 'dart:convert';
 
+import 'package:mi_utem/models/user/persona.dart';
 import 'package:mi_utem/models/user/rut.dart';
 import 'package:mi_utem/utils/string_utils.dart';
 
-class User {
+class User extends Persona {
 
   String? token;
-  Rut? rut;
 
   String? correoPersonal;
   String? correoUtem;
@@ -14,26 +14,22 @@ class User {
   String? fotoBase64;
   List<String> perfiles;
 
-  String nombreCompleto;
   String? nombres;
   String? apellidos;
 
   String? username;
   String? fotoUrl;
 
-  get nombreCompletoCapitalizado => capitalize(nombreCompleto);
   get nombreDisplayCapitalizado => capitalize("${nombres?.split(' ')[0]} $apellidos");
-  get primerNombre => nombreCompletoCapitalizado.split(' ')[0];
-  get iniciales => nombreCompletoCapitalizado.split(' ').map((it) => it[0].toUpperCase()).join('');
 
   User({
+    super.rut,
+    super.nombreCompleto = "N/N",
     this.token,
-    this.rut,
     this.correoPersonal = "N/N",
     this.correoUtem,
     this.fotoBase64,
     this.perfiles = const [],
-    this.nombreCompleto = "N/N",
     this.nombres,
     this.apellidos,
     this.username,
@@ -43,13 +39,13 @@ class User {
   static List<User> fromJsonList(List<dynamic>? list)  => list != null ? list.map((json) => User.fromJson(json as Map<String, dynamic>)).toList() : [];
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    token: json['token'],
     rut: json.containsKey('rut') ? Rut.fromString("${json['rut']}") : null,
+    nombreCompleto: json['nombreCompleto'],
+    token: json['token'],
     correoPersonal: json['correoPersonal'],
     correoUtem: json['correoUtem'],
     fotoBase64: json['fotoBase64'],
     perfiles: ((json['perfiles'] as List<dynamic>?) ?? []).map((it) => it.toString()).toList(),
-    nombreCompleto: json['nombreCompleto'],
     nombres: json['nombres'],
     apellidos: json['apellidos'],
     username: json['username'],

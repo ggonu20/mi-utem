@@ -2,14 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 import 'package:mi_utem/utils/http/http_client.dart';
 
-class AsignaturasRepositoryImplementation implements AsignaturasRepository {
+class AsignaturasRepository {
 
   final _authClient = HttpClient.authClient;
 
-  @override
   Future<List<Asignatura>?> getAsignaturas(String? carreraId, {bool forceRefresh = false}) async {
     if(carreraId == null) {
       return null;
@@ -25,7 +23,6 @@ class AsignaturasRepositoryImplementation implements AsignaturasRepository {
     return Asignatura.fromJsonList(response.data);
   }
 
-  @override
   Future<Asignatura?> getDetalleAsignatura(Asignatura? asignatura, {bool forceRefresh = false}) async {
     if(asignatura == null) {
       return null;

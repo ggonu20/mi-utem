@@ -2,7 +2,7 @@
 import 'package:get/get.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/services/interfaces/auth_service.dart';
+import 'package:mi_utem/services/auth_service.dart';
 
 final httpClient = InterceptedClient.build(
   interceptors: [

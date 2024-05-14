@@ -22,7 +22,7 @@ class HttpClient {
   static Dio httpClient = Dio(BaseOptions(baseUrl: url))..interceptors.addAll([
     HeadersInterceptor(),
     _errorInterceptor,
-    _logInterceptor,
+    logInterceptor,
     _dioCacheManager.interceptor,
   ]);
 
@@ -43,7 +43,7 @@ class HttpClient {
     },
   );
 
-  static InterceptorsWrapper _logInterceptor = InterceptorsWrapper(
+  static InterceptorsWrapper logInterceptor = InterceptorsWrapper(
     onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
       logger.d("[HttpClient]: ${options.method.toUpperCase()} ${options.uri}");
       options.extra["request_created_at"] = DateTime.now().toIso8601String();

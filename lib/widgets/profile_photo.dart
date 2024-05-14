@@ -46,35 +46,40 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
     height: widget.radius * 2,
     child: Stack(
       children: [
-        CircularProfileAvatar(widget.user!.fotoUrl ?? "",
-          onTap: () => widget.onTap != null && widget.onImageTap == null ? widget.onTap : null,
-          borderColor: widget.borderColor,
-          borderWidth: widget.borderWidth,
-          radius: widget.radius,
-          backgroundColor: MainTheme.primaryColor,
-          imageBuilder: (context, imageProvider) => GestureDetector(
-            onTap: () {
-              if (widget.onImageTap != null) {
-                widget.onImageTap!(context, imageProvider);
-              }
-            },
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
+        FutureBuilder<String?>(
+          // future: Get.find<PreferencesRepository>().getProfilePicture(),
+          initialData: null,
+          builder: (ctx, snapshot) => CircularProfileAvatar(snapshot.data != null ? '' : (widget.user!.fotoUrl ?? ""),
+            child: snapshot.data != null ? Image.memory(Base64Decoder().convert(snapshot.data!)) : null,
+            onTap: () => widget.onTap != null && widget.onImageTap == null ? widget.onTap : null,
+            borderColor: widget.borderColor,
+            borderWidth: widget.borderWidth,
+            radius: widget.radius,
+            backgroundColor: MainTheme.primaryColor,
+            imageBuilder: (context, imageProvider) => GestureDetector(
+              onTap: () {
+                if (widget.onImageTap != null) {
+                  widget.onImageTap!(context, imageProvider);
+                }
+              },
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-          ),
-          initialsText: Text(
-            widget.user!.iniciales,
-            style: TextStyle(
-              fontSize: widget.radius * 0.5,
-              color: Colors.white,
+            initialsText: Text(
+              widget.user!.iniciales,
+              style: TextStyle(
+                fontSize: widget.radius * 0.5,
+                color: Colors.white,
+              ),
             ),
           ),
         ),

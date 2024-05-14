@@ -2,7 +2,7 @@ import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
+import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/themes/theme.dart';
 

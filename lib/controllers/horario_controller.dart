@@ -1,75 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/controllers/interfaces/horario_controller.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/repositories/interfaces/horario_repository.dart';
+import 'package:mi_utem/repositories/horario_repository.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
-import 'package:mi_utem/services/interfaces/carreras_service.dart';
+import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
-class HorarioControllerImplementation implements HorarioController {
+class HorarioController {
   final _storage = GetStorage();
   final _randomColors = Colors.primaries.toList()..shuffle();
   final _now = DateTime.now();
 
-  @override
   num daysCount = 6;
 
-  @override
   num periodsCount = 9;
 
-  @override
   String startTime = "7:55";
 
-  @override
   Duration periodDuration = Duration(minutes: 90);
 
-  @override
   Duration periodGap = Duration(minutes: 5);
 
-  @override
   List<Color> usedColors = [];
 
-  @override
   RxDouble zoom = 0.5.obs;
 
-  @override
   RxBool indicatorIsOpen = false.obs;
 
-  @override
   RxBool isCenteredInCurrentPeriodAndDay = false.obs;
 
-  @override
   TransformationController blockContentController = TransformationController();
 
-  @override
   TransformationController daysHeaderController = TransformationController();
 
-  @override
   TransformationController periodHeaderController = TransformationController();
 
-  @override
   TransformationController cornerController = TransformationController();
 
   Function? _onUpdate;
 
-  @override
   List<Color> get unusedColors {
     List<Color> availableColors = [..._randomColors].where((Color color) => !usedColors.contains(color)).toList();
     return availableColors.isEmpty ? [..._randomColors] : availableColors;
   }
 
-  @override
   double get minutesFromStart => _now.difference(DateTime(_now.year, _now.month, _now.day, int.parse(startTime.split(":")[0]), int.parse(startTime.split(":")[1]))).inMinutes.toDouble();
 
-  @override
   int? get indexOfCurrentDayStartingAtMonday => _now.weekday > daysCount ? null : _now.weekday - 1;
 
-  @override
   int? get indexOfCurrentPeriod {
     final periodBlockDuration = periodDuration.inMinutes + (periodGap.inMinutes * 2);
 
@@ -82,7 +64,6 @@ class HorarioControllerImplementation implements HorarioController {
     return null;
   }
 
-  @override
   void init(BuildContext context) {
     zoom.value = RemoteConfigService.horarioZoom;
     moveViewportToCurrentPeriodAndDay(context);
@@ -91,7 +72,6 @@ class HorarioControllerImplementation implements HorarioController {
     _setScrollControllerListeners();
   }
 
-  @override
   Future<Horario?> getHorario({ bool forceRefresh = false }) async {
     final carrerasService = Get.find<CarrerasService>();
     Carrera? carrera = carrerasService.selectedCarrera;
@@ -109,7 +89,6 @@ class HorarioControllerImplementation implements HorarioController {
     return horario;
   }
 
-  @override
   void moveViewportTo(BuildContext context, double x, double y) {
     final viewportWidth = MediaQuery.of(context).size.width - MediaQuery.of(context).padding.horizontal;
     final viewportHeight = MediaQuery.of(context).size.height - MediaQuery.of(context).padding.vertical;
@@ -133,7 +112,6 @@ class HorarioControllerImplementation implements HorarioController {
     _onChangeAnyController();
   }
 
-  @override
   void moveViewportToPeriodIndexAndDayIndex(BuildContext context, int periodIndex, int dayIndex) {
     final blockWidth = HorarioMainScroller.blockWidth;
     final x = (dayIndex * blockWidth) + (blockWidth / 2);
@@ -144,7 +122,6 @@ class HorarioControllerImplementation implements HorarioController {
     moveViewportTo(context, x, y);
   }
 
-  @override
   void moveViewportToCurrentPeriodAndDay(BuildContext context) {
     final periodIndex = indexOfCurrentPeriod ?? 0;
     final dayIndex = indexOfCurrentDayStartingAtMonday ?? 0;
@@ -154,7 +131,6 @@ class HorarioControllerImplementation implements HorarioController {
     isCenteredInCurrentPeriodAndDay.value = true;
   }
 
-  @override
   void setZoom(double zoom) {
     blockContentController.value = blockContentController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
     periodHeaderController.value = periodHeaderController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
@@ -164,7 +140,6 @@ class HorarioControllerImplementation implements HorarioController {
     _onChangeAnyController();
   }
 
-  @override
   void addAsignaturaAndSetColor(Asignatura asignatura, {Color? color}) {
     bool hasColor = getColor(asignatura) != null;
     if (hasColor) {
@@ -177,19 +152,16 @@ class HorarioControllerImplementation implements HorarioController {
     _storage.write(_key, _newColor.value);
   }
 
-  @override
   Color? getColor(Asignatura asignatura) {
     final _key = '${asignatura.codigo}_${asignatura.tipoHora}';
     final _colorValue = _storage.read(_key);
     return _colorValue != null ? Color(_colorValue) : null;
   }
 
-  @override
   void setIndicatorIsOpen(bool isOpen) {
     indicatorIsOpen.value = isOpen;
   }
 
-  @override
   void setOnUpdate(Function? onUpdate) => _onUpdate = onUpdate;
 
   void _setRandomColorsByHorario(Horario horario) => horario.horario?.forEach((dia) => dia.forEach((bloque) {

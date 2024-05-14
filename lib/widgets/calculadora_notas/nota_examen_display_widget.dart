@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
+import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class NotaExamenDisplayWidget extends StatelessWidget {

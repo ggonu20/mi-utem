@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/controllers/interfaces/horario_controller.dart';
+import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';

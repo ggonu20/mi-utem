@@ -14,10 +14,10 @@ class Noticia {
 
   factory Noticia.fromJson(Map<String, dynamic>? json) => json != null ? Noticia(
     id: json["id"],
-    titulo: json["titulo"],
-    subtitulo: json["subtitulo"],
-    link: json["link"],
-    imagen: json["imagen"],
+    titulo: json['yoast_head_json']['title'],
+    subtitulo: json['yoast_head_json']['og_description'],
+    imagen: json['yoast_head_json']['og_image'][0]['url'],
+    link: "https://noticias.utem.cl/?p=${json['id']}",
   ) : Noticia.empty();
 
   static List<Noticia> fromJsonList(List<dynamic> json) => json.map((e) => Noticia.fromJson(e)).toList();

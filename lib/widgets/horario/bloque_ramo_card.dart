@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
+import 'package:mi_utem/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/interfaces/carreras_service.dart';
+import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/widgets/horario/bloque_clase.dart';
 import 'package:mi_utem/widgets/horario/bloque_vacio.dart';
 import 'package:mi_utem/widgets/horario/modals/asignatura_vista_previa_modal.dart';

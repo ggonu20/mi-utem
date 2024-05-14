@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
+import 'package:mi_utem/repositories/preferences_repository.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/onboarding/set_alias_screen.dart';
 import 'package:mi_utem/themes/theme.dart';

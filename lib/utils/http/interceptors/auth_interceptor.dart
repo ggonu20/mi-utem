@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/services/interfaces/auth_service.dart';
+import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/utils/http/http_client.dart';
 
 class AuthInterceptor extends QueuedInterceptor {

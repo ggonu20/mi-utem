@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
+import 'package:mi_utem/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/widgets/asignatura/modals/user_modal.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -35,10 +35,8 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
     ),
     body: PullToRefresh(
       onRefresh: () async => setState(() => {}),
-      child: FutureBuilder<List<User>?>(
-        future: () async {
-          return (await _asignaturasRepository.getDetalleAsignatura(widget.asignatura))?.estudiantes;
-        }(),
+      child: FutureBuilder<Asignatura?>(
+        future: _asignaturasRepository.getDetalleAsignatura(widget.asignatura),
         builder: (ctx, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
             return Padding(
@@ -56,7 +54,7 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
             );
           }
 
-          List<User>? estudiantes = snapshot.data;
+          List<User>? estudiantes = snapshot.data?.estudiantes;
           if(snapshot.hasError || !snapshot.hasData || estudiantes == null) {
             return Center(
               child: SingleChildScrollView(
@@ -80,13 +78,13 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
               title: Text(estudiantes[i].nombreCompletoCapitalizado),
               subtitle: Text(estudiantes[i].correoUtem ?? ''),
               onTap: () {
-                showModalBottomSheet(context: context, builder: (ctx) => UserModal(
-                  user: estudiantes[i],
-                ));
                 AnalyticsService.logEvent('asignatura_estudiante_tap', parameters: {
                   'asignatura': widget.asignatura?.codigo,
                   'estudiante': estudiantes[i].correoUtem,
                 });
+                showModalBottomSheet(context: context, builder: (ctx) => UserModal(
+                  user: estudiantes[i],
+                ));
               },
             ),
           );

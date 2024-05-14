@@ -8,11 +8,11 @@ import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
 import "package:mi_utem/models/novedades/ibanner.dart";
 import "package:mi_utem/models/user/user.dart";
-import "package:mi_utem/repositories/interfaces/noticias_repository.dart";
-import "package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart";
-import "package:mi_utem/repositories/interfaces/preferences_repository.dart";
-import "package:mi_utem/services/interfaces/auth_service.dart";
-import "package:mi_utem/services/interfaces/grades_service.dart";
+import "package:mi_utem/repositories/noticias_repository.dart";
+import "package:mi_utem/repositories/permiso_ingreso_repository.dart";
+import "package:mi_utem/repositories/preferences_repository.dart";
+import "package:mi_utem/services/auth_service.dart";
+import "package:mi_utem/services/grades_service.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
 import "package:mi_utem/services/review_service.dart";
 import "package:mi_utem/widgets/custom_app_bar.dart";
@@ -36,7 +36,6 @@ class _MainScreenState extends State<MainScreen> {
 
   List<IBanner> _banners = const [];
   User? _user;
-  String? _alias;
   final _authService = Get.find<AuthService>();
   final _preferencesRepository = Get.find<PreferencesRepository>();
 
@@ -59,7 +58,6 @@ class _MainScreenState extends State<MainScreen> {
 
     loadData();
 
-    _preferencesRepository.getAlias().then((alias) => setState(() => _alias = alias));
     _authService.getUser().then((user) => setState(() => _user = user));
   }
 
@@ -72,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
 
   String get _greetingText {
     List<dynamic> texts = jsonDecode(RemoteConfigService.greetings);
-    return texts[Random().nextInt(texts.length)].replaceAll("%name", _alias ?? _user?.primerNombre ?? "N/N");
+    return texts[Random().nextInt(texts.length)];
   }
 
   @override
@@ -97,10 +95,14 @@ class _MainScreenState extends State<MainScreen> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               width: double.infinity,
-              child: MarkdownBody(
-                data: _greetingText,
-                styleSheet: MarkdownStyleSheet(
-                  p: Theme.of(context).textTheme.displayMedium!.copyWith(fontWeight: FontWeight.normal),
+              child: FutureBuilder<String?>(
+                future: _preferencesRepository.getAlias(),
+                initialData: _user?.primerNombre ?? "N/N",
+                builder: (ctx, snapshot) => MarkdownBody(
+                  data: _greetingText.replaceAll("%name", snapshot.data ?? "N/N"),
+                  styleSheet: MarkdownStyleSheet(
+                    p: Theme.of(context).textTheme.displayMedium!.copyWith(fontWeight: FontWeight.normal),
+                  ),
                 ),
               ),
             ),

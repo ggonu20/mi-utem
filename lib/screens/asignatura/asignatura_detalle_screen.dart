@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
-import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
+import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/asignaturas/detalles/navigation_tab.dart';
-import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
+import 'package:mi_utem/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_resumen_tab.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
-import 'package:mi_utem/services/interfaces/carreras_service.dart';
+import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';

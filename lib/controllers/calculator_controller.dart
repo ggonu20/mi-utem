@@ -1,10 +1,9 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
 
-class CalculatorControllerImplementation implements CalculatorController {
+class CalculatorController {
 
   /* Porcentaje máximo de todas las notas */
   static const maxPercentage = 100;
@@ -25,74 +24,52 @@ class CalculatorControllerImplementation implements CalculatorController {
   static const presentationFinalWeight = 1 - examFinalWeight;
 
   /* Notas parciales */
-  @override
   RxList<IEvaluacion> partialGrades = <IEvaluacion>[].obs;
 
   /* Controlador de texto para los porcentajes con máscara (para autocompletar formato) */
-  @override
   RxList<MaskedTextController> percentageTextFieldControllers = <MaskedTextController>[].obs;
 
   /* Controlador de texto para las notas con máscara (para autocompletar formato) */
-  @override
   RxList<MaskedTextController> gradeTextFieldControllers = <MaskedTextController>[].obs;
 
   /* Nota del examen */
-  @override
   Rx<double?> examGrade = Rx(null);
 
   /* Controlador de texto para la nota del examen con máscara (para autocompletar formato) */
-  @override
   Rx<MaskedTextController> examGradeTextFieldController = MaskedTextController(mask: "0.0").obs;
 
-  @override
   RxBool freeEditable = false.obs;
 
-  @override
   Rx<double?> calculatedFinalGrade = Rx(null);
 
-  @override
   Rx<double?> calculatedPresentationGrade = Rx(null);
 
-  @override
   Rx<int> amountOfPartialGradesWithoutGrade = 0.obs;
 
-  @override
   Rx<int> amountOfPartialGradesWithoutPercentage = 0.obs;
 
-  @override
   RxBool hasMissingPartialGrade = false.obs;
 
-  @override
   RxBool canTakeExam = false.obs;
 
-  @override
   Rx<double?> minimumRequiredExamGrade = Rx(null);
 
-  @override
   RxDouble percentageOfPartialGrades = 0.0.obs;
 
-  @override
   RxDouble missingPercentage = 0.0.obs;
 
-  @override
   RxBool hasMissingPercentage = false.obs;
 
-  @override
   Rx<double?> suggestedPercentage = Rx(null);
 
-  @override
   Rx<double?> suggestedPresentationGrade = Rx(null);
 
-  @override
   RxDouble percentageWithoutGrade = 0.0.obs;
 
-  @override
   RxBool hasCorrectPercentage = false.obs;
 
-  @override
   Rx<double?> suggestedGrade = Rx(null);
 
-  @override
   void updateWithGrades(Grades grades) {
     partialGrades.clear();
     percentageTextFieldControllers.clear();
@@ -105,7 +82,6 @@ class CalculatorControllerImplementation implements CalculatorController {
     setExamGrade(grades.notaExamen);
   }
 
-  @override
   void updateGradeAt(int index, IEvaluacion updatedGrade) {
     final grade = partialGrades[index];
     if(!(grade.editable || freeEditable.value)) {
@@ -120,7 +96,6 @@ class CalculatorControllerImplementation implements CalculatorController {
     }
   }
 
-  @override
   void addGrade(IEvaluacion grade) {
     partialGrades.add(grade);
     percentageTextFieldControllers.add(MaskedTextController(
@@ -134,7 +109,6 @@ class CalculatorControllerImplementation implements CalculatorController {
     _updateCalculations();
   }
 
-  @override
   void removeGradeAt(int index) {
     final grade = partialGrades[index];
     if(!(grade.editable || freeEditable.value)) {
@@ -147,26 +121,22 @@ class CalculatorControllerImplementation implements CalculatorController {
     _updateCalculations();
   }
 
-  @override
   void makeEditable() {
     freeEditable.value = true;
     _updateCalculations();
   }
 
-  @override
   void makeNonEditable() {
     freeEditable.value = false;
     _updateCalculations();
   }
 
-  @override
   void clearExamGrade() {
     examGrade.value = null;
     examGradeTextFieldController.value.updateText("");
     _updateCalculations();
   }
 
-  @override
   void setExamGrade(num? grade, { bool updateTextController = true }) {
     examGrade.value = grade?.toDouble();
     if(updateTextController) {
