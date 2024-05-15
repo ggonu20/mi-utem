@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
@@ -82,48 +83,44 @@ class _LoginButtonState extends State<LoginButton> {
 
       await _authService.login();
 
-      try {
-        final isFirstTime = await _authService.isFirstTime();
-        final user = await _authService.getUser();
-        if(user == null) {
-          Navigator.pop(context);
-          showTextSnackbar(context,
-            title: "Error",
-            message: "Ha ocurrido un error desconocido. Por favor intenta más tarde.",
-          );
-          return;
-        }
-
-        AnalyticsService.logEvent('login');
-        AnalyticsService.setUser(user);
-
-        Navigator.of(context).popUntil((route) => route.isFirst); // Esto elimina todas las pantallas anteriores
-        // Y esto reemplaza la pantalla actual por la nueva, cosa de que no pueda "volver" al login a menos que cierre la sesión.
-        final hasCompletedOnboarding = (await Preferencia.onboardingStep.get()) == 'complete';
-        if(hasCompletedOnboarding) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
-          if(isFirstTime) {
-            showDialog(context: context, builder: (ctx) => AcercaDialog());
-          }
-          return;
-        }
-
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WelcomeScreen()));
-      } catch (e) {
-        logger.e(e);
+      final isFirstTime = await _authService.isFirstTime();
+      final user = await _authService.getUser();
+      if(user == null) {
         Navigator.pop(context);
         showTextSnackbar(context,
           title: "Error",
           message: "Ha ocurrido un error desconocido. Por favor intenta más tarde.",
         );
+        return;
       }
-      return;
+
+      AnalyticsService.logEvent('login');
+      AnalyticsService.setUser(user);
+
+      Navigator.of(context).popUntil((route) => route.isFirst); // Esto elimina todas las pantallas anteriores
+      // Y esto reemplaza la pantalla actual por la nueva, cosa de que no pueda "volver" al login a menos que cierre la sesión.
+      final hasCompletedOnboarding = (await Preferencia.onboardingStep.get()) == 'complete';
+      if(hasCompletedOnboarding) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+        if(isFirstTime) {
+          showDialog(context: context, builder: (ctx) => AcercaDialog());
+        }
+        return;
+      }
+
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WelcomeScreen()));
     } on CustomException catch (e) {
       logger.e(e);
       Navigator.pop(context);
       showTextSnackbar(context,
         title: "Error",
         message: e.message,
+      );
+    }  on DioError catch (e) {
+      Navigator.pop(context);
+      showTextSnackbar(context,
+        title: "Error",
+        message: (e.error as CustomException).message,
       );
     } catch (e) {
       logger.e(e);
