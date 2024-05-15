@@ -13,6 +13,7 @@ class HeadersInterceptor extends Interceptor {
       headers['Content-Type'] = 'application/json';
     }
     options.headers = headers;
+
     super.onRequest(options, handler);
   }
 }

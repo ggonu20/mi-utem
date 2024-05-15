@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
-import 'package:mi_utem/services/docentes_service.dart';
 import 'package:mi_utem/utils/debounce.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
@@ -36,7 +35,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
     setState(() {
       _docentes = [];
       _futureDocentes = null;
-      _futureDocentes = DocentesService.buscarDocentes(nombre);
+      // _futureDocentes = DocentesService.buscarDocentes(nombre);
     });
     List<User> docentes = await _futureDocentes!;
     setState(() => _docentes = docentes);

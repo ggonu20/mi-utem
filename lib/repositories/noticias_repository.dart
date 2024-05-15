@@ -3,18 +3,14 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:mi_utem/models/noticia.dart';
 import 'package:mi_utem/utils/http/http_client.dart';
 import 'package:mi_utem/utils/http/interceptors/headers_interceptor.dart';
+import 'package:mi_utem/utils/http/interceptors/log_interceptor.dart';
 
 class NoticiasRepository {
 
   final _httpClient = Dio(BaseOptions(baseUrl: "https://noticias.utem.cl"))..interceptors.addAll([
     HeadersInterceptor(),
-    HttpClient.logInterceptor,
-    DioCacheManager(CacheConfig(
-      baseUrl: "https://noticias.utem.cl",
-      defaultMaxAge: Duration(days: 7),
-      defaultMaxStale: Duration(days: 60),
-      databaseName: 'utem_noticias_cache',
-    )).interceptor,
+    logInterceptor,
+    HttpClient.cacheManager.interceptor,
   ]);
 
   Future<List<Noticia>?> getNoticias({ bool forceRefresh = false }) async {

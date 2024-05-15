@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/repositories/asignaturas_repository.dart';
@@ -33,4 +37,20 @@ Future<void> registerServices() async {
   /* Controladores (Para procesar datos de interfaz) */
   Get.lazyPut(() => HorarioController());
   Get.lazyPut(() => CalculatorController());
+
+  final credentialsRepository = Get.find<CredentialsRepository>();
+  if(!await credentialsRepository.hasCredentials()) {
+    return;
+  }
+
+  String? email = (await credentialsRepository.getCredentials())?.email;
+  if(email == null) {
+    return;
+  }
+
+  if(!email.contains("@")) {
+    email += "@utem.cl";
+  }
+
+  logger.d("[ServiceManager]: ID de usuario: ${md5.convert(utf8.encode(email)).toString()} ($email)");
 }

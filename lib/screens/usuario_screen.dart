@@ -7,7 +7,6 @@ import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/auth_service.dart';
-import 'package:mi_utem/services/docentes_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
@@ -52,11 +51,11 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
     try {
       User? user;
       if (widget.tipo == 2) {
-        if (widget.asignatura == null) {
-          user = await DocentesService.traerUnDocente(widget.query!["nombre"]);
-        } else {
-          user = await DocentesService.asignarUnDocente(widget.query!["nombre"], widget.asignatura!.codigo, widget.asignatura!.nombre);
-        }
+        // if (widget.asignatura == null) {
+        //   user = await DocentesService.traerUnDocente(widget.query!["nombre"]);
+        // } else {
+        //   user = await DocentesService.asignarUnDocente(widget.query!["nombre"], widget.asignatura!.codigo, widget.asignatura!.nombre);
+        // }
 
         setState(() => _user = user);
       } else {

@@ -19,10 +19,8 @@ import 'services/remote_config/remote_config.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await dotenv.load();
   await GetStorage.init();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -32,7 +30,7 @@ void main() async {
   await NotificationService.initialize();
   await BackgroundService.initAndStart();
   await SentryFlutter.init((options) {
-    options.dsn = Constants.sentryDsn;
+    options.dsn = sentryDsn;
     options.attachScreenshot = true;
     options.tracesSampleRate = 1.0;
   }, appRunner: () => runApp(MiUtem()));
@@ -50,7 +48,7 @@ class _MiUtemState extends State<MiUtem> {
   Widget build(BuildContext context) {
     FlutterUxcam.optIntoSchematicRecordings();
     FlutterUxcam.startWithConfiguration(FlutterUxConfig(
-      userAppKey: kDebugMode ? Constants.uxCamDevKey : Constants.uxCamProdKey,
+      userAppKey: kDebugMode ? uxCamDevKey : uxCamProdKey,
       enableAutomaticScreenNameTagging: true,
       enableMultiSessionRecord: true,
     ));

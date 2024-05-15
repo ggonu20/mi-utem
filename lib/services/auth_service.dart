@@ -20,7 +20,7 @@ class AuthService {
   AuthRepository _authRepository = Get.find<AuthRepository>();
   CredentialsRepository _credentialsService = Get.find<CredentialsRepository>();
 
-  Future<bool> isFirstTime() async => await Preferencia.lastLogin.exists() == false;
+  Future<bool> isFirstTime() async => (await Preferencia.lastLogin.exists()) == false;
 
   Future<bool> isLoggedIn({ bool forceRefresh = false }) async {
     final credentials = await _getCredential();
@@ -36,9 +36,8 @@ class AuthService {
       return false;
     }
 
-    final hasLastLogin = await isFirstTime();
-    if(!hasLastLogin) {
-      logger.d("[AuthService#isLoggedIn]: no last login");
+    if(await isFirstTime()) {
+      logger.d("[AuthService#isLoggedIn]: Es primera vez");
       return false;
     }
 

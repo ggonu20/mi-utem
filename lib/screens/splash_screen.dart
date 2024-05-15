@@ -1,17 +1,16 @@
-import 'dart:convert';
-
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/http_clients.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/onboarding/welcome_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
+import 'package:mi_utem/utils/http/http_client.dart';
 import 'package:mi_utem/widgets/loading/loading_dialog.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -73,35 +72,37 @@ class _SplashScreenState extends State<SplashScreen> {
                       showLoadingDialog(context);
                       // Revisar si tenemos conexión a internet
                       try {
-                        final response = await httpClient.get(Uri.parse(apiUrl));
-                        final json = jsonDecode(response.body);
-                        if(!(json is Map && json["funcionando"] == true)) {
+                        final response = await HttpClient.httpClient.head(apiUrl);
+                        if(response.statusCode != 200) {
                           Navigator.pop(context);
                           showTextSnackbar(context,
-                            title: "Error",
-                            message: "No se pudo conectar al servidor. Revisa tu conexión a internet.",
+                            title: "Error al conectar con la API",
+                            message: "La app funcionará en modo Offline. Revisa tu conexión a internet si quieres acceder a todas las funcionalidades.",
                             backgroundColor: Colors.red,
+                            duration: Duration(seconds: 20),
                           );
-                          return;
                         }
                       } catch (e) {
+                        logger.e("[SplashScreen]: Error al conectar con la API", e);
                         Navigator.pop(context);
                         showTextSnackbar(context,
-                          title: "Error",
-                          message: "No se pudo conectar al servidor. Revisa tu conexión a internet.",
+                          title: "Error al conectar con la API",
+                          message: "La app funcionará en modo Offline. Revisa tu conexión a internet si quieres acceder a todas las funcionalidades.",
                           backgroundColor: Colors.red,
+                          duration: Duration(seconds: 20),
                         );
                         return;
                       }
+
                       final isLoggedIn = await _authService.isLoggedIn();
-                      if(!isLoggedIn) {
-                        AnalyticsService.removeUser();
-                      } else {
-                        final user = await _authService.getUser();
-                        if(user != null) {
-                          AnalyticsService.setUser(user);
-                        }
+                      logger.d("[SplashScreen]: isLoggedIn: $isLoggedIn");
+                      final user = await _authService.getUser();
+                      AnalyticsService.removeUser();
+                      if(isLoggedIn && user != null) {
+                        AnalyticsService.setUser(user);
                       }
+
+                      // Esto nos asegura de que el splash es la única ruta inicial, y resuelve el error de poder volver al login.
                       Navigator.popUntil(context, (route) => route.isFirst);
 
                       final hasCompletedOnboarding = (await Preferencia.onboardingStep.get()) == "complete";
