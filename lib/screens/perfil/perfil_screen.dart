@@ -2,8 +2,8 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/repositories/preferences_repository.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
@@ -25,11 +25,11 @@ class PerfilScreen extends StatefulWidget {
 
 class _PerfilScreenState extends State<PerfilScreen> {
 
-  String? alias;
+  String? apodo;
 
   @override
   void initState() {
-    Get.find<PreferencesRepository>().getAlias().then((alias) => setState(() => this.alias = alias));
+    Preferencia.apodo.get().then((apodo) => setState(() => this.apodo = apodo));
     super.initState();
   }
 
@@ -83,12 +83,12 @@ class _PerfilScreenState extends State<PerfilScreen> {
                           ),
                         ),
                       ),
-                      if(alias != null) Divider(height: 1),
-                      if(alias != null) ListTile(
+                      if(apodo != null) Divider(height: 1),
+                      if(apodo != null) ListTile(
                         title: Text("Apodo",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        subtitle: Text("$alias",
+                        subtitle: Text("$apodo",
                           style: TextStyle(
                             color: Colors.grey[900],
                             fontSize: 18,

@@ -7,10 +7,10 @@ import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
 import "package:mi_utem/models/novedades/ibanner.dart";
+import "package:mi_utem/models/preferencia.dart";
 import "package:mi_utem/models/user/user.dart";
 import "package:mi_utem/repositories/noticias_repository.dart";
 import "package:mi_utem/repositories/permiso_ingreso_repository.dart";
-import "package:mi_utem/repositories/preferences_repository.dart";
 import "package:mi_utem/services/auth_service.dart";
 import "package:mi_utem/services/grades_service.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
@@ -37,7 +37,6 @@ class _MainScreenState extends State<MainScreen> {
   List<IBanner> _banners = const [];
   User? _user;
   final _authService = Get.find<AuthService>();
-  final _preferencesRepository = Get.find<PreferencesRepository>();
 
   @override
   void initState() {
@@ -96,7 +95,7 @@ class _MainScreenState extends State<MainScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               width: double.infinity,
               child: FutureBuilder<String?>(
-                future: _preferencesRepository.getAlias(),
+                future: Preferencia.apodo.get(defaultValue: "N/N"),
                 initialData: _user?.primerNombre ?? "N/N",
                 builder: (ctx, snapshot) => MarkdownBody(
                   data: _greetingText.replaceAll("%name", snapshot.data ?? "N/N"),

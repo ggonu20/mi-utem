@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/repositories/asignaturas_repository.dart';
@@ -14,13 +15,17 @@ import 'package:mi_utem/widgets/loading/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class AsignaturasListaScreen extends StatefulWidget {
-  const AsignaturasListaScreen({super.key});
+
+  const AsignaturasListaScreen({
+    super.key
+  });
 
   @override
   State<AsignaturasListaScreen> createState() => _AsignaturasListaScreenState();
 }
 
 class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
+
   final _asignaturasService = Get.find<AsignaturasRepository>();
   bool _forceRefresh = false;
 
@@ -54,6 +59,7 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
         }(),
         builder: (context, snapshot) {
           if(snapshot.hasError) {
+            logger.e(snapshot.error);
             final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "Ocurrió un error al obtener las asignaturas";
             return _errorWidget(error);
           }

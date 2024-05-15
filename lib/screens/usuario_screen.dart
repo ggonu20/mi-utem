@@ -4,8 +4,8 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/repositories/preferences_repository.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/docentes_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -36,11 +36,10 @@ class UsuarioScreen extends StatefulWidget {
 
 class _UsuarioScreenState extends State<UsuarioScreen> {
   final _authService = Get.find<AuthService>();
-  final _preferencesRepository = Get.find<PreferencesRepository>();
 
   Future<User>? _userFuture;
   User? _user;
-  String? _alias;
+  String? _apodo;
 
   @override
   void initState() {
@@ -62,10 +61,10 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         setState(() => _user = user);
       } else {
         user = await _authService.getUser();
-        final alias = await _preferencesRepository.getAlias();
+        final apodo = await Preferencia.apodo.get();
         setState(() {
           _user = user;
-          _alias = alias;
+          _apodo = apodo;
         });
       }
 
@@ -146,14 +145,14 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
       }
     }
 
-    if(_alias != null) {
+    if(_apodo != null) {
       lista.add(Divider(height: 1));
       lista.add(
         ListTile(
           title: Text("Alias",
             style: TextStyle(color: Colors.grey),
           ),
-          subtitle: Text(_alias!,
+          subtitle: Text(_apodo!,
             style: TextStyle(
               color: Colors.grey[900],
               fontSize: 18,

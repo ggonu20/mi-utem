@@ -1,7 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/repositories/preferences_repository.dart';
+import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -16,12 +15,11 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
 
-  PreferencesRepository _preferencesRepository = Get.find<PreferencesRepository>();
   bool _hasAllowedNotifications = false;
 
   @override
   void initState() {
-    _preferencesRepository.setOnboardingStep("notifications");
+    Preferencia.onboardingStep.set("notifications");
     NotificationService.hasAllowedNotifications().then((value) {
       if(value) {
         setState(() => _hasAllowedNotifications = value);
@@ -94,14 +92,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     if(!context.mounted) {
                       return;
                     }
-                    await _preferencesRepository.setOnboardingStep("complete");
+                    await Preferencia.onboardingStep.set("complete");
                     Navigator.popUntil(context, (route) => route.isFirst);
-                    final alias = await _preferencesRepository.getAlias();
+                    final alias = await Preferencia.apodo.get();
                     AwesomeNotifications().createNotification(content: NotificationContent(
                       id: 1,
                       channelKey: NotificationService.announcementsChannelKey,
                       actionType: ActionType.Default,
-                      title: '¡Hola $alias! 🎉',
+                      title: alias != null ? "¡Hola $alias! 🎉" : "¡Hola! 🎉",
                       body: '¡Te damos la bienvenida a la aplicación Mi UTEM! 🚀',
                     ));
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));

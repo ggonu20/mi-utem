@@ -52,8 +52,7 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
           asignatura: asignatura,
           onRefresh: () async {
             final carrera = Get.find<CarrerasService>().selectedCarrera;
-            final asignaturaBase = (await _asignaturasRepository.getAsignaturas(carrera?.id))?.firstWhere((asignatura) => asignatura.codigo == this.asignatura.codigo && asignatura.id == this.asignatura.id);
-            final asignatura = await _asignaturasRepository.getDetalleAsignatura(asignaturaBase);
+            final asignatura = (await _asignaturasRepository.getAsignaturas(carrera?.id, forceRefresh: true))?.firstWhere((asignatura) => asignatura.codigo == this.asignatura.codigo && asignatura.id == this.asignatura.id);
             if (asignatura != null) {
               setState(() => this.asignatura = asignatura);
             }

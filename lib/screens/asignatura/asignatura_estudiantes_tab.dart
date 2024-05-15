@@ -26,6 +26,7 @@ class AsignaturaEstudiantesTab extends StatefulWidget {
 
 class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
 
+  bool _forceRefresh = false;
   AsignaturasRepository _asignaturasRepository = Get.find<AsignaturasRepository>();
 
   @override
@@ -34,9 +35,13 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
       title: Text("Estudiantes"),
     ),
     body: PullToRefresh(
-      onRefresh: () async => setState(() => {}),
-      child: FutureBuilder<Asignatura?>(
-        future: _asignaturasRepository.getDetalleAsignatura(widget.asignatura),
+      onRefresh: () async => setState(() => _forceRefresh = true),
+      child: FutureBuilder<List<User>?>(
+        future: () async {
+          final estudiantes = await _asignaturasRepository.getEstudiantesAsignatura(widget.asignatura, forceRefresh: _forceRefresh);
+          _forceRefresh = false;
+          return estudiantes;
+        }(),
         builder: (ctx, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
             return Padding(
@@ -54,7 +59,7 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
             );
           }
 
-          List<User>? estudiantes = snapshot.data?.estudiantes;
+          List<User>? estudiantes = snapshot.data;
           if(snapshot.hasError || !snapshot.hasData || estudiantes == null) {
             return Center(
               child: SingleChildScrollView(

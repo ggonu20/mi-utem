@@ -95,7 +95,7 @@ class BackgroundService {
         AsignaturasRepository asignaturasRepository = Get.find<AsignaturasRepository>();
         final asignaturas = await asignaturasRepository.getAsignaturas(carreraId, forceRefresh: true) ?? [];
         for(final asignatura in asignaturas) {
-          await asignaturasRepository.getDetalleAsignatura(asignatura, forceRefresh: true);
+          await asignaturasRepository.getEstudiantesAsignatura(asignatura, forceRefresh: true);
         }
       }
     } catch(_){}

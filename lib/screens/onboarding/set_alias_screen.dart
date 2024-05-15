@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/repositories/preferences_repository.dart';
+import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/onboarding/notifications_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -15,24 +14,22 @@ class SetAliasScreen extends StatefulWidget {
 
 class _SetAliasScreenState extends State<SetAliasScreen> {
 
-  PreferencesRepository _preferencesRepository = Get.find<PreferencesRepository>();
-
   final _focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   final _aliasController = TextEditingController();
 
   @override
   void initState() {
-    _preferencesRepository.getOnboardingStep().then((step) {
+    Preferencia.onboardingStep.get().then((step) {
       if(step == null) {
-        _preferencesRepository.setOnboardingStep("alias");
+        Preferencia.onboardingStep.set("alias");
       } else if (step == 'complete') {
         Navigator.push(context, MaterialPageRoute(builder: (ctx) => const MainScreen()));
       } else {
         Navigator.push(context, MaterialPageRoute(builder: (ctx) => const NotificationsScreen()));
       }
     });
-    _preferencesRepository.getAlias().then((value) => _aliasController.text = value ?? '');
+    Preferencia.apodo.get().then((value) => _aliasController.text = value ?? '');
     super.initState();
   }
 
@@ -131,7 +128,8 @@ class _SetAliasScreenState extends State<SetAliasScreen> {
                     if (_formKey.currentState?.validate() != true) {
                       return;
                     }
-                    _preferencesRepository.setAlias(_aliasController.text);
+
+                    Preferencia.apodo.set(_aliasController.text);
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NotificationsScreen()));
                   },
                   style: ElevatedButton.styleFrom(

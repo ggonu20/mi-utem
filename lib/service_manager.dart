@@ -9,7 +9,6 @@ import 'package:mi_utem/repositories/grades_repository.dart';
 import 'package:mi_utem/repositories/horario_repository.dart';
 import 'package:mi_utem/repositories/noticias_repository.dart';
 import 'package:mi_utem/repositories/permiso_ingreso_repository.dart';
-import 'package:mi_utem/repositories/preferences_repository.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/grades_service.dart';
@@ -24,7 +23,6 @@ Future<void> registerServices() async {
   Get.lazyPut(() => PermisoIngresoRepository());
   Get.lazyPut(() => NoticiasRepository());
   Get.lazyPut(() => HorarioRepository());
-  Get.lazyPut(() => PreferencesRepository());
 
 
   /* Servicios (Para procesar datos REST) */

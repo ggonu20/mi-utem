@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
-import 'package:mi_utem/repositories/preferences_repository.dart';
+import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/onboarding/welcome_screen.dart';
@@ -104,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                       Navigator.popUntil(context, (route) => route.isFirst);
 
-                      final hasCompletedOnboarding = await Get.find<PreferencesRepository>().hasCompletedOnboarding();
+                      final hasCompletedOnboarding = (await Preferencia.onboardingStep.get()) == "complete";
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => isLoggedIn ? (hasCompletedOnboarding ? MainScreen() : WelcomeScreen()) : LoginScreen()));
                     },
                   ),

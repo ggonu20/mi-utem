@@ -53,7 +53,7 @@ class NotaListItem extends StatelessWidget {
         Flexible(
           flex: 3,
           child: Center(
-            child: Obx(() => TextField(
+            child: TextField(
               controller: gradeController ?? defaultGradeController,
               enabled: editable,
               onChanged: (String value) {
@@ -98,7 +98,7 @@ class NotaListItem extends StatelessWidget {
                   return input;
                 }),
               ],
-            )),
+            ),
           ),
         ),
         SizedBox(width: 16),

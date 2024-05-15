@@ -60,7 +60,7 @@ class Asignatura {
     estado: capitalize(json['estado'] ?? ''),
     docente: capitalize(json['docente'] ?? ''),
     seccion: json['seccion'],
-    grades: json.containsKey('notas') ? Grades.fromJson(json['notas']) : Grades(),
+    grades: json['notas'] != null ? Grades.fromJson(json['notas']) : Grades(),
     estudiantes: json.containsKey("estudiantes") ? User.fromJsonList(json["estudiantes"]) : [],
     asistencia: Asistencia(asistidos: json['asistenciaAlDia']),
     tipoAsignatura: capitalize(json['tipoAsignatura'] as String? ?? ''),

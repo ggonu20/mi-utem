@@ -5,25 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/secure_storage.dart';
+import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/models/user/credential.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/repositories/auth_repository.dart';
 import 'package:mi_utem/repositories/credentials_repository.dart';
-import 'package:mi_utem/repositories/preferences_repository.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/utils/http/http_client.dart';
+import 'package:mi_utem/utils/utils.dart';
 
 class AuthService {
 
-  PreferencesRepository _preferencesRepository = Get.find<PreferencesRepository>();
   AuthRepository _authRepository = Get.find<AuthRepository>();
   CredentialsRepository _credentialsService = Get.find<CredentialsRepository>();
 
-  @override
-  Future<bool> isFirstTime() async => !(await _preferencesRepository.hasLastLogin());
+  Future<bool> isFirstTime() async => await Preferencia.lastLogin.exists() == false;
 
-  @override
   Future<bool> isLoggedIn({ bool forceRefresh = false }) async {
     final credentials = await _getCredential();
     if(credentials == null) {
@@ -38,14 +36,14 @@ class AuthService {
       return false;
     }
 
-    final hasLastLogin = await _preferencesRepository.hasLastLogin();
+    final hasLastLogin = await isFirstTime();
     if(!hasLastLogin) {
       logger.d("[AuthService#isLoggedIn]: no last login");
       return false;
     }
 
     final now = DateTime.now();
-    final lastLoginDate = await _preferencesRepository.getLastLogin() ?? now;
+    final lastLoginDate = let<String, DateTime?>(await Preferencia.lastLogin.get(), (String _lastLogin) => DateTime.tryParse(_lastLogin)) ?? now;
     final difference = now.difference(lastLoginDate);
     if(difference.inMinutes < 5 && now != lastLoginDate && !forceRefresh) {
       return true;
@@ -57,7 +55,7 @@ class AuthService {
       final userJson = user.toJson();
       userJson["token"] = token;
       await setUser(User.fromJson(userJson));
-      _preferencesRepository.setLastLogin(DateTime.now());
+      Preferencia.lastLogin.set(now.toIso8601String());
       return true;
     } catch (e) {
       logger.e("[AuthService#isLoggedIn]: Error al refrescar token", e);
@@ -66,7 +64,6 @@ class AuthService {
     return false;
   }
 
-  @override
   Future<void> login() async {
     final credentials = await _getCredential();
     if(credentials == null) {
@@ -76,24 +73,22 @@ class AuthService {
     final user = await _authRepository.auth(credentials: credentials);
 
     await setUser(user);
-    _preferencesRepository.setLastLogin(DateTime.now());
+    Preferencia.lastLogin.set(DateTime.now().toIso8601String());
   }
 
-  @override
   Future<void> logout({BuildContext? context}) async {
-    await HttpClient.clearCache();
     setUser(null);
     _credentialsService.setCredentials(null);
-    _preferencesRepository.setOnboardingStep(null);
-    _preferencesRepository.setLastLogin(null);
-    _preferencesRepository.setAlias(null);
+    Preferencia.onboardingStep.delete();
+    Preferencia.lastLogin.delete();
+    Preferencia.apodo.delete();
+    await HttpClient.clearCache();
 
     if(context != null) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => LoginScreen()));
     }
   }
 
-  @override
   Future<User?> getUser() async {
     final data = await secureStorage.read(key: "user");
     if(data == null || data == "null") {
@@ -103,7 +98,6 @@ class AuthService {
     return User.fromJson(jsonDecode(data) as Map<String, dynamic>);
   }
 
-  @override
   Future<void> setUser(User? user) async => await secureStorage.write(key: "user", value: user.toString());
 
   Future<Credentials?> _getCredential() async {
@@ -116,7 +110,6 @@ class AuthService {
     return credential;
   }
 
-  @override
   Future<User?> updateProfilePicture(String image) async {
     final user = await getUser();
     if(user == null) {
@@ -130,7 +123,6 @@ class AuthService {
     return user;
   }
 
-  @override
   Future<void> saveFCMToken() async {
     final user = await this.getUser();
     if(user == null) {
@@ -162,7 +154,6 @@ class AuthService {
     }
   }
 
-  @override
   Future<void> deleteFCMToken() async {
     String? fcmToken;
     try {

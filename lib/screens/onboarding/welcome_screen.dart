@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/repositories/preferences_repository.dart';
+import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/onboarding/set_alias_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -15,11 +14,9 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
 
-  PreferencesRepository _preferencesRepository = Get.find<PreferencesRepository>();
-
   @override
   void initState() {
-    _preferencesRepository.getOnboardingStep().then((step) {
+    Preferencia.onboardingStep.get().then((step) {
       if(step == null) {
         return;
       } else if (step == 'complete') {
