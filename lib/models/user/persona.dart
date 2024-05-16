@@ -16,8 +16,8 @@ class Persona {
   get iniciales => nombreCompletoCapitalizado.split(' ').map((it) => it[0].toUpperCase()).join('');
 
   factory Persona.fromJson(Map<String, dynamic> json) => Persona(
-      nombreCompleto: json['nombreCompleto'],
-      rut: json.containsKey("rut") ? Rut.fromString("${json['rut']}") : null
+    nombreCompleto: json['nombreCompleto'],
+    rut: json.containsKey("rut") ? Rut.fromString("${json['rut']}") : null,
   );
 
   Map<String, dynamic> toJson() => {

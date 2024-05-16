@@ -13,13 +13,14 @@ class CarrerasService {
 
   Carrera? selectedCarrera;
 
-  Future<void> getCarreras({ bool forceRefresh = false }) async {
+  Future<Carrera?> getCarreras({ bool forceRefresh = false }) async {
     logger.d("[CarrerasService#getCarreras]: Obteniendo carreras...");
     final _carreras = await _carrerasRepository.getCarreras(forceRefresh: forceRefresh);
 
     carreras.clear();
     carreras.addAll(_carreras);
     autoSelectCarreraActiva();
+    return selectedCarrera;
   }
 
   void changeSelectedCarrera(Carrera carrera) => selectedCarrera = carrera;

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:mi_utem/utils/utils.dart';
 
 class NotaExamenDisplayWidget extends StatelessWidget {
 
@@ -29,7 +30,7 @@ class NotaExamenDisplayWidget extends StatelessWidget {
             onChanged: (String value) => _calculatorController.setExamGrade(double.tryParse(value.replaceAll(",", ".")), updateTextController: false),
             enabled: _calculatorController.canTakeExam.value,
             decoration: InputDecoration(
-              hintText: _calculatorController.minimumRequiredExamGrade.value?.toStringAsFixed(1) ?? "--",
+              hintText: formatoNota(_calculatorController.minimumRequiredExamGrade.value) ?? "--",
               filled: !_calculatorController.canTakeExam.value,
               fillColor: Colors.grey.withOpacity(0.2),
               disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(

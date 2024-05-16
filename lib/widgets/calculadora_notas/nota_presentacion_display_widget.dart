@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:mi_utem/utils/utils.dart';
 
 class NotaPresentacionDisplayWidget extends StatelessWidget {
   const NotaPresentacionDisplayWidget({
@@ -20,7 +21,7 @@ class NotaPresentacionDisplayWidget extends StatelessWidget {
           width: 80,
           margin: const EdgeInsets.only(left: 15),
           child: Obx(() => TextField(
-            controller: TextEditingController(text: _calculatorController.calculatedPresentationGrade.value?.toStringAsFixed(1) ?? ""),
+            controller: TextEditingController(text: formatoNota(_calculatorController.calculatedPresentationGrade.value) ?? ""),
             textAlign: TextAlign.center,
             enabled: false,
             decoration: InputDecoration(

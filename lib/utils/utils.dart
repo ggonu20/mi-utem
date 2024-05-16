@@ -19,3 +19,6 @@
 /// print(fecha); // 2021-10-10 00:00:00.000
 /// ```
 V? let<K,V>(K? object, V Function(K) op) => object != null ? op(object) : null;
+
+/// Esta función muestra una nota en formato de 1 o 2 decimales dependiendo de si es un 3.95 o no.
+String? formatoNota(num? nota) => nota == 3.95 ? nota?.toStringAsFixed(2) : nota?.toStringAsFixed(1);

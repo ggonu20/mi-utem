@@ -31,13 +31,13 @@ class NoticiasCarruselWidget extends StatelessWidget {
       const SizedBox(height: 10),
       FutureBuilder(
         future: Get.find<NoticiasRepository>().getNoticias(),
-        builder: (context, AsyncSnapshot<List<Noticia>?> snapshot) {
+        builder: (context, AsyncSnapshot<List<Noticia>> snapshot) {
           if (snapshot.hasError) {
             final error = snapshot.error is CustomException ? (snapshot.error as CustomException) : CustomException.custom("No pudimos obtener las noticias.");
-            logger.d("[NoticiasCarruselWidget] ${error.message} (${error.statusCode})", snapshot.error);
+            logger.d("[NoticiasCarruselWidget] ${error.message} (${error.statusCode})", snapshot.error, snapshot.stackTrace);
 
             return CustomErrorWidget(
-              title: "Ocurrió un error al obtener las noticias",
+              title: "Ocurrió un error al cargar las noticias",
               error: error.message,
             );
           }
@@ -55,7 +55,7 @@ class NoticiasCarruselWidget extends StatelessWidget {
               viewportFraction: MediaQuery.of(context).orientation == Orientation.landscape ? 0.3 : 0.5,
               initialPage: 0,
             ),
-            itemBuilder: (BuildContext context, int i, int rI) => NoticiaCardWidget(noticias[i]),
+            itemBuilder: (BuildContext context, int i, int rI) => NoticiaCardWidget(noticia: noticias[i]),
             itemCount: noticias.length,
           );
         },

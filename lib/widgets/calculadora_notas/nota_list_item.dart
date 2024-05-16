@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:mi_utem/utils/utils.dart';
 
 class NotaListItem extends StatelessWidget {
   final IEvaluacion evaluacion;
@@ -28,7 +29,7 @@ class NotaListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final defaultGradeController = MaskedTextController(
       mask: "0.0",
-      text: evaluacion.nota?.toStringAsFixed(1) ?? "",
+      text: formatoNota(evaluacion.nota) ?? "",
     );
     final defaultPercentageController = MaskedTextController(
       mask: "000",
@@ -66,7 +67,7 @@ class NotaListItem extends StatelessWidget {
               },
               textAlign: TextAlign.center,
               decoration: InputDecoration(
-                hintText: showSuggestedGrade ? (calculatorController.suggestedGrade.value?.toStringAsFixed(0) ?? "--") : "--",
+                hintText: showSuggestedGrade ? (formatoNota(calculatorController.suggestedGrade.value) ?? "--") : "--",
                 disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                   borderSide: const BorderSide(
                     color: Colors.transparent,

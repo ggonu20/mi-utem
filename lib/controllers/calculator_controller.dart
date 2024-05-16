@@ -104,7 +104,7 @@ class CalculatorController {
     ));
     gradeTextFieldControllers.add(MaskedTextController(
       mask: "0.0",
-      text: grade.nota?.toStringAsFixed(1) ?? "",
+      text: grade.nota?.toStringAsFixed(2) ?? "",
     ));
     _updateCalculations();
   }
@@ -140,7 +140,7 @@ class CalculatorController {
   void setExamGrade(num? grade, { bool updateTextController = true }) {
     examGrade.value = grade?.toDouble();
     if(updateTextController) {
-      examGradeTextFieldController.value.updateText(grade?.toStringAsFixed(1) ?? "--");
+      examGradeTextFieldController.value.updateText(grade?.toStringAsFixed(2) ?? "--");
     }
     _updateCalculations();
   }

@@ -76,15 +76,16 @@ class AuthService {
   }
 
   Future<void> logout({BuildContext? context}) async {
-    setUser(null);
-    _credentialsService.setCredentials(null);
-    Preferencia.onboardingStep.delete();
-    Preferencia.lastLogin.delete();
-    Preferencia.apodo.delete();
+    await setUser(null);
+    await _credentialsService.setCredentials(null);
+    await Preferencia.onboardingStep.delete();
+    await Preferencia.lastLogin.delete();
+    await Preferencia.apodo.delete();
     await HttpClient.clearCache();
 
     if(context != null) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => LoginScreen()));
+      Navigator.popUntil(context, (route) => route.isFirst);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => LoginScreen()));
     }
   }
 

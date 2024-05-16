@@ -13,12 +13,29 @@ class NoticiasRepository {
     HttpClient.cacheManager.interceptor,
   ]);
 
-  Future<List<Noticia>?> getNoticias({ bool forceRefresh = false }) async {
+  Future<List<Noticia>> getNoticias({ bool forceRefresh = false }) async {
     final hasta = DateTime.now().toUtc().toIso8601String();
     final desde = DateTime.now().subtract(Duration(days: 180)).toUtc().toIso8601String();
-    final response = await _httpClient.get("/wp-json/wp/v2/posts?_embed&_fields=id,yoast_head_json&per_page=10&before=$hasta&after=$desde", options: buildCacheOptions(Duration(days: 14), forceRefresh: forceRefresh, subKey: "/noticias"));
+    final categoryIdResponse = await _httpClient.get("/wp-json/wp/v2/categories",
+      options: buildCacheOptions(Duration(days: 14), forceRefresh: forceRefresh, subKey: "/noticias/categorias"),
+      queryParameters: {
+        "_fields": "id",
+        "slug": "todas-las-noticias",
+      },
+    );
+    final categoryId = ((categoryIdResponse.data as List<dynamic>).first as Map<String, dynamic>)['id'];
+    final response = await _httpClient.get("/wp-json/wp/v2/posts",
+      options: buildCacheOptions(Duration(days: 14), forceRefresh: forceRefresh, subKey: "/noticias"),
+      queryParameters: {
+        "_fields": ["id", "yoast_head_json.title", "yoast_head_json.og_description", "yoast_head_json.og_image"].join(','),
+        "categories": categoryId,
+        "per_page": 12,
+        "before": hasta,
+        "after": desde,
+      },
+    );
     if (response.statusCode != 200) {
-      return null;
+      return [];
     }
 
     return Noticia.fromJsonList(response.data as List<dynamic>);

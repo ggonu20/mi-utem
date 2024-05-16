@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/utils/utils.dart';
 
 class NotaFinalDisplayWidget extends StatelessWidget {
 
@@ -14,7 +15,7 @@ class NotaFinalDisplayWidget extends StatelessWidget {
 
     return Column(
       children: [
-        Obx(() => Text(_calculatorController.calculatedFinalGrade.value?.toStringAsFixed(1) ?? "--",
+        Obx(() => Text(formatoNota(_calculatorController.calculatedFinalGrade.value) ?? '--',
           style: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,

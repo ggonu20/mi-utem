@@ -23,4 +23,17 @@ Future<Response> authClientRequest(String path, {
   Options? options,
   bool forceRefresh = false,
   Duration? ttl = const Duration(days: 7),
-}) async => await HttpClient.authClient.request("$apiUrl/v1/$path", data: data, options: options ?? buildCacheOptions(ttl ?? Duration(days: 7), forceRefresh: forceRefresh, subKey: path).copyWith(method: method, headers: headers, contentType: contentType, responseType: responseType));
+}) async => await HttpClient.authClient.request("$apiUrl/v1/$path",
+  data: data,
+  options: options ?? buildCacheOptions(ttl ?? Duration(days: 7),
+    forceRefresh: forceRefresh,
+    primaryKey: 'miutem',
+    subKey: path,
+    maxStale: const Duration(days: 14),
+  ).copyWith(
+    method: method,
+    headers: headers,
+    contentType: contentType,
+    responseType: responseType,
+  ),
+);

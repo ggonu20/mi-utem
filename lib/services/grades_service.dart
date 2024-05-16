@@ -39,12 +39,7 @@ class GradesService {
       return {};
     }
 
-    final carrerasService = Get.find<CarrerasService>();
-    if(carrerasService.selectedCarrera == null) {
-      await carrerasService.getCarreras();
-    }
-    final carrera = carrerasService.selectedCarrera;
-    final carreraId = carrera?.id;
+    final carreraId = (await Get.find<CarrerasService>().getCarreras())?.id;
 
     if(carreraId == null) {
       return {};
