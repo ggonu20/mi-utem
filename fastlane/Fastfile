@@ -95,9 +95,39 @@ platform :mobile do
     end
   end
 
+  desc "Lee el archivo ../pubspec.yaml, obtiene la version y su numero de compilación"
+  lane :get_pubspec_version do
+    pubspec = File.read("../pubspec.yaml")
+    version = pubspec.match(/version: (.+)/)[1]
+    build_name = version.match(/(\d+\.\d+\.\d+)/)[1]
+    build_number = ((version.match(/(\d+)$/)[1]).to_i + 1).to_s
+
+    {
+        "build_name" => build_name,
+        "build_number" => build_number
+    }
+  end
+
+  desc "Incrementa el numero de compilación en el archivo ../pubspec.yaml"
+  lane :increment_pubspec_build_number do
+    version = get_pubspec_version()
+    build_number = version["build_number"]
+    build_name = version["build_name"]
+
+    puts "Incrementando el numero de compilación en el archivo ../pubspec.yaml"
+    new_version = "version: #{build_name}+#{build_number}"
+
+    pubspec = File.read("../pubspec.yaml")
+    pubspec = pubspec.gsub(/version: (.+)/, new_version)
+    File.write("../pubspec.yaml", pubspec)
+
+    puts "Numero de compilación incrementado en el archivo ../pubspec.yaml"
+  end
+
   lane :upload do |options|
-    build_number = options[:build_number]
-    build_name = options[:build_name]
+    version = get_pubspec_version()
+    build_number = version["build_number"]  # Obtiene la version del pubspec.yaml
+    build_name = version["build_name"]      # Obtiene el numero de compilación del pubspec.yaml
     changelog = read_changelog
     emojified_changelog = emojify_changelog
     changelog = translate_changelog(changelog: changelog)
@@ -111,6 +141,16 @@ platform :mobile do
     skip_git_push = false
     skip_slack = false
     is_ci = false
+
+    puts "Construyendo app con version #{build_name} (#{build_number})"
+
+    if options[:build_number]
+      build_number = options[:build_number]
+    end
+
+    if options[:build_name]
+      build_name = options[:build_name]
+    end
 
     if options[:type] == "release" || options[:type] == "beta"
       type = options[:type]
@@ -217,5 +257,8 @@ platform :mobile do
       },
     )
     end
+
+    puts "App construida y publicada con éxito"
+    increment_pubspec_build_number()
   end
 end
