@@ -2,13 +2,10 @@ part of 'remote_config.dart';
 
 final _defaults = <String, dynamic>{
   RemoteConfigServiceKeys.banners: jsonEncode([]),
-  RemoteConfigServiceKeys.creditos: jsonEncode(
-      ['Hecho con ❤ por el *Club de Desarrollo Experimental* junto a SISEI']),
+  RemoteConfigServiceKeys.creditos: jsonEncode(['Hecho con ❤ por el *Club de Desarrollo Experimental* junto a SISEI']),
   RemoteConfigServiceKeys.clubNombre: "Club de Desarrollo Experimental",
-  RemoteConfigServiceKeys.clubDescripcion:
-      "El Club de Desarrollo Experimental es una iniciativa de estudiantes y para estudiantes de la UTEM que busca realzar el lado tecnológico que debería tener la universidad, impulsando y desarrollando ideas y proyectos de caracter innovador.",
-  RemoteConfigServiceKeys.clubLogo:
-      "https://user-images.githubusercontent.com/16374322/114324335-737b6b80-9af7-11eb-841d-9d14aca0f988.png",
+  RemoteConfigServiceKeys.clubDescripcion: "El Club de Desarrollo Experimental es una iniciativa de estudiantes y para estudiantes de la UTEM que busca realzar el lado tecnológico que debería tener la universidad, impulsando y desarrollando ideas y proyectos de caracter innovador.",
+  RemoteConfigServiceKeys.clubLogo: "https://user-images.githubusercontent.com/16374322/114324335-737b6b80-9af7-11eb-841d-9d14aca0f988.png",
   RemoteConfigServiceKeys.clubRedes: jsonEncode([
     {
       "nombre": "Facebook",
@@ -35,10 +32,9 @@ final _defaults = <String, dynamic>{
       "url": "https://www.linkedin.com/company/exdevutem/"
     }
   ]),
-  RemoteConfigServiceKeys.miutemDescripcion:
-      "Esta aplicación surgió a principios del 2019 como un proyecto independiente **creado completamente por estudiantes** del Club de Desarrollo Experimental (ExDev) de la UTEM ❤️.  \nActualmente nos encontramos trabajando **junto al equipo de SISEI** para que esta aplicación se convierta en la aplicación institucional oficial de la universidad 🎉  \nToda la información corresponde a datos referenciales, y debe ser validada por la Dirección General de Docencia.",
-  RemoteConfigServiceKeys.miutemPortada:
-      "https://user-images.githubusercontent.com/16374322/114324046-16cb8100-9af6-11eb-9a95-11da425e2fbd.png",
+  RemoteConfigServiceKeys.miutemAcercaDeLaApp: "- Paquete: **%paquete**\n- Aplicación: **%nombre**\n- Versión: **%version**\n- Número de Compilación: **%compilacion**",
+  RemoteConfigServiceKeys.miutemDescripcion: "Esta aplicación surgió a principios del 2019 como un proyecto independiente **creado completamente por estudiantes** del Club de Desarrollo Experimental (ExDev) de la UTEM ❤️.  \nActualmente nos encontramos trabajando **junto al equipo de SISEI** para que esta aplicación se convierta en la aplicación institucional oficial de la universidad 🎉  \nToda la información corresponde a datos referenciales, y debe ser validada por la Dirección General de Docencia.",
+  RemoteConfigServiceKeys.miutemPortada: "https://user-images.githubusercontent.com/16374322/114324046-16cb8100-9af6-11eb-9a95-11da425e2fbd.png",
   RemoteConfigServiceKeys.miutemDesarrolladores: jsonEncode([
     {
       "nombre": "Sebastián Albornoz Medina",
@@ -122,6 +118,25 @@ final _defaults = <String, dynamic>{
       ]
     },
     {
+      "nombre": "Francisco Solís Maturana",
+      "rol": "Desarrollador",
+      "fotoUrl": "https://avatars.githubusercontent.com/u/30329003",
+      "redes": [
+        {
+          "nombre": "LinkedIn",
+          "color": Color(0xFF0077b5).value,
+          "icono": FontAwesomeIcons.linkedinIn.codePoint,
+          "url": "https://www.linkedin.com/in/franciscosolismat/"
+        },
+        {
+          "nombre": "GitHub",
+          "color": Color(0xFF333333).value,
+          "icono": FontAwesomeIcons.github.codePoint,
+          "url": "https://github.com/Im-Fran",
+        }
+      ]
+    },
+    {
       "nombre": "Jorge Verdugo Chacón",
       "rol": "Desarrollador",
       "fotoUrl":
@@ -168,19 +183,14 @@ final _defaults = <String, dynamic>{
       ]
     }
   ]),
-  RemoteConfigServiceKeys.credencialBarras:
-      "Código de barras compatible con Sistema de Bibliotecas",
-  RemoteConfigServiceKeys.credencialInfo:
-      "**Mayor información:** \n\n [biblioteca.utem.cl](https://biblioteca.utem.cl/)\n\nEn caso de dudas con su credencial, consultar a su biblioteca o al correo electrónico [**credenciales@utem.cl**](mailto:credenciales@utem.cl)",
-  RemoteConfigServiceKeys.credencialDisclaimer:
-      "**Esta credencial virtual es generada automáticamente y es de uso personal e intransferible. El atraso en la devolución de libros y revistas será sancionado por la biblioteca.**",
-  RemoteConfigServiceKeys.credencialSibutemLogo:
-      "https://user-images.githubusercontent.com/16374322/114325090-42ea0080-9afc-11eb-9cc8-ef4846d4ad8f.jpg",
+  RemoteConfigServiceKeys.credencialBarras: "Código de barras compatible con Sistema de Bibliotecas",
+  RemoteConfigServiceKeys.credencialInfo: "**Mayor información:** \n\n [biblioteca.utem.cl](https://biblioteca.utem.cl/)\n\nEn caso de dudas con su credencial, consultar a su biblioteca o al correo electrónico [**credenciales@utem.cl**](mailto:credenciales@utem.cl)",
+  RemoteConfigServiceKeys.credencialDisclaimer: "**Esta credencial virtual es generada automáticamente y es de uso personal e intransferible. El atraso en la devolución de libros y revistas será sancionado por la biblioteca.**",
+  RemoteConfigServiceKeys.credencialSibutemLogo: "https://user-images.githubusercontent.com/16374322/114325090-42ea0080-9afc-11eb-9cc8-ef4846d4ad8f.jpg",
   RemoteConfigServiceKeys.calculadoraMostrar: true,
   RemoteConfigServiceKeys.horarioZoom: 0.5,
   RemoteConfigServiceKeys.homeProntoIcono: Icons.pregnant_woman.codePoint,
-  RemoteConfigServiceKeys.homeProntoTexto:
-      "Se están gestando nuevas funciones 😎",
+  RemoteConfigServiceKeys.homeProntoTexto: "Se están gestando nuevas funciones 😎",
   RemoteConfigServiceKeys.prontoEg: "Este recurso no esta disponible",
   RemoteConfigServiceKeys.egHabilitados: true,
   RemoteConfigServiceKeys.drawerMenu: jsonEncode([

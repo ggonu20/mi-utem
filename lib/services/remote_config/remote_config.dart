@@ -28,6 +28,7 @@ class RemoteConfigService {
   static final clubNombre = _getString(RemoteConfigServiceKeys.clubNombre);
   static final clubDescripcion = _getString(RemoteConfigServiceKeys.clubDescripcion);
   static final clubLogo = _getString(RemoteConfigServiceKeys.clubLogo);
+  static final miutemAcercaDeLaApp = _getString(RemoteConfigServiceKeys.miutemAcercaDeLaApp);
   static final miutemDescripcion = _getString(RemoteConfigServiceKeys.miutemDescripcion);
   static final miutemDesarrolladores = _getString(RemoteConfigServiceKeys.miutemDesarrolladores);
   static final miutemPortada = _getString(RemoteConfigServiceKeys.miutemPortada);
