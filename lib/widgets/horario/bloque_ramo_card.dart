@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
+import 'package:mi_utem/repositories/grades_repository.dart';
+import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/widgets/horario/bloque_clase.dart';
 import 'package:mi_utem/widgets/horario/bloque_vacio.dart';
 import 'package:mi_utem/widgets/horario/modals/asignatura_vista_previa_modal.dart';
+import 'package:mi_utem/widgets/loading/loading_dialog.dart';
 
 class ClassBlockCard extends StatelessWidget {
   final BloqueHorario? block;
@@ -16,7 +18,7 @@ class ClassBlockCard extends StatelessWidget {
   final double internalMargin;
   final Color textColor;
 
-  ClassBlockCard({
+  const ClassBlockCard({
     super.key,
     required this.block,
     required this.width,
@@ -26,7 +28,7 @@ class ClassBlockCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) => SizedBox(
     height: height,
     width: width,
     child: Padding(
@@ -43,11 +45,12 @@ class ClassBlockCard extends StatelessWidget {
   );
 
   _onTap(BloqueHorario block, BuildContext context) async {
-    final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas((Get.find<CarrerasService>().selectedCarrera)?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
-    if(asignatura == null) return;
-
+    showLoadingDialog(context);
     final carrera = await Get.find<CarrerasService>().getCarreras();
-    if(carrera == null){
+    final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas(carrera?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
+    final grades = await Get.find<GradesRepository>().getGrades(carreraId: carrera?.id, asignaturaId: asignatura?.id);
+    if(carrera == null || asignatura == null) {
+      Navigator.pop(context);
       return;
     }
 
@@ -55,16 +58,19 @@ class ClassBlockCard extends StatelessWidget {
       "asignatura": asignatura.nombre,
       "codigo": asignatura.codigo,
     });
+    Navigator.pop(context);
     Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
       carrera: carrera,
-      asignatura: asignatura,
+      asignatura: asignatura.copyWith(grades: grades),
     )));
   }
 
   _onLongPress(BloqueHorario block, BuildContext context) async {
+    showLoadingDialog(context);
     final carrera = await Get.find<CarrerasService>().getCarreras();
     final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas(carrera?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
-    if(asignatura == null) {
+    if(carrera == null || asignatura == null) {
+      Navigator.pop(context);
       return;
     }
 
@@ -72,6 +78,7 @@ class ClassBlockCard extends StatelessWidget {
       "asignatura": block.asignatura?.nombre,
       "codigo": block.asignatura?.codigo,
     });
+    Navigator.pop(context);
     showModalBottomSheet(context: context, builder: (ctx) => AsignaturaVistaPreviaModal(asignatura: asignatura, bloque: block));
   }
 }

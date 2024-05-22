@@ -7,6 +7,7 @@ import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/pair.dart';
 import 'package:mi_utem/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/repositories/grades_repository.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
@@ -47,7 +48,7 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
     ),
     body: PullToRefresh(
       onRefresh: () async => setState(() => _forceRefresh = true),
-      child: FutureBuilder<Pair<Carrera, List<Asignatura>>>(
+      child: FutureBuilder<Pair<Carrera?, List<Asignatura>?>>(
         future: () async {
           final carrera = await Get.find<CarrerasService>().getCarreras();
           if(carrera == null) {
@@ -60,6 +61,7 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
             throw CustomException.custom("No pudimos cargar las asignaturas.");
           }
           _forceRefresh = false;
+          asignaturas.forEach((asignatura) => Get.find<GradesRepository>().getGrades(carreraId: carrera.id, asignaturaId: asignatura.id));
           return Pair(carrera, asignaturas);
         }(),
         builder: (context, snapshot) {

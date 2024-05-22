@@ -6,9 +6,10 @@ import 'package:mi_utem/widgets/calculadora_notas/nota_list_item.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
+
 class AsignaturaNotasTab extends StatelessWidget {
   final Asignatura asignatura;
-  final Future<dynamic> Function() onRefresh;
+  final Future Function() onRefresh;
 
   const AsignaturaNotasTab({
     super.key,
@@ -16,11 +17,16 @@ class AsignaturaNotasTab extends StatelessWidget {
     required this.onRefresh,
   });
 
-
   @override
   Widget build(BuildContext context) {
     final grades = asignatura.grades;
-    final notasParciales = grades?.notasParciales;
+    final notasParciales = asignatura.grades?.notasParciales;
+    if(grades == null || notasParciales == null || notasParciales.isEmpty) {
+      return const CustomErrorWidget(
+        emoji: "🤔",
+        title: "Parece que aún no hay notas ni ponderadores",
+      );
+    }
 
     return PullToRefresh(
       onRefresh: onRefresh,
@@ -29,23 +35,20 @@ class AsignaturaNotasTab extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         children: [
           NotasDisplayWidget(
-            notaFinal: grades?.notaFinal,
-            notaExamen: grades?.notaExamen,
-            notaPresentacion: grades?.notaPresentacion,
+            notaFinal: grades.notaFinal,
+            notaExamen: grades.notaExamen,
+            notaPresentacion: grades.notaPresentacion,
             estado: asignatura.estado,
             colorPorEstado: asignatura.colorPorEstado,
           ),
           Card(
-            child: Padding (
+            child: Padding(
               padding: const EdgeInsets.all(20),
-              child: notasParciales != null && notasParciales.isNotEmpty ? ListView.builder(
+              child: ListView.builder(
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 itemBuilder: (context, i) => NotaListItem(evaluacion: IEvaluacion.fromRemote(notasParciales[i])),
                 itemCount: notasParciales.length,
-              ) : const CustomErrorWidget(
-                emoji: "🤔",
-                title: "Parece que aún no hay notas ni ponderadores",
               ),
             ),
           ),

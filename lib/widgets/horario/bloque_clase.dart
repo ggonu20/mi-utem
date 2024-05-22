@@ -25,36 +25,32 @@ class BloqueClase extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    HorarioController _controller = Get.find<HorarioController>();
-
-    return Container(
-      decoration: BoxDecoration(
-        color: _controller.getColor(block.asignatura!) ?? this.color,
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: Get.find<HorarioController>().getColor(block.asignatura) ?? this.color,
+      borderRadius: BorderRadius.circular(15),
+    ),
+    child: Material(
+      color: Colors.transparent,
+      child: InkWell(
         borderRadius: BorderRadius.circular(15),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(15),
-          onTap: onTap != null ? () => onTap?.call(block) : null,
-          onLongPress: onLongPress != null ? () => onLongPress?.call(block) : null,
-          child: Column(
-            children: [
-              HorarioText.classCode(block.codigo!,
-                color: textColor,
-              ),
-              HorarioText.className(block.asignatura!.nombre!.toUpperCase(),
-                color: textColor,
-              ),
-              HorarioText.classLocation(block.sala ?? "Sin sala",
-                color: textColor,
-              ),
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          ),
+        onTap: () => onTap?.call(block),
+        onLongPress: () => onLongPress?.call(block),
+        child: Column(
+          children: [
+            HorarioText.classCode("${block.codigo}",
+              color: textColor,
+            ),
+            HorarioText.className("${block.asignatura?.nombre?.toUpperCase()}",
+              color: textColor,
+            ),
+            HorarioText.classLocation(block.sala ?? "Sin sala",
+              color: textColor,
+            ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         ),
       ),
-    );
-  }
+    ),
+  );
 }

@@ -9,7 +9,7 @@ import 'package:mi_utem/main.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/repositories/grades_repository.dart';
-import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
+import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 
 class NotificationController {

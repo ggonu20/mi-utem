@@ -5,9 +5,10 @@ import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/asignaturas/detalles/navigation_tab.dart';
 import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/repositories/grades_repository.dart';
-import 'package:mi_utem/screens/asignatura/asignatura_notas_tab.dart';
-import 'package:mi_utem/screens/asignatura/asignatura_resumen_tab.dart';
+import 'package:mi_utem/screens/asignatura/detalle/asignatura_notas_tab.dart';
+import 'package:mi_utem/screens/asignatura/detalle/asignatura_resumen_tab.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -24,18 +25,16 @@ class AsignaturaDetalleScreen extends StatefulWidget {
   });
 
   @override
-  State<AsignaturaDetalleScreen> createState() => _AsignaturaDetalleScreenState();
+  State<AsignaturaDetalleScreen> createState() => _AsignaturaDetalleScreenState(asignatura: asignatura);
 }
 
 class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
 
-  late Asignatura asignatura;
+  Asignatura asignatura;
 
-  @override
-  void initState() {
-    asignatura = widget.asignatura;
-    super.initState();
-  }
+  _AsignaturaDetalleScreenState({
+    required this.asignatura,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,17 +50,20 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
         child: AsignaturaNotasTab(
           asignatura: asignatura,
           onRefresh: () async {
-            asignatura.grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id, forceRefresh: true);
-            setState(() => this.asignatura = asignatura);
+            final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas(widget.carrera.id, forceRefresh: true))?.firstWhere((it) => it.id == this.asignatura.id).copyWith(
+              grades: await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: this.asignatura.id, forceRefresh: true),
+            );
+            if(asignatura != null) {
+              setState(() => this.asignatura = asignatura);
+            }
           },
         ),
         initial: true,
       ),
     ];
-    final index = tabs.indexWhere((tab) => tab.initial);
 
     return DefaultTabController(
-      initialIndex: index == -1 ? 0 : index,
+      initialIndex: tabs.indexWhere((it) => it.initial),
       length: tabs.length,
       child: Scaffold(
         appBar: CustomAppBar(
@@ -70,9 +72,9 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
             IconButton(
               icon: Icon(Mdi.calculator),
               tooltip: "Calculadora",
-              onPressed: () {
+              onPressed: () async {
                 Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen()));
-                final grades = asignatura.grades;
+                final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id);
                 if (grades != null) {
                   Get.find<CalculatorController>().updateWithGrades(grades);
                 }
@@ -81,12 +83,10 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
           ] : [],
           bottom: TabBar(
             indicatorColor: Colors.white.withOpacity(0.8),
-            tabs: tabs.map((tab) => Tab(text: tab.label)).toList(),
+            tabs: tabs.map((e) => Tab(text: e.label)).toList(),
           ),
         ),
-        body: TabBarView(
-          children: tabs.map((tab) => tab.child).toList(),
-        ),
+        body: TabBarView(children: tabs.map((e) => e.child).toList()),
       ),
     );
   }

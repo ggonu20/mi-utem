@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/repositories/grades_repository.dart';
-import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
+import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:mi_utem/widgets/loading/loading_dialog.dart';
 
 class AsignaturaListTile extends StatefulWidget {
   final Carrera carrera;
@@ -35,12 +36,12 @@ class _AsignaturaListTileState extends State<AsignaturaListTile> {
     child: Card(
       child: InkWell(
         onTap: () async {
+          showLoadingDialog(context);
           final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id);
-          setState(() => asignatura = asignatura.copyWith(grades: grades));
-
+          Navigator.pop(context);
           Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
             carrera: widget.carrera,
-            asignatura: asignatura,
+            asignatura: asignatura.copyWith(grades: grades),
           )));
         },
         child: Container(

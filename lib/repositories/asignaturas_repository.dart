@@ -14,19 +14,6 @@ class AsignaturasRepository {
     return Asignatura.fromJsonList(response.data);
   }
 
-  /// Obtiene las notas de una asignatura
-  Future<Asignatura?> getNotasAsignatura(String? carreraId, Asignatura? asignatura, { bool forceRefresh = false }) async {
-    if(asignatura == null || carreraId == null) {
-      return null;
-    }
-
-    final response = await authClientRequest("carreras/$carreraId/asignaturas/${asignatura.id}/notas", forceRefresh: forceRefresh);
-    return Asignatura.fromJson({
-      ...asignatura.toJson(),
-      'notas': response.data as Map<String, dynamic>,
-    });
-  }
-
   /// Obtiene los estudiantes de una asignatura
   Future<List<User>?> getEstudiantesAsignatura(Asignatura? asignatura, {bool forceRefresh = false}) async {
     if(asignatura == null) {

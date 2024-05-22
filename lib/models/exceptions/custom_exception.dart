@@ -14,6 +14,8 @@ class CustomException implements Exception {
     this.internalCode,
   });
 
+  factory CustomException.unknown() => CustomException.custom(null);
+
   factory CustomException.custom(String? errorMessage) => CustomException(message: "Ha ocurrido un error inesperado. ${errorMessage ?? "Por favor intenta más tarde."}");
 
   factory CustomException.fromJson(Map<String, dynamic> json) => CustomException(

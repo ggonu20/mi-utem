@@ -48,7 +48,7 @@ class AsignaturaVistaPreviaModal extends StatelessWidget {
             Divider(height: 5, indent: 20, endIndent: 20),
             ListTile(
               title: Text("Sala"),
-              subtitle: Text(bloque.sala!),
+              subtitle: Text(bloque.sala ?? "Sin sala"),
             ),
           ],
         ),

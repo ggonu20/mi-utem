@@ -7,6 +7,7 @@ import 'package:mi_utem/repositories/horario_repository.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
+import 'package:mi_utem/utils/utils.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class HorarioController {
@@ -145,10 +146,9 @@ class HorarioController {
     _storage.write(_key, _newColor.value);
   }
 
-  Color? getColor(Asignatura asignatura) {
-    final _key = '${asignatura.codigo}_${asignatura.tipoHora}';
-    final _colorValue = _storage.read(_key);
-    return _colorValue != null ? Color(_colorValue) : null;
+  Color? getColor(Asignatura? asignatura) {
+    if(asignatura == null) return null;
+    return let(_storage.read('${asignatura.codigo}_${asignatura.tipoHora}'), (dynamic element) => Color(element));
   }
 
   void setIndicatorIsOpen(bool isOpen) {
