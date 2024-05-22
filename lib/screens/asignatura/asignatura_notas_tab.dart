@@ -7,9 +7,8 @@ import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class AsignaturaNotasTab extends StatelessWidget {
-  
   final Asignatura asignatura;
-  final Future Function() onRefresh;
+  final Future<dynamic> Function() onRefresh;
 
   const AsignaturaNotasTab({
     super.key,
@@ -17,39 +16,43 @@ class AsignaturaNotasTab extends StatelessWidget {
     required this.onRefresh,
   });
 
+
   @override
-  Widget build(BuildContext context) => PullToRefresh(
-    onRefresh: onRefresh,
-    child: ListView(
-      physics: AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.all(10),
-      children: [
-        NotasDisplayWidget(
-          notaFinal: asignatura.grades?.notaFinal,
-          notaExamen: asignatura.grades?.notaExamen,
-          notaPresentacion: asignatura.grades?.notaPresentacion,
-          estado: asignatura.estado,
-          colorPorEstado: asignatura.colorPorEstado,
-        ),
-        Card(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child: asignatura.grades?.notasParciales.isNotEmpty == true ? ListView.builder(
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              itemBuilder: (context, i) {
-                REvaluacion evaluacion = asignatura.grades!.notasParciales[i];
-                return NotaListItem(evaluacion: IEvaluacion.fromRemote(evaluacion));
-              },
-              itemCount: asignatura.grades!.notasParciales.length,
-            ) : const CustomErrorWidget(
-              emoji: "🤔",
-              title: "Parece que aún no hay notas ni ponderadores",
+  Widget build(BuildContext context) {
+    final grades = asignatura.grades;
+    final notasParciales = grades?.notasParciales;
+
+    return PullToRefresh(
+      onRefresh: onRefresh,
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(10),
+        children: [
+          NotasDisplayWidget(
+            notaFinal: grades?.notaFinal,
+            notaExamen: grades?.notaExamen,
+            notaPresentacion: grades?.notaPresentacion,
+            estado: asignatura.estado,
+            colorPorEstado: asignatura.colorPorEstado,
+          ),
+          Card(
+            child: Padding (
+              padding: const EdgeInsets.all(20),
+              child: notasParciales != null && notasParciales.isNotEmpty ? ListView.builder(
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemBuilder: (context, i) => NotaListItem(evaluacion: IEvaluacion.fromRemote(notasParciales[i])),
+                itemCount: notasParciales.length,
+              ) : const CustomErrorWidget(
+                emoji: "🤔",
+                title: "Parece que aún no hay notas ni ponderadores",
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
+
 

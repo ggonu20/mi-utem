@@ -44,7 +44,7 @@ class AuthService {
     final now = DateTime.now();
     final lastLoginDate = let<String, DateTime?>(await Preferencia.lastLogin.get(), (String _lastLogin) => DateTime.tryParse(_lastLogin)) ?? now;
     final difference = now.difference(lastLoginDate);
-    if(difference.inMinutes < 5 && now != lastLoginDate && !forceRefresh) {
+    if(difference.inMinutes < 4 && now != lastLoginDate && !forceRefresh) {
       return true;
     }
 

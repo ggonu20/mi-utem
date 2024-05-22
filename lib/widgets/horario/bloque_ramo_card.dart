@@ -45,28 +45,33 @@ class ClassBlockCard extends StatelessWidget {
   _onTap(BloqueHorario block, BuildContext context) async {
     final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas((Get.find<CarrerasService>().selectedCarrera)?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
     if(asignatura == null) return;
-    AnalyticsService.logEvent(
-      "horario_class_block_tap",
-      parameters: {
-        "asignatura": asignatura.nombre,
-        "codigo": asignatura.codigo,
-      },
-    );
 
-    Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(asignatura: asignatura)));
+    final carrera = await Get.find<CarrerasService>().getCarreras();
+    if(carrera == null){
+      return;
+    }
+
+    AnalyticsService.logEvent("horario_class_block_tap", parameters: {
+      "asignatura": asignatura.nombre,
+      "codigo": asignatura.codigo,
+    });
+    Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
+      carrera: carrera,
+      asignatura: asignatura,
+    )));
   }
 
   _onLongPress(BloqueHorario block, BuildContext context) async {
-    final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas((Get.find<CarrerasService>().selectedCarrera)?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
-    if(asignatura == null) return;
-    AnalyticsService.logEvent(
-      "horario_class_block_long_press",
-      parameters: {
-        "asignatura": block.asignatura?.nombre,
-        "codigo": block.asignatura?.codigo,
-      },
-    );
+    final carrera = await Get.find<CarrerasService>().getCarreras();
+    final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas(carrera?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
+    if(asignatura == null) {
+      return;
+    }
 
+    AnalyticsService.logEvent("horario_class_block_long_press", parameters: {
+      "asignatura": block.asignatura?.nombre,
+      "codigo": block.asignatura?.codigo,
+    });
     showModalBottomSheet(context: context, builder: (ctx) => AsignaturaVistaPreviaModal(asignatura: asignatura, bloque: block));
   }
 }

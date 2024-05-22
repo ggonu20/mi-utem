@@ -1,24 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/repositories/grades_repository.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
 
-class AsignaturaListTile extends StatelessWidget {
+class AsignaturaListTile extends StatefulWidget {
+  final Carrera carrera;
   final Asignatura asignatura;
 
   const AsignaturaListTile({
     super.key,
+    required this.carrera,
     required this.asignatura,
   });
+
+  @override
+  State<AsignaturaListTile> createState() => _AsignaturaListTileState();
+}
+
+class _AsignaturaListTileState extends State<AsignaturaListTile> {
+  late Asignatura asignatura;
+
+  @override
+  void initState() {
+    asignatura = widget.asignatura;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10.0),
     child: Card(
       child: InkWell(
-        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
-          asignatura: asignatura,
-        ))),
+        onTap: () async {
+          final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id);
+          setState(() => asignatura = asignatura.copyWith(grades: grades));
+
+          Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
+            carrera: widget.carrera,
+            asignatura: asignatura,
+          )));
+        },
         child: Container(
           padding: const EdgeInsets.all(20),
           width: double.infinity,
@@ -47,5 +71,4 @@ class AsignaturaListTile extends StatelessWidget {
       ),
     ),
   );
-
 }

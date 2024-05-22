@@ -89,4 +89,38 @@ class Asignatura {
     'intentos': intentos,
     'tipoSala': tipoSala,
   };
+
+  Asignatura copyWith({
+    String? id,
+    String? nombre,
+    String? codigo,
+    String? tipoHora,
+    String? estado,
+    String? docente,
+    String? seccion,
+    Asistencia? asistencia,
+    Grades? grades,
+    List<User>? estudiantes,
+    String? tipoAsignatura,
+    String? sala,
+    String? horario,
+    num? intentos,
+    String? tipoSala,
+  }) => Asignatura(
+    id: id ?? this.id,
+    nombre: nombre ?? this.nombre,
+    codigo: codigo ?? this.codigo,
+    tipoHora: tipoHora ?? this.tipoHora,
+    estado: estado ?? this.estado,
+    docente: docente ?? this.docente,
+    seccion: seccion ?? this.seccion,
+    asistencia: asistencia ?? this.asistencia,
+    grades: grades ?? this.grades,
+    estudiantes: estudiantes ?? this.estudiantes,
+    tipoAsignatura: tipoAsignatura ?? this.tipoAsignatura,
+    sala: sala ?? this.sala,
+    horario: horario ?? this.horario,
+    intentos: intentos ?? this.intentos,
+    tipoSala: tipoSala ?? this.tipoSala,
+  );
 }

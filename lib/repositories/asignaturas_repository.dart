@@ -11,16 +11,7 @@ class AsignaturasRepository {
     }
 
     final response = await authClientRequest("carreras/$carreraId/asignaturas", forceRefresh: forceRefresh);
-
-    final asignaturas = Asignatura.fromJsonList(response.data);
-    for(int i = 0; i < asignaturas.length; i++) {
-      final asignatura = await getNotasAsignatura(carreraId, asignaturas[i], forceRefresh: forceRefresh);
-      if(asignatura != null) {
-        asignaturas[i] = asignatura;
-      }
-    }
-
-    return asignaturas;
+    return Asignatura.fromJsonList(response.data);
   }
 
   /// Obtiene las notas de una asignatura

@@ -14,9 +14,11 @@ class CalculadoraNotasScreen extends StatefulWidget {
 
 class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
 
+  final CalculatorController calculatorController = Get.find<CalculatorController>();
+
   @override
   void initState() {
-    Get.find<CalculatorController>().makeEditable();
+    calculatorController.makeEditable();
     super.initState();
   }
 
@@ -25,6 +27,13 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: const Text("Calculadora de notas"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            tooltip: "Limpiar notas",
+            onPressed: calculatorController.clearGrades,
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),

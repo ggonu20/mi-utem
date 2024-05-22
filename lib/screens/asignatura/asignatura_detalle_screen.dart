@@ -4,20 +4,22 @@ import 'package:mdi/mdi.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/asignaturas/detalles/navigation_tab.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/repositories/grades_repository.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_resumen_tab.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
-import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 
 class AsignaturaDetalleScreen extends StatefulWidget {
+  final Carrera carrera;
   final Asignatura asignatura;
 
   const AsignaturaDetalleScreen({
     super.key,
+    required this.carrera,
     required this.asignatura,
   });
 
@@ -27,9 +29,7 @@ class AsignaturaDetalleScreen extends StatefulWidget {
 
 class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
 
-  final _asignaturasRepository = Get.find<AsignaturasRepository>();
   late Asignatura asignatura;
-  bool get _mostrarCalculadora => RemoteConfigService.calculadoraMostrar;
 
   @override
   void initState() {
@@ -51,11 +51,8 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
         child: AsignaturaNotasTab(
           asignatura: asignatura,
           onRefresh: () async {
-            final carreraId = (await Get.find<CarrerasService>().getCarreras())?.id;
-            final asignatura = (await _asignaturasRepository.getAsignaturas(carreraId, forceRefresh: true))?.firstWhere((asignatura) => asignatura.codigo == this.asignatura.codigo && asignatura.id == this.asignatura.id);
-            if (asignatura != null) {
-              setState(() => this.asignatura = asignatura);
-            }
+            asignatura.grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id, forceRefresh: true);
+            setState(() => this.asignatura = asignatura);
           },
         ),
         initial: true,
@@ -69,7 +66,7 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
       child: Scaffold(
         appBar: CustomAppBar(
           title: Text(asignatura.nombre ?? "Asignatura sin nombre"),
-          actions: _mostrarCalculadora ? [
+          actions: RemoteConfigService.calculadoraMostrar ? [
             IconButton(
               icon: Icon(Mdi.calculator),
               tooltip: "Calculadora",

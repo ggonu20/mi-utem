@@ -19,7 +19,7 @@ class GradesService {
   Future<Grades?> getGrades(String carreraId, String asignaturaId, {bool forceRefresh = false, bool saveGrades = true}) async {
     final grades = await _gradesRepository.getGrades(carreraId: carreraId, asignaturaId: asignaturaId);
 
-    if(saveGrades) {
+    if(saveGrades && grades != null) {
       await this.saveGrades(asignaturaId, grades);
     }
 
