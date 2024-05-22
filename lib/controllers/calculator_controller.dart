@@ -109,6 +109,13 @@ class CalculatorController {
     _updateCalculations();
   }
 
+  void clearGrades() {
+    partialGrades.clear();
+    percentageTextFieldControllers.clear();
+    gradeTextFieldControllers.clear();
+    _updateCalculations();
+  }
+
   void removeGradeAt(int index) {
     final grade = partialGrades[index];
     if(!(grade.editable || freeEditable.value)) {
