@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
 import 'package:mi_utem/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/repositories/grades_repository.dart';
@@ -39,9 +40,10 @@ class GradesService {
       return {};
     }
 
-    final carreraId = (await Get.find<CarrerasService>().getCarreras())?.id;
+    final carrera = await Get.find<CarrerasService>().getCarreras();
+    final carreraId = carrera?.id;
 
-    if(carreraId == null) {
+    if(carrera == null || carreraId == null) {
       return {};
     }
 
@@ -70,7 +72,7 @@ class GradesService {
       final changeType = await this.compareGrades(asignaturaId, updatedGrades);
       await this.saveGrades(asignaturaId, updatedGrades);
 
-      this._notifyGradeUpdate(asignatura, changeType);
+      this._notifyGradeUpdate(carrera, asignatura, changeType);
 
       response[asignaturaId] = changeType;
     }
@@ -167,7 +169,7 @@ class GradesService {
   bool _hasAGradeWithValue(Grades asignatura) =>
       asignatura.notasParciales.any((it) => it.nota != null);
 
-  void _notifyGradeUpdate(Asignatura asignatura, GradeChangeType changeType) {
+  void _notifyGradeUpdate(Carrera carrera, Asignatura asignatura, GradeChangeType changeType) {
     final name = asignatura.nombre ?? asignatura.codigo;
 
     String? title;
@@ -204,6 +206,7 @@ class GradesService {
         title: title,
         body: body,
         asignatura: asignatura,
+        carrera: carrera,
       );
     } else if(changeType != GradeChangeType.noChange) {
       Sentry.captureMessage("Asignatura ha cambiado pero no notificado",

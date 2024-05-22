@@ -56,7 +56,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    Text("Olvídate sobre revisar la app a cada rato, ${_hasAllowedNotifications ? "te avisaremos" : "permítenos avisarte"} cuando haya novedades!",
+                    Text("Olvídate sobre revisar la app a cada rato, ${_hasAllowedNotifications ? "te avisaremos" : "permítenos avisarte"} cuando tus notas cambien, o existan otras novedades!",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -65,9 +65,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     ),
                     const SizedBox(height: 20),
                     if(!_hasAllowedNotifications) FilledButton(
-                      onPressed: () {
-                        NotificationService.requestUserPermissionIfNecessary(context).then((value) => setState(() => _hasAllowedNotifications = value));
-                      },
+                      onPressed: () async => await NotificationService.requestUserPermissionIfNecessary(context).then((value) => setState(() => _hasAllowedNotifications = value)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MainTheme.primaryDarkColor,
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),

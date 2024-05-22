@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/controllers/notification_controller.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/widgets/dialogs/custom_alert_dialog.dart';
+import 'package:mi_utem/models/carrera.dart';
 
 class NotificationService {
   static const announcementsChannelKey = 'announcements_channel';
@@ -70,22 +68,8 @@ class NotificationService {
   static Future<bool> requestUserPermissionIfNecessary(BuildContext context) async {
     bool isAllowed = await hasAllowedNotifications();
     if (!isAllowed) {
-      isAllowed = await showDialog(context: context, builder: (ctx) => CustomAlertDialog(
-        titulo: "Activa las notificaciones",
-        emoji: "🔔",
-        descripcion: "Necesitamos tu permiso para poder enviarte notificaciones. Nada de spam, lo prometemos.",
-        onCancelar: () async {
-          bool isAllowed = await notifications.isNotificationAllowed();
-          Navigator.pop(ctx, isAllowed);
-        },
-        onConfirmar: () async {
-          await notifications.requestPermissionToSendNotifications();
-          bool isAllowed = await notifications.isNotificationAllowed();
-          Navigator.pop(ctx, isAllowed);
-        },
-        cancelarTextoBoton: "No permitir",
-        confirmarTextoBoton: "Permitir",
-      ));
+      await notifications.requestPermissionToSendNotifications();
+      isAllowed = await notifications.isNotificationAllowed();
     }
     return isAllowed;
   }
@@ -93,19 +77,17 @@ class NotificationService {
   static void showGradeChangeNotification({
     required String title,
     required String body,
+    required Carrera carrera,
     required Asignatura asignatura,
-  }) {
-    final Map<String, String?> payload = {
+  }) => notifications.createNotification(content: NotificationContent(
+    id: asignatura.hashCode,
+    channelKey: gradeChangesChannelKey,
+    title: title,
+    body: body,
+    payload: {
       'type': 'grade_change',
-      'asignatura': jsonEncode(asignatura.toJson()),
-    };
-
-    notifications.createNotification(content: NotificationContent(
-      id: asignatura.hashCode,
-      channelKey: gradeChangesChannelKey,
-      title: title,
-      body: body,
-      payload: payload,
-    ));
-  }
+      'asignatura': asignatura.toString(),
+      'carrera': carrera.toString(),
+    },
+  ));
 }

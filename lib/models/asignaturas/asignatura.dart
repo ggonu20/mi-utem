@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/asignaturas/asistencia.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
@@ -89,6 +91,9 @@ class Asignatura {
     'intentos': intentos,
     'tipoSala': tipoSala,
   };
+
+  @override
+  String toString() => jsonEncode(toJson());
 
   Asignatura copyWith({
     String? id,
