@@ -28,24 +28,28 @@ Tipos de cambios
 
 ## [Unreleased]
 
-## [3.0.0] - 2024-04-04Z
-
 ### Added
-
 - Apodo para personalizar la aplicación.
+- Se agrega onboarding (con configuración de apodo, solicitud de permiso de notificaciones y bienvenida a la app).
 - Lista de estudiantes al resumen de asignatura.
 - Vista previa de estudiantes y profesores.
-- Acceso rápido a la asignatura desde el horario
-- Vista previa de la asignatura al mantenerla presionada en horario 
+- Se agrega modal de vista previa de la asignatura desde horario (al mantener presionado un bloque).
+- Se agrega navegación hacia la asignatura desde el horario al presionar un bloque.
+- Botón para limpiar las notas en la calculadora.
+- Sección de `Acerca de la App` en modo depuración.
 
 ### Changed
-
 - Se actualizaron algunas dependencias.
-- Se mejora el rendimiento de la aplicación.
+- Se ordenan las clases y widgets de la app.
+- Se optimiza el código y la aplicación en general.
+- Se separan clases en formato de repositorios, servicios y controladores.
+- Se mejora la documentación de algunos archivos y métodos.
+- Ahora se cargan las noticias de la página [noticias.utem.cl](https://noticias.utem.cl).
+- Se utiliza navegación de flutter nativa (Usando [`Navigator`](https://docs.flutter.dev/cookbook/navigation/navigation-basics) en lugar de rutas nombradas).
 
 ### Removed
-
-- Lista de estudiantes de la pestaña de asignatura.
+- Se elimina pestaña de estudiantes del detalle de asignatura (a favor del botón de lista de estudiantes en el resumen).
+- Modal de Permitir Notificaciones a favor de modal nativa del sistema. Solo se editará el mensaje de notificaciones, ya que es redundante el botón de permitir y cancelar.
 
 ## [2.11.9] - 2023-10-11Z
 
