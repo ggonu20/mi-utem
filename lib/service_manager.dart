@@ -21,13 +21,12 @@ Future<void> registerServices() async {
   /* Repositorios (Para conectarse a la REST Api o servicios locales) */
   Get.lazyPut(() => AuthRepository());
   Get.lazyPut(() => AsignaturasRepository());
-  Get.lazyPut(() => CredentialsRepository());
+  Get.lazyPut(() => CredentialsRepository(), fenix: true);
   Get.lazyPut(() => CarrerasRepository());
   Get.lazyPut(() => GradesRepository());
-  Get.lazyPut(() => PermisoIngresoRepository());
+  Get.lazyPut(() => PermisoIngresoRepository(), fenix: true);
   Get.lazyPut(() => NoticiasRepository());
-  Get.lazyPut(() => HorarioRepository());
-
+  Get.lazyPut(() => HorarioRepository(), fenix: true);
 
   /* Servicios (Para procesar datos REST) */
   Get.lazyPut(() => AuthService());
@@ -35,8 +34,8 @@ Future<void> registerServices() async {
   Get.lazyPut(() => GradesService());
 
   /* Controladores (Para procesar datos de interfaz) */
-  Get.lazyPut(() => HorarioController());
-  Get.lazyPut(() => CalculatorController());
+  Get.lazyPut(() => HorarioController(), fenix: true);
+  Get.lazyPut(() => CalculatorController(), fenix: true);
 
   final credentialsRepository = Get.find<CredentialsRepository>();
   if(!await credentialsRepository.hasCredentials()) {
