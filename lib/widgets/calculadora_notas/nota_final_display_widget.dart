@@ -15,7 +15,7 @@ class NotaFinalDisplayWidget extends StatelessWidget {
 
     return Column(
       children: [
-        Obx(() => Text(formatoNota(_calculatorController.calculatedFinalGrade.value) ?? '--',
+        Obx(() => Text(formatoNota(_calculatorController.calculatedFinalGrade) ?? '--',
           style: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,

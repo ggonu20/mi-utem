@@ -21,7 +21,7 @@ class NotaPresentacionDisplayWidget extends StatelessWidget {
           width: 80,
           margin: const EdgeInsets.only(left: 15),
           child: Obx(() => TextField(
-            controller: TextEditingController(text: formatoNota(_calculatorController.calculatedPresentationGrade.value) ?? ""),
+            controller: TextEditingController(text: formatoNota(_calculatorController.calculatedPresentationGrade) ?? ""),
             textAlign: TextAlign.center,
             enabled: false,
             decoration: InputDecoration(

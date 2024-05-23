@@ -25,13 +25,13 @@ class NotaExamenDisplayWidget extends StatelessWidget {
           width: 80,
           margin: const EdgeInsets.only(left: 15),
           child: Obx(() => TextField(
-            controller: _calculatorController.examGradeTextFieldController.value,
+            controller: _calculatorController.examGradeTextFieldController,
             textAlign: TextAlign.center,
             onChanged: (String value) => _calculatorController.setExamGrade(double.tryParse(value.replaceAll(",", ".")), updateTextController: false),
-            enabled: _calculatorController.canTakeExam.value,
+            enabled: _calculatorController.canTakeExam,
             decoration: InputDecoration(
-              hintText: formatoNota(_calculatorController.minimumRequiredExamGrade.value) ?? "--",
-              filled: !_calculatorController.canTakeExam.value,
+              hintText: formatoNota(_calculatorController.minimumRequiredExamGrade) ?? "--",
+              filled: !_calculatorController.canTakeExam,
               fillColor: Colors.grey.withOpacity(0.2),
               disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                 borderSide: BorderSide(

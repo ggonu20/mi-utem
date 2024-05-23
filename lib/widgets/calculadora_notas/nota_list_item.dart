@@ -67,7 +67,7 @@ class NotaListItem extends StatelessWidget {
               },
               textAlign: TextAlign.center,
               decoration: InputDecoration(
-                hintText: showSuggestedGrade ? (formatoNota(calculatorController.suggestedGrade.value) ?? "--") : "--",
+                hintText: showSuggestedGrade ? (formatoNota(calculatorController.suggestedGrade) ?? "--") : "--",
                 disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                   borderSide: const BorderSide(
                     color: Colors.transparent,
@@ -117,7 +117,7 @@ class NotaListItem extends StatelessWidget {
               },
               enabled: editable,
               decoration: InputDecoration(
-                hintText: calculatorController.suggestedPercentage.value?.toStringAsFixed(0) ?? "Peso",
+                hintText: calculatorController.suggestedPercentage?.toStringAsFixed(0) ?? "Peso",
                 suffixText: "%",
                 disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                   borderSide: BorderSide(
