@@ -33,7 +33,9 @@ void main() async {
     options.dsn = sentryDsn;
     options.attachScreenshot = true;
     options.tracesSampleRate = 1.0;
-  }, appRunner: () => runApp(MiUtem()));
+    options.enableMetrics = true;
+    options.attachViewHierarchy = true;
+  }, appRunner: () => runApp(SentryWidget(child: MiUtem())));
 }
 
 class MiUtem extends StatefulWidget {
