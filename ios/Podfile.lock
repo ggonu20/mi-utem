@@ -906,13 +906,11 @@ PODS:
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
-  - Sentry/HybridSDK (8.20.0):
-    - SentryPrivate (= 8.20.0)
-  - sentry_flutter (0.0.1):
+  - Sentry/HybridSDK (8.25.2)
+  - sentry_flutter (8.2.0):
     - Flutter
     - FlutterMacOS
-    - Sentry/HybridSDK (= 8.20.0)
-  - SentryPrivate (8.20.0)
+    - Sentry/HybridSDK (= 8.25.2)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -985,7 +983,6 @@ SPEC REPOS:
     - PromisesObjC
     - PromisesSwift
     - Sentry
-    - SentryPrivate
     - UXCam
 
 EXTERNAL SOURCES:
@@ -1095,9 +1092,8 @@ SPEC CHECKSUMS:
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
-  Sentry: a8d7b373b9f9868442b02a0c425192f693103cbf
-  sentry_flutter: 03e7660857a8cdb236e71456a7e8447b65c8a788
-  SentryPrivate: 006b24af16828441f70e2ab6adf241bd0a8ad130
+  Sentry: 51b056d96914a741f63eca774d118678b1eb05a1
+  sentry_flutter: e8397d13e297a5d4b6be8a752e33140b21c5cc97
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
