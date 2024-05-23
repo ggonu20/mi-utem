@@ -79,6 +79,6 @@ class ClassBlockCard extends StatelessWidget {
       "codigo": block.asignatura?.codigo,
     });
     Navigator.pop(context);
-    showModalBottomSheet(context: context, builder: (ctx) => AsignaturaVistaPreviaModal(asignatura: asignatura, bloque: block));
+    showModalBottomSheet(context: context, builder: (ctx) => AsignaturaVistaPreviaModal(asignatura: asignatura, bloque: block), shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))));
   }
 }
