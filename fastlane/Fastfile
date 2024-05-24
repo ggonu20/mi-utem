@@ -216,10 +216,12 @@ platform :mobile do
       )
     end
 
-    stamp_changelog(
-      section_identifier: build_name,
-      git_tag: build_name,
-    )
+    if options[:type] == "release"
+      stamp_changelog(
+        section_identifier: build_name,
+        git_tag: build_name,
+      )
+    end
 
     unless skip_git_push
       push_to_git_remote
