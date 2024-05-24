@@ -33,6 +33,7 @@ Tipos de cambios
 - Se agrega onboarding (con configuración de apodo, solicitud de permiso de notificaciones y bienvenida a la app).
 - Lista de estudiantes al resumen de asignatura.
 - Vista previa de estudiantes y profesores.
+- Vista previa de los datos del profesor
 - Se agrega ventana de vista previa de la asignatura desde horario (al mantener presionado un bloque).
 - Se agrega navegación hacia la asignatura desde el horario al presionar un bloque.
 - Botón para limpiar las notas en la calculadora.
@@ -51,6 +52,7 @@ Tipos de cambios
 ### Removed
 - Se elimina pestaña de estudiantes del detalle de asignatura (a favor del botón de lista de estudiantes en el resumen).
 - Modal de Permitir Notificaciones a favor de modal nativa del sistema. Solo se editará el mensaje de notificaciones, ya que es redundante el botón de permitir y cancelar.
+- Vistas sin uso en la aplicación.
 
 ## [2.11.9] - 2023-10-11Z
 

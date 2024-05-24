@@ -151,7 +151,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
               ),
               Center(
                 child: ProfilePhoto(
-                  user: user,
+                  fotoUrl: user.fotoUrl,
+                  iniciales: user.iniciales,
                   radius: 60,
                   editable: false,
                   onImage: (imagenBase64) async {

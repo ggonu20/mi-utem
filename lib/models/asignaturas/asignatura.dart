@@ -3,18 +3,21 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/asignaturas/asistencia.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
+import 'package:mi_utem/models/user/persona.dart';
+import 'package:mi_utem/models/user/rut.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/utils/string_utils.dart';
+import 'package:mi_utem/utils/utils.dart';
 
 class Asignatura {
-  String? id;
-  String? nombre;
-  String? codigo;
-  String? tipoHora;
-  String? estado;
-  String? docente;
-  String? seccion;
+  String id;
+  String nombre;
+  String codigo;
+  String tipoHora;
+  String estado;
+  String seccion;
+  Persona docente;
 
   Asistencia? asistencia;
   Grades? grades;
@@ -26,13 +29,13 @@ class Asignatura {
   String? tipoSala;
 
   Asignatura({
-    this.id,
-    this.nombre,
-    this.codigo,
-    this.tipoHora,
-    this.estado,
-    this.docente,
-    this.seccion,
+    required this.id,
+    required this.nombre,
+    required this.codigo,
+    required this.tipoHora,
+    required this.estado,
+    required this.seccion,
+    required this.docente,
     this.asistencia,
     this.grades,
     this.estudiantes,
@@ -54,13 +57,24 @@ class Asignatura {
     }
   }
 
-  factory Asignatura.fromJson(Map<String, dynamic>? json) => json != null ? Asignatura(
+  factory Asignatura.fromJson(Map<String, dynamic> json) => Asignatura(
     id: json['id'],
     codigo: json['codigo'],
     nombre: capitalize(json['nombre'] ?? ''),
     tipoHora: capitalize(json['tipoHora'] ?? ''),
     estado: capitalize(json['estado'] ?? ''),
-    docente: capitalize(json['docente'] ?? ''),
+    docente: let<String, Persona?>(json['docente'], (String? docente) {
+      if(docente == null) {
+        return null;
+      }
+
+      final nombreCompleto = docente.split(" ").where((element) => int.tryParse(element) == null).join(" ").replaceAll("- ", "");
+      final digitos = int.tryParse(docente.split(" ").where((element) => int.tryParse(element) != null).join(" ").replaceAll("-", ""));
+      return Persona(
+        nombreCompleto: capitalize(nombreCompleto),
+        rut: digitos != null ? Rut(digitos) : null,
+      );
+    }) ?? Persona(nombreCompleto: "Sin Docente"),
     seccion: json['seccion'],
     grades: json['notas'] != null ? Grades.fromJson(json['notas']) : Grades(),
     estudiantes: json.containsKey("estudiantes") ? User.fromJsonList(json["estudiantes"]) : [],
@@ -70,7 +84,7 @@ class Asignatura {
     horario: json['horario'],
     intentos: json.containsKey('intentos') ? (json['intentos'] is num ? json['intentos'] as num? : num.tryParse(json['intentos'])) : null,
     tipoSala: capitalize(json['tipoSala'] ?? ''),
-  ) : Asignatura();
+  );
 
   static List<Asignatura> fromJsonList(dynamic json) => json != null ? (json as List<dynamic>).map((it) => Asignatura.fromJson(it)).toList() : [];
 
@@ -101,7 +115,7 @@ class Asignatura {
     String? codigo,
     String? tipoHora,
     String? estado,
-    String? docente,
+    Persona? docente,
     String? seccion,
     Asistencia? asistencia,
     Grades? grades,

@@ -91,7 +91,8 @@ class CustomDrawer extends StatelessWidget {
                           ),
                         ),
                         currentAccountPicture: ProfilePhoto(
-                          user: user,
+                          fotoUrl: user.fotoUrl,
+                          iniciales: user.iniciales,
                           radius: 30,
                         ),
                         decoration: BoxDecoration(

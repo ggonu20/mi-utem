@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/models/user/persona.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/image/image_view_screen.dart';
@@ -43,7 +43,8 @@ class AcercaClubDesarrolladores extends StatelessWidget {
             child: Row(
               children: [
                 ProfilePhoto(
-                  user: User(nombres: developer['nombre'], fotoUrl: developer['fotoUrl']),
+                  fotoUrl: developer['fotoUrl'],
+                  iniciales: Persona(nombreCompleto: developer['nombre']).iniciales,
                   onImageTap: (context, imageProvider) {
                     AnalyticsService.logEvent("acerca_person_image_tap", parameters: {
                       "persona": developer['nombre'],

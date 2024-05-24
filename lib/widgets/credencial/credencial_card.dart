@@ -39,7 +39,8 @@ class CredencialCard extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: altoBanner - 40),
               child: ProfilePhoto(
-                user: user,
+                fotoUrl: user?.fotoUrl,
+                iniciales: user?.iniciales ?? "N/N",
                 radius: 50,
                 borderWidth: 5,
               ),

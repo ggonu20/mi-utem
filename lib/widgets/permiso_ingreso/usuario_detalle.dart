@@ -16,8 +16,11 @@ class UsuarioDetalle extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          ProfilePhoto(user: user),
-          Container(width: 10),
+          ProfilePhoto(
+            fotoUrl: user.fotoUrl,
+            iniciales: user.iniciales,
+          ),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,7 +29,7 @@ class UsuarioDetalle extends StatelessWidget {
                   maxLines: 2,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Container(height: 4),
+                const SizedBox(height: 4),
                 Text("${user.rut}",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),

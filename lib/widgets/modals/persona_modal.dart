@@ -1,16 +1,16 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/models/user/persona.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class UserModal extends StatelessWidget {
-  final User user;
+class PersonaModal extends StatelessWidget {
+  final Persona persona;
 
-  const UserModal({
+  const PersonaModal({
     super.key,
-    required this.user,
+    required this.persona,
   });
 
   @override
@@ -33,10 +33,10 @@ class UserModal extends StatelessWidget {
                     style: TextStyle(color: Colors.grey),
                   ),
                   onLongPress: () async {
-                    await FlutterClipboard.copy(user.nombreCompleto);
+                    await FlutterClipboard.copy(persona.nombreCompleto);
                     showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
                   },
-                  subtitle: Text(user.nombreCompletoCapitalizado,
+                  subtitle: Text(persona.nombreCompletoCapitalizado,
                     style: TextStyle(
                       color: Colors.grey[900],
                       fontSize: 18,
@@ -45,17 +45,17 @@ class UserModal extends StatelessWidget {
                 ),
                 Divider(height: 5),
                 ListTile(
-                  title: Text("Correo",
+                  title: Text("Rut",
                     style: TextStyle(color: Colors.grey),
                   ),
                   onLongPress: () async {
-                    await FlutterClipboard.copy(user.correoUtem!);
-                    showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
+                    await FlutterClipboard.copy(persona.rut.toString());
+                    showTextSnackbar(context, title: "¡Copiado!", message: "Rut copiado al portapapeles");
                   },
                   onTap: () async {
-                    await launchUrl(Uri.parse("mailto:${user.correoUtem ?? ""}"));
+                    await launchUrl(Uri.parse("mailto:${persona.rut.toString()}"));
                   },
-                  subtitle: Text(user.correoUtem!,
+                  subtitle: Text(persona.rut.toString(),
                     style: TextStyle(
                       color: Colors.grey[900],
                       fontSize: 18,
@@ -68,8 +68,7 @@ class UserModal extends StatelessWidget {
         ),
         Center(
           child: ProfilePhoto(
-            fotoUrl: user.fotoUrl,
-            iniciales: user.iniciales,
+            iniciales: persona.iniciales,
             radius: 60,
             editable: false,
           ),

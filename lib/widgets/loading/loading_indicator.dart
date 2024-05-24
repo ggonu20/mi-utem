@@ -36,11 +36,7 @@ class LoadingIndicator extends StatelessWidget {
     ),
   );
 
-  static Widget centered({required String message}) => Center(
-    child: LoadingIndicator(
-      message: message,
-    ),
-  );
+  static Widget centered({String? message}) => Center(child: LoadingIndicator(message: message));
 
   static Widget centeredDefault() => centered(message: "Esto tardará un poco, paciencia...");
 

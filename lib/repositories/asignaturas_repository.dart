@@ -1,6 +1,7 @@
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/utils/http/functions.dart';
+import 'package:mi_utem/utils/utils.dart';
 
 class AsignaturasRepository {
 
@@ -23,8 +24,12 @@ class AsignaturasRepository {
     final response = await authClientRequest("asignaturas/${asignatura.codigo}", forceRefresh: forceRefresh);
     final json = response.data as Map<String, dynamic>;
 
-    // Por ahora solo se actualizan los estudiantes
-    return User.fromJsonList(json['estudiantes']);
+    final estudiantes = (json['estudiantes'] as List<dynamic>).map((it) {
+      it['nombreCompleto'] = (it['nombreCompleto'] as String).split(" ").rotate(2).join(" ");
+      return it;
+    }).toList();
+
+    return User.fromJsonList(estudiantes);
   }
 
 

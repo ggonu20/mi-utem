@@ -6,14 +6,14 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/image/imagen_editor_modal.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 
 class ProfilePhoto extends StatefulWidget {
   final double radius;
-  final User? user;
+  final String? fotoUrl;
+  final String iniciales;
   final Function(BuildContext, ImageProvider)? onImageTap;
   final Function()? onTap;
   final double borderWidth;
@@ -23,7 +23,8 @@ class ProfilePhoto extends StatefulWidget {
 
   ProfilePhoto({
     super.key,
-    required this.user,
+    required this.iniciales,
+    this.fotoUrl,
     this.onTap,
     this.onImageTap,
     this.radius = 25,
@@ -49,7 +50,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
         FutureBuilder<String?>(
           // future: Get.find<PreferencesRepository>().getProfilePicture(),
           initialData: null,
-          builder: (ctx, snapshot) => CircularProfileAvatar(snapshot.data != null ? '' : (widget.user!.fotoUrl ?? ""),
+          builder: (ctx, snapshot) => CircularProfileAvatar(snapshot.data != null ? '' : (widget.fotoUrl ?? ""),
             child: snapshot.data != null ? Image.memory(Base64Decoder().convert(snapshot.data!)) : null,
             onTap: () => widget.onTap != null && widget.onImageTap == null ? widget.onTap : null,
             borderColor: widget.borderColor,
@@ -74,8 +75,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                 ),
               ),
             ),
-            initialsText: Text(
-              widget.user!.iniciales,
+            initialsText: Text(widget.iniciales,
               style: TextStyle(
                 fontSize: widget.radius * 0.5,
                 color: Colors.white,

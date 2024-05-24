@@ -3,6 +3,7 @@ import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/utils/string_utils.dart';
 import 'package:mi_utem/widgets/field_list_tile.dart';
+import 'package:mi_utem/widgets/modals/persona_modal.dart';
 
 class AsignaturaResumenTab extends StatelessWidget {
   final Asignatura asignatura;
@@ -40,13 +41,11 @@ class AsignaturaResumenTab extends StatelessWidget {
                 GestureDetector(
                   child: FieldListTile(
                     title: "Docente",
-                    value: asignatura.docente?.split(" ").where((element) => int.tryParse(element) == null).join(" ").replaceAll("- ", "") ?? "Sin docente", // Se filtran enteros, al parecer hay algunos textos que incluyen un identificador.
+                    value: asignatura.docente.nombreCompleto,
                   ),
-                  onTap: () async {
-                    // TODO: Mostrar perfil del docente.
-                  },
+                  onTap: () async => showModalBottomSheet(context: context, builder: (ctx) => PersonaModal(persona: asignatura.docente)),
                 ),
-                if (asignatura.seccion?.isNotEmpty == true) ...[
+                if (asignatura.seccion.isNotEmpty) ...[
                   Divider(height: 5, indent: 20, endIndent: 20),
                   FieldListTile(
                     title: "Sección",

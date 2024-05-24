@@ -6,14 +6,14 @@ class Persona {
   final String nombreCompleto;
   final Rut? rut;
 
-  Persona({
+  const Persona({
     required this.nombreCompleto,
-    required this.rut
+    this.rut
   });
 
-  get nombreCompletoCapitalizado => capitalize(nombreCompleto);
-  get primerNombre => nombreCompletoCapitalizado.split(' ')[0];
-  get iniciales => nombreCompletoCapitalizado.split(' ').map((it) => it[0].toUpperCase()).join('');
+  String get nombreCompletoCapitalizado => capitalize(nombreCompleto);
+  String get primerNombre => nombreCompletoCapitalizado.split(' ')[0];
+  String get iniciales => nombreCompletoCapitalizado.split(' ').map((it) => it[0].toUpperCase()).join('');
 
   factory Persona.fromJson(Map<String, dynamic> json) => Persona(
     nombreCompleto: json['nombreCompleto'],
