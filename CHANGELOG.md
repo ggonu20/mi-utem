@@ -33,10 +33,11 @@ Tipos de cambios
 - Se agrega onboarding (con configuración de apodo, solicitud de permiso de notificaciones y bienvenida a la app).
 - Lista de estudiantes al resumen de asignatura.
 - Vista previa de estudiantes y profesores.
-- Se agrega modal de vista previa de la asignatura desde horario (al mantener presionado un bloque).
+- Se agrega ventana de vista previa de la asignatura desde horario (al mantener presionado un bloque).
 - Se agrega navegación hacia la asignatura desde el horario al presionar un bloque.
 - Botón para limpiar las notas en la calculadora.
 - Sección de `Acerca de la App` en modo depuración.
+- Se agrega métricas y toma de errores de Sentry (esta vez están bien configurados)
 
 ### Changed
 - Se actualizaron algunas dependencias.
@@ -153,11 +154,4 @@ Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se 
 ### Removed
 
 - Lista de estudiantes en la pantalla de asignatura
-- Perfil de profesores
-- Perfil de profesores
-- Perfil de profesores
-- Perfil de profesores
-- Perfil de profesores
-- Perfil de profesores
-- Perfil de profesores
 - Perfil de profesores
