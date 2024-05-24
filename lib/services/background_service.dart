@@ -43,7 +43,12 @@ class BackgroundController {
 class BackgroundService {
   static Future<void> initAndStart() async {
     BackgroundFetch.registerHeadlessTask(BackgroundController.backgroundFetchHeadlessTask);
-    await BackgroundFetch.configure(_backgroundFetchConfig, _onFetch, _onTimeout);
+    await BackgroundFetch.configure(_backgroundFetchConfig, (taskId) {
+      Sentry.metrics().timing("BackgroundFetch_$taskId",
+        function: _onFetch(taskId),
+        unit: DurationSentryMeasurementUnit.milliSecond,
+      );
+    }, _onTimeout);
 
     BackgroundFetch.start().then((_) {}).catchError((e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);
@@ -53,7 +58,7 @@ class BackgroundService {
   static _onFetch(String taskId) async {
     final init = DateTime.now();
     var now = init;
-    logger.d("[BackgroundFetch]: Se ejecutó la tarea 'refreshTask' (${now.toIso8601String()})");
+    logger.d("[BackgroundFetch]: Se ejecutó la tarea '$taskId' (${now.toIso8601String()})");
 
     // Refresca el token de autenticación
     bool loggedIn = await Get.find<AuthService>().isLoggedIn(forceRefresh: true);
@@ -112,7 +117,7 @@ class BackgroundService {
     logger.d("[BackgroundFetch]: Se refrescó el horario, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
     now = DateTime.now();
 
-    logger.d("[BackgroundFetch]: Se terminó la tarea 'refreshTask', tomó ${DateTime.now().difference(init).inMilliseconds} ms");
+    logger.d("[BackgroundFetch]: Se terminó la tarea '$taskId', tomó ${DateTime.now().difference(init).inMilliseconds} ms");
   }
 
   static _onTimeout(String taskId) async {
