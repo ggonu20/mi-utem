@@ -68,11 +68,19 @@ class Asignatura {
         return null;
       }
 
-      final nombreCompleto = docente.split(" ").where((element) => int.tryParse(element) == null).join(" ").replaceAll("- ", "");
-      final digitos = int.tryParse(docente.split(" ").where((element) => int.tryParse(element) != null).join(" ").replaceAll("-", ""));
+      final partes = docente.split("-");
+      if(partes.isEmpty) {
+        return null;
+      }
+
+      if(partes.length == 1) {
+        return Persona(nombreCompleto: capitalize(partes.first));
+      }
+
+      final numeroRut = int.tryParse(partes.first);
       return Persona(
-        nombreCompleto: capitalize(nombreCompleto),
-        rut: digitos != null ? Rut(digitos) : null,
+        nombreCompleto: capitalize(partes.last.trim()),
+        rut: numeroRut != null ? Rut(numeroRut) : null,
       );
     }) ?? Persona(nombreCompleto: "Sin Docente"),
     seccion: json['seccion'],

@@ -11,9 +11,9 @@ class Persona {
     this.rut
   });
 
-  String get nombreCompletoCapitalizado => capitalize(nombreCompleto);
+  String get nombreCompletoCapitalizado => capitalize(nombreCompleto.trim());
   String get primerNombre => nombreCompletoCapitalizado.split(' ')[0];
-  String get iniciales => nombreCompletoCapitalizado.split(' ').map((it) => it[0].toUpperCase()).join('');
+  String get iniciales => nombreCompletoCapitalizado.split(' ').map((it) => it[0]).join('');
 
   factory Persona.fromJson(Map<String, dynamic> json) => Persona(
     nombreCompleto: json['nombreCompleto'],
