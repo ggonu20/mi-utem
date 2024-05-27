@@ -15,6 +15,10 @@ jobs:
         with:
           ruby-version: '3.3.0'
           bundler-cache: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '17'
       - name: Instalar Flutter
         uses: flutter-actions/setup-flutter@v3
         with:
