@@ -33,6 +33,10 @@ jobs:
         env:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
         run: echo $GOOGLE_SERVICES > android/app/google-services.json
+      - name: Generar Api PlayStore
+        env:
+          API_PLAY_STORE: ${{ secrets.API_PLAY_STORE }}
+        run: echo $API_PLAY_STORE > android/key.properties
       - name: Publicar Beta
         uses: maierj/fastlane-action@v3.1.0
         env:
