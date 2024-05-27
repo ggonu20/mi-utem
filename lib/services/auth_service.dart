@@ -32,7 +32,7 @@ class AuthService {
     final user = await getUser();
     final userToken = user?.token;
     if(user == null || userToken == null) {
-      logger.d("[AuthService#isLoggedIn]: user || token => false => ${user == null} || ${userToken == null}");
+      logger.d("[AuthService#isLoggedIn]: Usuario o token nulo (user: ${user == null}, token: ${userToken == null})");
       return false;
     }
 
@@ -50,10 +50,7 @@ class AuthService {
 
     try {
       final token = await _authRepository.refresh(token: userToken, credentials: credentials);
-
-      final userJson = user.toJson();
-      userJson["token"] = token;
-      await setUser(User.fromJson(userJson));
+      await setUser(user.copyWith(token: token));
       Preferencia.lastLogin.set(now.toIso8601String());
       return true;
     } catch (e) {

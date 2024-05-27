@@ -68,4 +68,30 @@ class User extends Persona {
 
   @override
   String toString() => jsonEncode(toJson());
+
+  User copyWith({
+    Rut? rut,
+    String? nombreCompleto,
+    String? token,
+    String? correoPersonal,
+    String? correoUtem,
+    String? fotoBase64,
+    List<String>? perfiles,
+    String? nombres,
+    String? apellidos,
+    String? username,
+    String? fotoUrl
+  }) => User(
+    rut: rut ?? this.rut,
+    nombreCompleto: nombreCompleto ?? this.nombreCompleto,
+    token: token ?? this.token,
+    correoPersonal: correoPersonal ?? this.correoPersonal,
+    correoUtem: correoUtem ?? this.correoUtem,
+    fotoBase64: fotoBase64 ?? this.fotoBase64,
+    perfiles: perfiles ?? this.perfiles,
+    nombres: nombres ?? this.nombres,
+    apellidos: apellidos ?? this.apellidos,
+    username: username ?? this.username,
+    fotoUrl: fotoUrl ?? this.fotoUrl
+  );
 }
