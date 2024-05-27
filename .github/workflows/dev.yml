@@ -1,7 +1,8 @@
 name: Publicar Aplicación Beta
 on:
-  push:
+  pull_request:
     branches: [dev]
+    types: [opened, synchronize]
 
 jobs:
   build:
