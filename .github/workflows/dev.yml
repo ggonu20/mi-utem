@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     environment: development
     steps:
       - uses: actions/checkout@v4
@@ -13,7 +13,7 @@ jobs:
         with:
           ruby-version: '3.3.0'
           bundler-cache: true
-      - name: Publicar Beta Android
+      - name: Publicar Beta
         uses: maierj/fastlane-action@v3.1.0
         env:
           APP_IDENTIFIER_IOS: ${{ secrets.APP_IDENTIFIER_IOS }}
@@ -42,3 +42,10 @@ jobs:
         with:
           lane: 'upload'
           options: '{ "type": "beta", "skip_git_push": "true", "skip_slack": "true", "is_ci": "true", "skip_ios": "true" }'
+      - name: Publicar Version en Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml
+          git commit -m "ci(bump-version): github action bump version"
+          git push
