@@ -1,114 +1,95 @@
 name: Publicar Aplicación Beta
 on:
-  issues:
-  issue_comment:
   pull_request:
     types: [opened, reopened, synchronize, closed]
 
 jobs:
-  debug-print:
-    runs-on: ubuntu-latest
+  build:
+    # Formato de comentario: /deploy-beta
+    if: |
+      github.event.issue.author_association == 'MEMBER' &&
+      (github.event.issue.state == 'open' && !github.event.issue.draft && github.event.issue.state == 'open') &&
+      (!github.event.issue.locked && !github.event.issue.active_lock_reason) &&
+      (!github.event.issue.pull_request.merged_at)
+    runs-on: macos-latest
+    environment: development
     steps:
-      - run: |
-          echo "Tiene PR: ${{ !!github.event.issue.pull_request }}"
-          echo "Autor del Comentario: ${{ github.event.comment.author_association }}"
-          echo "Autor del Issue: ${{ github.event.issue.author_association }}"
-          echo "Estado del Issue: ${{ github.event.issue.state }}"
-          echo "Bloqueado: ${{ github.event.issue.locked }}"
-          echo "Razón del Bloqueo: ${{ github.event.issue.active_lock_reason }}"
-          echo "Fusionado: ${{ github.event.issue.pull_request.merged_at }}"
-          echo "Comentario: ${{ github.event.comment.body }}"
-          echo "Último Commit: ${{ github.event.pull_request.head.message }}"
-          echo "Ref: ${{ github.event.pull_request.head.ref }}"
-#  build:
-#    # Formato de comentario: /deploy-beta
-#    if: |
-#      (github.event_name == 'issue_comment' && github.event.issue.pull_request) &&
-#      github.event.issue.author_association == 'MEMBER' &&
-#      (github.event.issue.state == 'open' && !github.event.issue.draft && github.event.issue.state == 'open') &&
-#      (!github.event.issue.locked && !github.event.issue.active_lock_reason) &&
-#      (!github.event.issue.pull_request.merged_at) &&
-#      contains(github.event.pull_request.head.message, '@exdevutembot mi-utem deploy-beta')
-#
-#    runs-on: macos-latest
-#    environment: development
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          ref: ${{ github.event.pull_request.head.ref }}
-#      - name: Instalar Ruby
-#        uses: ruby/setup-ruby@v1
-#        with:
-#          ruby-version: '3.3.0'
-#          bundler-cache: true
-#      - name: Instalar Java
-#        uses: actions/setup-java@v4
-#        with:
-#          distribution: 'zulu'
-#          java-version: '17'
-#          cache: 'gradle'
-#      - name: Instalar Flutter
-#        uses: flutter-actions/setup-flutter@v3
-#        with:
-#          channel: stable
-#          version: 3.7.12
-#          cache: true
-#          cache-sdk: true
-#          cache-key: mi-utem
-#      - name: Instalar Dependencias
-#        run: flutter pub get
-#      - name: Copiar .env
-#        run: cp .env.example .env
-#      - name: Generar Archivos de Google Play
-#        env:
-#          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
-#          API_PLAY_STORE: ${{ secrets.API_PLAY_STORE }}
-#          KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
-#          KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
-#        run: |
-#          echo $GOOGLE_SERVICES | base64 --decode > android/app/google-services.json
-#          echo $API_PLAY_STORE | base64 --decode > android/api-playstore.json
-#
-#          mkdir -p android/keystores
-#          chmod 755 android/keystores
-#
-#          echo $KEYSTORE_PROPERTIES | base64 --decode > android/keystores/key.properties
-#          echo $KEYSTORE_FILE | base64 --decode > android/keystores/keystore.jks
-#
-#          chmod 644 android/keystores/key*
-#      - name: Publicar Beta
-#        uses: maierj/fastlane-action@v3.1.0
-#        env:
-#          APP_IDENTIFIER_IOS: ${{ secrets.APP_IDENTIFIER_IOS }}
-#          APP_IDENTIFIER_ANDROID: ${{ secrets.APP_IDENTIFIER_ANDROID }}
-#
-#          SLACK_URL: ${{ secrets.SLACK_URL }}
-#          APPLE_ID: ${{ secrets.APPLE_ID }}
-#
-#          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-#          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-#          FASTLANE_ITC_TEAM_ID: ${{ secrets.FASTLANE_ITC_TEAM_ID }}
-#          FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
-#          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-#
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
-#          MATCH_REPO_GIT_URL: ${{ secrets.MATCH_REPO_GIT_URL }}
-#          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-#          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
-#          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-#
-#          KEYCHAIN_NAME: ${{ secrets.KEYCHAIN_NAME }}
-#          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-#
-#          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
-#        with:
-#          lane: 'upload'
-#          options: '{ "type": "beta", "skip_git_push": "true", "skip_slack": "true", "is_ci": "true", "skip_ios": "true" }'
-#      - name: Publicar Version en Git
-#        run: |
-#          git config user.name "github-actions[bot]"
-#          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-#          git add pubspec.yaml
-#          git commit -m "ci(bump-version): github action bump version"
-#          git push
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Instalar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.0'
+          bundler-cache: true
+      - name: Instalar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+      - name: Instalar Flutter
+        uses: flutter-actions/setup-flutter@v3
+        with:
+          channel: stable
+          version: 3.7.12
+          cache: true
+          cache-sdk: true
+          cache-key: mi-utem
+      - name: Instalar Dependencias
+        run: flutter pub get
+      - name: Copiar .env
+        run: cp .env.example .env
+      - name: Generar Archivos de Google Play
+        env:
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+          API_PLAY_STORE: ${{ secrets.API_PLAY_STORE }}
+          KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
+          KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
+        run: |
+          echo $GOOGLE_SERVICES | base64 --decode > android/app/google-services.json
+          echo $API_PLAY_STORE | base64 --decode > android/api-playstore.json
+
+          mkdir -p android/keystores
+          chmod 755 android/keystores
+
+          echo $KEYSTORE_PROPERTIES | base64 --decode > android/keystores/key.properties
+          echo $KEYSTORE_FILE | base64 --decode > android/keystores/keystore.jks
+
+          chmod 644 android/keystores/key*
+      - name: Publicar Beta
+        uses: maierj/fastlane-action@v3.1.0
+        env:
+          APP_IDENTIFIER_IOS: ${{ secrets.APP_IDENTIFIER_IOS }}
+          APP_IDENTIFIER_ANDROID: ${{ secrets.APP_IDENTIFIER_ANDROID }}
+
+          SLACK_URL: ${{ secrets.SLACK_URL }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_ITC_TEAM_ID: ${{ secrets.FASTLANE_ITC_TEAM_ID }}
+          FASTLANE_TEAM_ID: ${{ secrets.FASTLANE_TEAM_ID }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          MATCH_REPO_GIT_URL: ${{ secrets.MATCH_REPO_GIT_URL }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+
+          KEYCHAIN_NAME: ${{ secrets.KEYCHAIN_NAME }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+        with:
+          lane: 'upload'
+          options: '{ "type": "beta", "skip_git_push": "true", "skip_slack": "true", "is_ci": "true", "skip_ios": "true" }'
+      - name: Publicar Version en Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml
+          git commit -m "ci(bump-version): github action bump version"
+          git push
