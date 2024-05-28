@@ -5,13 +5,28 @@ on:
     types: [ opened, synchronize ]
 
 jobs:
+  debug-print:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Tiene PR: ${{ !!github.event.issue.pull_request }}"
+          echo "Autor del Comentario: ${{ github.event.comment.author_association }}"
+          echo "Autor del Issue: ${{ github.event.issue.author_association }}"
+          echo "Estado del Issue: ${{ github.event.issue.state }}"
+          echo "Bloqueado: ${{ github.event.issue.locked }}"
+          echo "Razón del Bloqueo: ${{ github.event.issue.active_lock_reason }}"
+          echo "Fusionado: ${{ github.event.issue.pull_request.merged_at }}"
+          echo "Mensaje del Commit: ${{ github.event.pull_request.head.message }}"
+          echo "Contiene: ${{ contains(github.event.pull_request.head.message, '@exdevutembot mi-utem deploy-beta') }}"
+          echo "Comentario: ${{ github.event.comment.body }}"
+
   build:
     # Formato de comentario: /deploy-beta
     # Si es pull request y el autor del comentario y del issue son miembros, y el issue está abierto, no está bloqueado, y el pull request no está fusionado y el último commit contiene '@exdevutembot mi-utem deploy-beta'
     if: |
       github.event.issue.pull_request &&
-      (github.event.comment.author_association == 'MEMBER' && github.event.issue.author_association == 'MEMBER') &&
-      (github.event.issue.state == 'open' || ! github.event.issue.draft && github.event.issue.state == 'open') &&
+      github.event.issue.author_association == 'MEMBER' &&
+      (github.event.issue.state == 'open' && !github.event.issue.draft && github.event.issue.state == 'open') &&
       (!github.event.issue.locked && !github.event.issue.active_lock_reason) &&
       (!github.event.issue.pull_request.merged_at) &&
       contains(github.event.pull_request.head.message, '@exdevutembot mi-utem deploy-beta')
