@@ -3,20 +3,18 @@ on:
   pull_request:
     branches: [ dev ]
     types: [ opened, synchronize ]
-  issue_comment:
-    types: [created]
 
 jobs:
   build:
     # Formato de comentario: /deploy-beta
-    # Si es pull request, y el comentario contiene '/deploy-beta', y el autor del comentario y del issue son miembros, y el issue está abierto, no está bloqueado, y el pull request no está fusionado
+    # Si es pull request y el autor del comentario y del issue son miembros, y el issue está abierto, no está bloqueado, y el pull request no está fusionado y el último commit contiene '@exdevutembot mi-utem deploy-beta'
     if: |
       (github.event_name == 'issue_comment' && github.event.issue.pull_request) &&
-      (github.event.comment.body == '/deploy-beta') &&
       (github.event.comment.author_association == 'MEMBER' && github.event.issue.author_association == 'MEMBER') &&
       (!github.event.pull_request.draft && github.event.pull_request.state == 'open' || ! github.event.issue.draft && github.event.issue.state == 'open') &&
       (!github.event.issue.locked && !github.event.issue.active_lock_reason) &&
-      (!github.event.issue.pull_request.merged_at)
+      (!github.event.issue.pull_request.merged_at) &&
+      contains(github.event.pull_request.head.message, '@exdevutembot mi-utem deploy-beta')
 
     runs-on: macos-latest
     environment: development
