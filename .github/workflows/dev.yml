@@ -4,22 +4,17 @@ on:
     types: [created]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: print-permissions
-        run: |
-          echo "GitHub Is Pull Request: ${{ !!github.event.issue.pull_request }}"
-          echo "GitHub Comment Body: ${{ github.event.comment.body }}"
-          echo "GitHub Comment Author Association: ${{ github.event.comment.author_association }}"
-          echo "GitHub Issue State: ${{ github.event.issue.state }}"
-          echo "GitHub Issue Locked: ${{ github.event.issue.locked }}"
-          echo "GitHub Issue Active Lock Reason: ${{ github.event.issue.active_lock_reason }}"
-          echo "GitHub Issue Pull Request Merged At: ${{ github.event.issue.pull_request.merged_at }}"
   build:
     # Formato de comentario: /deploy-beta
     # Si es pull request, y el comentario contiene '/deploy-beta', y el autor del comentario y del issue son miembros, y el issue está abierto, no está bloqueado, y el pull request no está fusionado
-    if: github.event.issue.pull_request && github.event.comment.body == '/deploy-beta' && github.event.comment.author_association == 'MEMBER' && github.event.issue.state == 'open' && github.event.issue.locked == false && github.event.issue.active_lock_reason == null && github.event.issue.pull_request.merged_at == null
+    if: |
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request) &&
+      (github.event.comment.body == '/deploy-beta') &&
+      (github.event.comment.author_association == 'MEMBER' && github.event.issue.author_association == 'MEMBER') &&
+      (!github.event.pull_request.draft && github.event.pull_request.state == 'open' || ! github.event.issue.draft && github.event.issue.state == 'open') &&
+      (!github.event.issue.locked && !github.event.issue.active_lock_reason) &&
+      (!github.event.issue.pull_request.merged_at)
+
     runs-on: macos-latest
     environment: development
     steps:
