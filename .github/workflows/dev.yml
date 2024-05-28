@@ -38,6 +38,7 @@ jobs:
         run: |
           echo $GOOGLE_SERVICES > android/app/google-services.json
           echo $API_PLAY_STORE > android/api-playstore.json
+          mkdir -p android/keystores
           echo $KEYSTORE_PROPERTIES > android/keystores/key.properties
           echo $KEYSTORE_FILE | base64 --decode > android/keystores/keystore.jks
 
