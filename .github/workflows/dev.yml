@@ -1,5 +1,8 @@
 name: Publicar Aplicación Beta
 on:
+  pull_request:
+    branches: [ dev ]
+    types: [ opened, synchronize ]
   issue_comment:
     types: [created]
 
