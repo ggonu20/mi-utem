@@ -1,11 +1,10 @@
 name: Publicar Aplicación Beta
-on:
-  pull_request:
-    branches: [dev]
-    types: [opened, synchronize]
+on: issue_comment
 
 jobs:
   build:
+    # Formato de comentario: /deploy-beta
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/deploy-beta') }}
     runs-on: macos-latest
     environment: development
     steps:
