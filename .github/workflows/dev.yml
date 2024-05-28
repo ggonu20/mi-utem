@@ -80,6 +80,7 @@ jobs:
           lane: 'upload'
           options: '{ "type": "beta", "skip_git_push": "true", "skip_slack": "true", "is_ci": "true", "skip_ios": "true" }'
       - name: Publicar Version en Git
+        uses: actions/checkout@v4
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
