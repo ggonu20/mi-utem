@@ -29,14 +29,18 @@ jobs:
         run: flutter pub get
       - name: Copiar .env
         run: cp .env.example .env
-      - name: Generar Google Services
+      - name: Generar Archivos de Google Play
         env:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
-        run: echo $GOOGLE_SERVICES > android/app/google-services.json
-      - name: Generar Api PlayStore
-        env:
           API_PLAY_STORE: ${{ secrets.API_PLAY_STORE }}
-        run: echo $API_PLAY_STORE > android/api-playstore.json
+          KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
+          KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
+        run: |
+          echo $GOOGLE_SERVICES > android/app/google-services.json
+          echo $API_PLAY_STORE > android/api-playstore.json
+          echo $KEYSTORE_PROPERTIES > android/keystores/key.properties
+          echo $KEYSTORE_FILE | base64 --decode > android/keystores/keystore.jks
+
       - name: Publicar Beta
         uses: maierj/fastlane-action@v3.1.0
         env:
