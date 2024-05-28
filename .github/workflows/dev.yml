@@ -1,5 +1,7 @@
 name: Publicar Aplicación Beta
-on: issue_comment
+on:
+  issue_comment:
+    types: [created]
 
 jobs:
   test:
