@@ -18,13 +18,17 @@ jobs:
       - name: Instalar Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
+          distribution: 'zulu'
           java-version: '17'
+          cache: 'gradle'
       - name: Instalar Flutter
         uses: flutter-actions/setup-flutter@v3
         with:
           channel: stable
           version: 3.7.12
+          cache: true
+          cache-sdk: true
+          cache-key: mi-utem
       - name: Instalar Dependencias
         run: flutter pub get
       - name: Copiar .env
@@ -36,13 +40,13 @@ jobs:
           KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
           KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
         run: |
-          echo $GOOGLE_SERVICES > android/app/google-services.json
-          echo $API_PLAY_STORE > android/api-playstore.json
+          echo $GOOGLE_SERVICES | base64 --decode > android/app/google-services.json
+          echo $API_PLAY_STORE | base64 --decode > android/api-playstore.json
           
           mkdir -p android/keystores
           chmod 755 android/keystores
           
-          echo $KEYSTORE_PROPERTIES > android/keystores/key.properties
+          echo $KEYSTORE_PROPERTIES | base64 --decode > android/keystores/key.properties
           echo $KEYSTORE_FILE | base64 --decode > android/keystores/keystore.jks
 
           chmod 644 android/keystores/key*
