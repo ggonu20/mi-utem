@@ -1,8 +1,5 @@
 name: Publicar Aplicación Beta
-on:
-  pull_request:
-    branches: [ dev ]
-    types: [ opened, synchronize ]
+on: issue_comment
 
 jobs:
   debug-print:
@@ -16,13 +13,11 @@ jobs:
           echo "Bloqueado: ${{ github.event.issue.locked }}"
           echo "Razón del Bloqueo: ${{ github.event.issue.active_lock_reason }}"
           echo "Fusionado: ${{ github.event.issue.pull_request.merged_at }}"
-          echo "Mensaje del Commit: ${{ github.event.pull_request.head.message }}"
-          echo "Contiene: ${{ contains(github.event.pull_request.head.message, '@exdevutembot mi-utem deploy-beta') }}"
           echo "Comentario: ${{ github.event.comment.body }}"
-
+          echo "Último Commit: ${{ github.event.pull_request.head.message }}"
+          echo "Ref: ${{ github.event.pull_request.head.ref }}"
   build:
     # Formato de comentario: /deploy-beta
-    # Si es pull request y el autor del comentario y del issue son miembros, y el issue está abierto, no está bloqueado, y el pull request no está fusionado y el último commit contiene '@exdevutembot mi-utem deploy-beta'
     if: |
       github.event.issue.pull_request &&
       github.event.issue.author_association == 'MEMBER' &&
