@@ -4,7 +4,8 @@ on: issue_comment
 jobs:
   build:
     # Formato de comentario: /deploy-beta
-    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/deploy-beta') && github.event.comment.author_association == 'MEMBER' && github.event.issue.author_association == 'MEMBER' && github.event.issue.state == 'open' && github.event.issue.locked == false && github.event.issue.active_lock_reason == null }}
+    # Si es pull request, y el comentario contiene '/deploy-beta', y el autor del comentario y del issue son miembros, y el issue está abierto, no está bloqueado, y el pull request no está fusionado
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy-beta') && github.event.comment.author_association == 'MEMBER' && github.event.issue.state == 'open' && github.event.issue.locked == false && github.event.issue.active_lock_reason == null && github.event.issue.pull_request.merged_at == null
     runs-on: macos-latest
     environment: development
     steps:
