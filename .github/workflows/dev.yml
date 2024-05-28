@@ -36,7 +36,7 @@ jobs:
       - name: Generar Api PlayStore
         env:
           API_PLAY_STORE: ${{ secrets.API_PLAY_STORE }}
-        run: echo $API_PLAY_STORE > android/key.properties
+        run: echo $API_PLAY_STORE > android/api-playstore.json
       - name: Publicar Beta
         uses: maierj/fastlane-action@v3.1.0
         env:
