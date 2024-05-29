@@ -7,10 +7,10 @@ jobs:
   build:
     # Formato de comentario: /deploy-beta
     if: |
-      github.event.issue.author_association == 'MEMBER' &&
-      (github.event.issue.state == 'open' && !github.event.issue.draft) &&
-      (!github.event.issue.locked && github.event.issue.active_lock_reason == null) &&
-      (github.event.issue.pull_request.merged_at == null)
+      github.event.pull_request.author_association == 'MEMBER' &&
+      (github.event.pull_request.state == 'open' && !github.event.pull_request.draft) &&
+      (!github.event.pull_request.locked && !github.event.pull_request.active_lock_reason) &&
+      (!github.event.pull_request.merged_at)
     runs-on: macos-latest
     environment: development
     steps:
