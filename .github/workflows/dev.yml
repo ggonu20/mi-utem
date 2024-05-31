@@ -47,6 +47,7 @@ jobs:
           KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
           KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
           APP_STORE_CONNECT_AUTHKEY: ${{ secrets.APP_STORE_CONNECT_AUTHKEY }}
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
         run: |
           echo $GOOGLE_SERVICES | base64 --decode > android/app/google-services.json
           echo $API_PLAY_STORE | base64 --decode > android/api-playstore.json
@@ -60,6 +61,7 @@ jobs:
           chmod 644 android/keystores/key*
           
           echo $APP_STORE_CONNECT_AUTHKEY > ios/fastlane/AuthKey.p8
+          echo $GOOGLE_SERVICE_INFO_PLIST > ios/Runner/GoogleService-Info.plist
       - name: Publicar Beta
         uses: maierj/fastlane-action@v3.1.0
         env:
