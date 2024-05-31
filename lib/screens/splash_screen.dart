@@ -95,7 +95,6 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
 
                       final isLoggedIn = await _authService.isLoggedIn();
-                      logger.d("[SplashScreen]: isLoggedIn: $isLoggedIn");
                       final user = await _authService.getUser();
                       AnalyticsService.removeUser();
                       if(isLoggedIn && user != null) {

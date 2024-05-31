@@ -36,11 +36,6 @@ class AuthService {
       return false;
     }
 
-    if(await isFirstTime()) {
-      logger.d("[AuthService#isLoggedIn]: Es primera vez");
-      return false;
-    }
-
     final now = DateTime.now();
     final lastLoginDate = let<String, DateTime?>(await Preferencia.lastLogin.get(), (String _lastLogin) => DateTime.tryParse(_lastLogin)) ?? now;
     final difference = now.difference(lastLoginDate);

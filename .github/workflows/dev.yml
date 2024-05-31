@@ -40,12 +40,13 @@ jobs:
         run: flutter pub get
       - name: Copiar .env
         run: cp .env.example .env
-      - name: Generar Archivos de Google Play
+      - name: Generar Archivos
         env:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
           API_PLAY_STORE: ${{ secrets.API_PLAY_STORE }}
           KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
           KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
+          APP_STORE_CONNECT_AUTHKEY: ${{ secrets.APP_STORE_CONNECT_AUTHKEY }}
         run: |
           echo $GOOGLE_SERVICES | base64 --decode > android/app/google-services.json
           echo $API_PLAY_STORE | base64 --decode > android/api-playstore.json
@@ -57,6 +58,8 @@ jobs:
           echo $KEYSTORE_FILE | base64 --decode > android/keystores/keystore.jks
 
           chmod 644 android/keystores/key*
+          
+          echo $APP_STORE_CONNECT_AUTHKEY > ios/fastlane/AuthKey.p8
       - name: Publicar Beta
         uses: maierj/fastlane-action@v3.1.0
         env:
@@ -83,9 +86,12 @@ jobs:
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
 
           FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         with:
           lane: 'upload'
-          options: '{ "type": "beta", "skip_git_push": "true", "skip_slack": "true", "is_ci": "true", "skip_ios": "true" }'
+          options: '{ "type": "beta", "skip_git_push": "true", "skip_slack": "true", "is_ci": "true" }'
       - name: Publicar Version en Git
         run: |
           git config user.name "github-actions[bot]"

@@ -5,7 +5,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/utils/string_utils.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AnalyticsService {
@@ -32,13 +31,11 @@ class AnalyticsService {
 
     await Sentry.configureScope((scope) => scope.setUser(SentryUser(
       id: correoUtem,
-      email: user.correoPersonal,
-      name: capitalize(user.nombreCompleto),
+      email: correoUtem,
+      name: user.nombreCompletoCapitalizado,
+      username: user.username,
       data: {
-        "rut": user.rut?.toString(),
-        "usuario": user.username,
         "backend_uid": correoUtem != null ? md5.convert(utf8.encode(correoUtem)) : "desconocido",
-        "perfiles": user.perfiles,
       },
       ipAddress: "{{auto}}",
     )));
