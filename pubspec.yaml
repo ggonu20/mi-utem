@@ -2,7 +2,7 @@ name: mi_utem
 description: 'Plataforma académica para estudiantes de la Universidad Tecnológica Metropolitana (UTEM)'
 publish_to: none
 
-version: 3.0.0+115
+version: 3.0.0+117
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
