@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/models/evaluacion/grades.dart';
 import 'package:mi_utem/widgets/calculadora_notas/display_notas_widget.dart';
 import 'package:mi_utem/widgets/calculadora_notas/editar_notas_widget.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:mi_utem/widgets/loading/loading_dialog.dart';
 
 class CalculadoraNotasScreen extends StatefulWidget {
-  const CalculadoraNotasScreen({super.key});
+  final Grades? grades;
+
+  const CalculadoraNotasScreen({
+    super.key,
+    this.grades,
+  });
 
   @override
   State<CalculadoraNotasScreen> createState() => _CalculadoraNotasScreenState();
@@ -14,12 +21,16 @@ class CalculadoraNotasScreen extends StatefulWidget {
 
 class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
 
-  final CalculatorController calculatorController = Get.find<CalculatorController>();
-
   @override
   void initState() {
-    calculatorController.makeEditable();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showLoadingDialog(context);
+      final CalculatorController calculatorController = Get.find<CalculatorController>();
+      calculatorController.makeEditable();
+      calculatorController.updateWithGrades(widget.grades);
+      Navigator.pop(context);
+    });
   }
 
   @override
@@ -31,7 +42,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
           IconButton(
             icon: const Icon(Icons.delete_outline),
             tooltip: "Limpiar notas",
-            onPressed: calculatorController.clearGrades,
+            onPressed: Get.find<CalculatorController>().clearGrades,
           ),
         ],
       ),

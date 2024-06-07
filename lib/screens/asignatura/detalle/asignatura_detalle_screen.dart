@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
-import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/asignaturas/detalles/navigation_tab.dart';
 import 'package:mi_utem/models/carrera.dart';
@@ -67,18 +66,12 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
       length: tabs.length,
       child: Scaffold(
         appBar: CustomAppBar(
-          title: Text(asignatura.nombre ?? "Asignatura sin nombre"),
+          title: Text(asignatura.nombre),
           actions: RemoteConfigService.calculadoraMostrar ? [
             IconButton(
               icon: Icon(Mdi.calculator),
               tooltip: "Calculadora",
-              onPressed: () async {
-                Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen()));
-                final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id);
-                if (grades != null) {
-                  Get.find<CalculatorController>().updateWithGrades(grades);
-                }
-              },
+              onPressed: _onTapCalculadora,
             ),
           ] : [],
           bottom: TabBar(
@@ -89,6 +82,11 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
         body: TabBarView(children: tabs.map((e) => e.child).toList()),
       ),
     );
+  }
+
+  _onTapCalculadora() async {
+    final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id);
+    Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen(grades: grades)));
   }
 }
 

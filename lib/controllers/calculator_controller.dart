@@ -125,21 +125,17 @@ class CalculatorController {
   double? get suggestedGrade {
     if (hasMissingPartialGrade && percentageWithoutGrade > 0) {
       final weightOfMissingGrades = percentageWithoutGrade / maxPercentage;
-      final requiredGradeValue =
-          passingGrade - (suggestedPresentationGrade ?? 0);
-      final missingGradesValue = requiredGradeValue / weightOfMissingGrades;
-      return missingGradesValue;
+      final requiredGradeValue = passingGrade - (suggestedPresentationGrade ?? 0);
+      return requiredGradeValue / weightOfMissingGrades;
     }
     return null;
   }
 
-  void makeEditable() {
-    freeEditable.value = true;
-  }
+  bool get hasGrades => partialGrades.isNotEmpty;
 
-  void makeNonEditable() {
-    freeEditable.value = false;
-  }
+  void makeEditable() => freeEditable.value = true;
+
+  void makeNonEditable() => freeEditable.value = false;
 
   void clearGrades() {
     partialGrades.clear();
@@ -148,10 +144,14 @@ class CalculatorController {
     clearExamGrade();
   }
 
-  void updateWithGrades(Grades grades) {
+  void updateWithGrades(Grades? grades) {
     partialGrades.clear();
     percentageTextFieldControllers.clear();
     gradeTextFieldControllers.clear();
+
+    if(grades == null) {
+      return;
+    }
 
     for(final grade in grades.notasParciales) {
       addGrade(IEvaluacion.fromRemote(grade));
