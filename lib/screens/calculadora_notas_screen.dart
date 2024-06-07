@@ -42,7 +42,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
           IconButton(
             icon: const Icon(Icons.delete_outline),
             tooltip: "Limpiar notas",
-            onPressed: Get.find<CalculatorController>().clearGrades,
+            onPressed: () => Get.find<CalculatorController>().clearGrades(),
           ),
         ],
       ),

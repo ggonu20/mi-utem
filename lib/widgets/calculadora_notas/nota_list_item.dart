@@ -44,13 +44,13 @@ class NotaListItem extends StatelessWidget {
       direction: Axis.horizontal,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Container(
+        SizedBox(
           width: 90,
           child: Text(evaluacion.descripcion ?? "Nota",
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Flexible(
           flex: 3,
           child: Center(
@@ -102,7 +102,7 @@ class NotaListItem extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Flexible(
           flex: 4,
           child: Center(
@@ -148,8 +148,8 @@ class NotaListItem extends StatelessWidget {
             )),
           ),
         ),
-        SizedBox(width: 20),
-        if (onDelete != null)GestureDetector(
+        const SizedBox(width: 20),
+        if (onDelete != null) GestureDetector(
           onTap: () => onDelete?.call(),
           child: Icon(
             Icons.delete,

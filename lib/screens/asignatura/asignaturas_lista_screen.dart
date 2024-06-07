@@ -97,9 +97,7 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-          child: Center(
-            child: LoadingIndicator(),
-          ),
+          child: LoadingIndicator.centered(),
         ),
       ],
     ),
