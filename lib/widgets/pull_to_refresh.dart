@@ -41,10 +41,10 @@ class PullToRefresh extends StatelessWidget {
           builder: (context, child) => SafeArea(
             child: Stack(
               children: [
-                Container(
+                SizedBox(
                   height: (_offsetToArmed) * controller.value,
                   width: double.infinity,
-                  child: Container(
+                  child: SizedBox(
                     height: 30,
                     width: 30,
                     child: SpinKitDoubleBounce(
