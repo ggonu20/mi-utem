@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
@@ -55,7 +56,7 @@ class _MiUtemState extends State<MiUtem> {
       enableMultiSessionRecord: true,
     ));
 
-    return MaterialApp(
+    return GetMaterialApp(
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       title: 'Mi UTEM',
@@ -65,6 +66,7 @@ class _MiUtemState extends State<MiUtem> {
         SentryNavigatorObserver(),
         FlutterUxcamNavigatorObserver()
       ],
+      defaultTransition: Transition.native,
       builder: (context, widget) => ResponsiveWrapper.builder(
         widget,
         maxWidth: 1200,
