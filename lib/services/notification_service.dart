@@ -54,12 +54,9 @@ class NotificationService {
 
     notifications.setListeners(
       onActionReceivedMethod: NotificationController.onActionReceivedMethod,
-      onNotificationCreatedMethod:
-          NotificationController.onNotificationCreatedMethod,
-      onNotificationDisplayedMethod:
-          NotificationController.onNotificationDisplayedMethod,
-      onDismissActionReceivedMethod:
-          NotificationController.onDismissActionReceivedMethod,
+      onNotificationCreatedMethod: NotificationController.onNotificationCreatedMethod,
+      onNotificationDisplayedMethod: NotificationController.onNotificationDisplayedMethod,
+      onDismissActionReceivedMethod: NotificationController.onDismissActionReceivedMethod,
     );
   }
 
@@ -79,15 +76,21 @@ class NotificationService {
     required String body,
     required Carrera carrera,
     required Asignatura asignatura,
-  }) => notifications.createNotification(content: NotificationContent(
-    id: asignatura.hashCode,
-    channelKey: gradeChangesChannelKey,
-    title: title,
-    body: body,
-    payload: {
-      'type': 'grade_change',
-      'asignatura': asignatura.toString(),
-      'carrera': carrera.toString(),
-    },
-  ));
+  }) async {
+    if(!await hasAllowedNotifications()) {
+      return;
+    }
+
+    notifications.createNotification(content: NotificationContent(
+      id: asignatura.hashCode,
+      channelKey: gradeChangesChannelKey,
+      title: title,
+      body: body,
+      payload: {
+        'type': 'grade_change',
+        'asignatura': asignatura.toString(),
+        'carrera': carrera.toString(),
+      },
+    ));
+  }
 }

@@ -4,6 +4,7 @@ enum Preferencia {
   apodo,
   lastLogin,
   onboardingStep,
+  isOffline,
   ;
 
   /// Revisa si la preferencia existe

@@ -71,31 +71,33 @@ class _SplashScreenState extends State<SplashScreen> {
                     callback: (String val) async {
                       showLoadingDialog(context);
                       // Revisar si tenemos conexión a internet
+                      bool offlineMode = (await Preferencia.isOffline.get(defaultValue: "false", guardar: true)) == "true";
                       try {
                         final response = await HttpClient.httpClient.head(apiUrl);
-                        if(response.statusCode != 200) {
-                          Navigator.pop(context);
-                          showTextSnackbar(context,
-                            title: "Error al conectar con la API",
-                            message: "La app funcionará en modo Offline. Revisa tu conexión a internet si quieres acceder a todas las funcionalidades.",
-                            backgroundColor: Colors.red,
-                            duration: Duration(seconds: 20),
-                          );
-                        }
+                        offlineMode = response.statusCode != 200;
                       } catch (e) {
                         logger.e("[SplashScreen]: Error al conectar con la API", e);
+                        offlineMode = true;
+                      }
+
+                      await Preferencia.isOffline.set(offlineMode.toString());
+                      final user = await _authService.getUser();
+
+                      if(offlineMode) {
                         Navigator.pop(context);
                         showTextSnackbar(context,
                           title: "Error al conectar con la API",
-                          message: "La app funcionará en modo Offline. Revisa tu conexión a internet si quieres acceder a todas las funcionalidades.",
+                          message: user != null ? "La app funcionará en modo Offline. Revisa tu conexión a internet si quieres acceder a todas las funcionalidades." : "Ouch! Parece que no tienes una conexión a internet. Revisa tu conexión e intenta más tarde.",
                           backgroundColor: Colors.red,
                           duration: Duration(seconds: 20),
                         );
-                        return;
+
+                        if(user == null) {
+                          return;
+                        }
                       }
 
                       final isLoggedIn = await _authService.isLoggedIn();
-                      final user = await _authService.getUser();
                       AnalyticsService.removeUser();
                       if(isLoggedIn && user != null) {
                         AnalyticsService.setUser(user);

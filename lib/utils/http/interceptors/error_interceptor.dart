@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 
 InterceptorsWrapper errorInterceptor = InterceptorsWrapper(
@@ -12,7 +13,13 @@ InterceptorsWrapper errorInterceptor = InterceptorsWrapper(
       return handler.reject(DioError(requestOptions: err.requestOptions, error: CustomException.fromJson(json as Map<String, dynamic>)));
     }
 
-    final error = DioError(requestOptions: err.requestOptions, error: CustomException.custom(err.response?.statusMessage), response: err.response, type: err.type);
+    logger.e("[ErrorInterceptor]: ${err.message}", err.error, err.stackTrace);
+    final error = DioError(requestOptions: err.requestOptions, error: CustomException.fromJson({
+      "mensaje": err.response?.statusMessage ?? "Ocurrió un error inesperado. Por favor, inténtalo nuevamente.",
+      "error": err.message,
+      "codigoHttp": err.response?.statusCode,
+      "codigoInterno": 0.0,
+    }), response: err.response, type: err.type);
     error.stackTrace = err.stackTrace;
     return handler.reject(error);
   },

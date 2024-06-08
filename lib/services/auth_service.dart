@@ -39,7 +39,8 @@ class AuthService {
     final now = DateTime.now();
     final lastLoginDate = let<String, DateTime?>(await Preferencia.lastLogin.get(), (String _lastLogin) => DateTime.tryParse(_lastLogin)) ?? now;
     final difference = now.difference(lastLoginDate);
-    if(difference.inMinutes < 4 && now != lastLoginDate && !forceRefresh) {
+    final offlineMode = (await Preferencia.isOffline.get()) == "true";
+    if((difference.inMinutes < 4 && now != lastLoginDate && !forceRefresh) || offlineMode) {
       return true;
     }
 
@@ -160,6 +161,9 @@ class AuthService {
     QuerySnapshot<Map<String, dynamic>> snapshotRepeated;
     try {
       snapshotRepeated = await usersCollection.where('fcmTokens', arrayContains: fcmToken).get();
+    } on FirebaseException catch(e) {
+      print(e);
+      return;
     } catch (e) {
       logger.e("[AuthService#deleteFCMToken]: Error al obtener usuarios con FCM Token", e);
       return;

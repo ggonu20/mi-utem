@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/horario.dart';
@@ -56,6 +57,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
       builder: (context, snapshot) {
         if(snapshot.hasError) {
           final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "Ocurrió un error al cargar el horario! Por favor intenta más tarde.";
+          logger.e("Error al cargar horario", snapshot.error, snapshot.stackTrace);
           return Scaffold(
             appBar: CustomAppBar(
               title: Text("Horario"),

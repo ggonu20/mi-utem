@@ -26,15 +26,12 @@ class CarrerasService {
   void changeSelectedCarrera(Carrera carrera) => selectedCarrera = carrera;
 
   void autoSelectCarreraActiva() {
-    logger.d("[CarrerasService#autoSelectCarreraActiva]: Seleccionando carrera activa... ${carreras.map((e) => e.toJson()).toList()}");
     final estados = ["Regular", "Causal de Eliminacion"]
         .reversed
         .map((e) => e.toLowerCase())
         .toList();
 
-    logger.d("[CarrerasService#autoSelectCarreraActiva]: Estados: $estados");
     carreras.sort((a,b) => estados.indexOf(b.estado!.toLowerCase()).compareTo(estados.indexOf(a.estado!.toLowerCase())));
-    logger.d("[CarrerasService#autoSelectCarreraActiva]: Carreras ordenadas: ${carreras.map((e) => e.toJson()).toList()}");
     final carreraActiva = carreras.first;
 
     AnalyticsService.setCarreraToUser(carreraActiva);

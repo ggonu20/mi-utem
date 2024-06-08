@@ -12,15 +12,8 @@ class AnalyticsService {
     await FirebaseAnalytics.instance.setUserId(id: user.correoUtem);
     await FlutterUxcam.setUserIdentity(user.correoUtem);
 
-    if (user.rut != null) {
-      await FirebaseAnalytics.instance.setUserProperty(name: "rut", value: user.rut?.toString());
-      await FlutterUxcam.setUserProperty("rut", user.rut!.toString());
-    }
-
-    if (user.primerNombre != null) {
-      await FirebaseAnalytics.instance.setUserProperty(name: "name", value: user.primerNombre);
-      await FlutterUxcam.setUserProperty("name", user.primerNombre);
-    }
+    await FirebaseAnalytics.instance.setUserProperty(name: "name", value: user.primerNombre);
+    await FlutterUxcam.setUserProperty("name", user.primerNombre);
 
     if (user.apellidos != null) {
       await FirebaseAnalytics.instance.setUserProperty(name: "last_name", value: user.apellidos);

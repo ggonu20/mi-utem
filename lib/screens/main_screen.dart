@@ -55,15 +55,17 @@ class _MainScreenState extends State<MainScreen> {
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview(context);
 
-    loadData();
+    loadData(forceRefresh: false);
 
     _authService.getUser().then((user) => setState(() => _user = user));
   }
 
-  Future<void> loadData() async {
-    await RemoteConfigService.update();
-    await Get.find<PermisoIngresoRepository>().getPermisos(forceRefresh: true); // Forzar re-descarga de los permisos
-    await Get.find<NoticiasRepository>().getNoticias(forceRefresh: true); // Forzar re-descarga de las noticias
+  Future<void> loadData({ bool forceRefresh = true }) async {
+    if(forceRefresh) {
+      await RemoteConfigService.update();
+    }
+    await Get.find<PermisoIngresoRepository>().getPermisos(forceRefresh: forceRefresh); // Forzar re-descarga de los permisos
+    await Get.find<NoticiasRepository>().getNoticias(forceRefresh: forceRefresh); // Forzar re-descarga de las noticias
     setState(() => _banners = RemoteConfigService.banners); // Actualizar los banners y se re-renderiza
   }
 
