@@ -5,6 +5,7 @@ import 'package:mi_utem/utils/http/interceptors/auth_interceptor.dart';
 import 'package:mi_utem/utils/http/interceptors/error_interceptor.dart';
 import 'package:mi_utem/utils/http/interceptors/headers_interceptor.dart';
 import 'package:mi_utem/utils/http/interceptors/log_interceptor.dart';
+import 'package:mi_utem/utils/http/interceptors/offline_mode_interceptor.dart';
 
 class HttpClient {
 
@@ -14,11 +15,15 @@ class HttpClient {
     defaultMaxStale: const Duration(days: 14),
   ));
 
-  static final Dio httpClient = Dio(BaseOptions(baseUrl: apiUrl))..interceptors.addAll([
+  static final Dio dioClient = Dio(BaseOptions(baseUrl: apiUrl))..interceptors.addAll([
     HeadersInterceptor(),
-    errorInterceptor,
     logInterceptor,
+  ]);
+
+  static final Dio httpClient = dioClient..interceptors.addAll([
+    OfflineModeInterceptor(),
     cacheManager.interceptor,
+    errorInterceptor,
   ]);
 
   static final Dio authClient = httpClient..interceptors.add(AuthInterceptor());
