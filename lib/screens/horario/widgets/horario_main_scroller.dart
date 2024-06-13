@@ -23,9 +23,8 @@ class HorarioMainScroller extends StatefulWidget {
 
   final Horario horario;
   final bool showActive;
-  final controller = Get.find<HorarioController>();
 
-  HorarioMainScroller({
+  const HorarioMainScroller({
     super.key,
     required this.horario,
     this.showActive = true,
@@ -63,15 +62,17 @@ class HorarioMainScroller extends StatefulWidget {
 
 class _HorarioMainScrollerState extends State<HorarioMainScroller> {
 
+  final controller = Get.find<HorarioController>();
+
   @override
   void initState() {
-    widget.controller.setOnUpdate(() => setState(() {}));
+    controller.setOnUpdate(() => setState(() {}));
     super.initState();
   }
 
   @override
   void dispose() {
-    widget.controller.setOnUpdate(null);
+    controller.setOnUpdate(null);
     super.dispose();
   }
 
@@ -85,19 +86,21 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
           height: HorarioMainScroller.periodsHeight,
           width: HorarioMainScroller.daysWidth,
           margin: EdgeInsets.only(
-            top: HorarioMainScroller.dayHeight * widget.controller.zoom.value,
-            left: HorarioMainScroller.periodWidth * widget.controller.zoom.value,
+            top: HorarioMainScroller.dayHeight * controller.zoom.value,
+            left: HorarioMainScroller.periodWidth * controller.zoom.value,
           ),
-          child: InteractiveViewer(
-            transformationController: widget.controller.blockContentController,
-            maxScale: HorarioMainScroller.defaultMaxScale,
-            minScale: HorarioMainScroller.defaultMinScale,
-            panAxis: PanAxis.free,
-            clipBehavior: Clip.none,
-            constrained: false,
-            onInteractionUpdate: (interaction) {},
-            child: SafeArea(
-              child: widget._horarioBlocksContent,
+          child: ClipRect(
+            child: InteractiveViewer(
+              transformationController: controller.blockContentController,
+              maxScale: HorarioMainScroller.defaultMaxScale,
+              minScale: HorarioMainScroller.defaultMinScale,
+              panAxis: PanAxis.free,
+              clipBehavior: Clip.none,
+              constrained: false,
+              onInteractionUpdate: (interaction) {},
+              child: SafeArea(
+                child: widget._horarioBlocksContent,
+              ),
             ),
           ),
         ),
@@ -105,9 +108,9 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
         Container(
           width: HorarioMainScroller.daysWidth,
           height: HorarioMainScroller.dayHeight,
-          margin: EdgeInsets.only(left: HorarioMainScroller.periodWidth * widget.controller.zoom.value),
-          child: InteractiveViewer(
-            transformationController: widget.controller.daysHeaderController,
+          margin: EdgeInsets.only(left: HorarioMainScroller.periodWidth * controller.zoom.value),
+          child: ClipRect(child: InteractiveViewer(
+            transformationController: controller.daysHeaderController,
             maxScale: HorarioMainScroller.defaultMaxScale,
             minScale: HorarioMainScroller.defaultMinScale,
             panAxis: PanAxis.free,
@@ -118,14 +121,14 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             child: SafeArea(
               child: widget._horarioDaysHeader,
             ),
-          ),
+          )),
         ),
         /* Esquina del Horario */
         Container(
           width: HorarioMainScroller.periodWidth,
           height: HorarioMainScroller.dayHeight,
-          child: InteractiveViewer(
-            transformationController: widget.controller.cornerController,
+          child: ClipRect(child: InteractiveViewer(
+            transformationController: controller.cornerController,
             maxScale: HorarioMainScroller.defaultMaxScale,
             minScale: HorarioMainScroller.defaultMinScale,
             panAxis: PanAxis.free,
@@ -137,15 +140,15 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             child: SafeArea(
               child: widget._horarioCorner,
             ),
-          ),
+          )),
         ),
         /* Lista de Horas */
         Container(
           width: HorarioMainScroller.periodWidth,
           height: HorarioMainScroller.periodsHeight,
-          margin: EdgeInsets.only(top: HorarioMainScroller.dayHeight * widget.controller.zoom.value),
+          margin: EdgeInsets.only(top: HorarioMainScroller.dayHeight * controller.zoom.value),
           child: InteractiveViewer(
-            transformationController: widget.controller.periodHeaderController,
+            transformationController: controller.periodHeaderController,
             maxScale: HorarioMainScroller.defaultMaxScale,
             minScale: HorarioMainScroller.defaultMinScale,
             panAxis: PanAxis.free,

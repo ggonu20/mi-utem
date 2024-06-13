@@ -13,30 +13,26 @@ class HorarioCorner extends StatelessWidget {
     this.backgroundColor = MainTheme.lightGrey,
   });
 
-  List<TableRow> get _children => [
-        TableRow(
-          children: [
-            Container(
-              height: height,
-              width: width,
-              color: backgroundColor,
-            ),
-          ],
-        ),
-      ];
-
   @override
-  Widget build(BuildContext context) {
-    return Table(
-      defaultColumnWidth: FixedColumnWidth(width),
-      border: TableBorder(
-        right: BorderSide(
-          color: Color(0xFFBDBDBD),
-          style: BorderStyle.solid,
-          width: 2,
-        ),
+  Widget build(BuildContext context) => Table(
+    defaultColumnWidth: FixedColumnWidth(width),
+    border: TableBorder(
+      right: BorderSide(
+        color: Color(0xFFBDBDBD),
+        style: BorderStyle.solid,
+        width: 2,
       ),
-      children: _children,
-    );
-  }
+    ),
+    children: [
+      TableRow(
+        children: [
+          Container(
+            height: height,
+            width: width,
+            color: backgroundColor,
+          ),
+        ],
+      ),
+    ],
+  );
 }
