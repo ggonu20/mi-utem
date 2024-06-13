@@ -51,7 +51,7 @@ class NoticiasCarruselWidget extends StatelessWidget {
           return CarouselSlider.builder(
             options: CarouselOptions(
               autoPlay: true,
-              height: 200,
+              height: 230,
               viewportFraction: MediaQuery.of(context).orientation == Orientation.landscape ? 0.3 : 0.5,
               initialPage: 0,
             ),

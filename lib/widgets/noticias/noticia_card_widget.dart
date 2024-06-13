@@ -6,7 +6,7 @@ import 'package:mi_utem/widgets/loading/loading_indicator.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NoticiaCardWidget extends StatefulWidget {
+class NoticiaCardWidget extends StatelessWidget {
 
   final Noticia noticia;
 
@@ -15,48 +15,44 @@ class NoticiaCardWidget extends StatefulWidget {
   });
 
   @override
-  State<NoticiaCardWidget> createState() => _NoticiaCardWidgetState();
-}
-
-class _NoticiaCardWidgetState extends State<NoticiaCardWidget> {
-
-  @override
   Widget build(BuildContext context) => SizedBox(
-    height: 200,
-    width: 200,
+    height: 230,
+    width: 250,
     child: Card(
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _onTapNoticia,
+          onTap: () => _onTapNoticia(context),
           borderRadius: BorderRadius.all(Radius.circular(15)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               CachedNetworkImage(
-                imageUrl: widget.noticia.imagen,
+                imageUrl: noticia.imagen,
                 placeholder: (ctx, url) => LoadingIndicator(),
                 errorWidget: (ctx, url, error) => Icon(Icons.error, size: 110, color: Theme.of(context).colorScheme.error),
                 height: 110,
                 fit: BoxFit.cover,
               ),
-              Container(
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: 70,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Spacer(),
-                    Text(widget.noticia.titulo,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    Spacer(),
-                  ],
+                child: SizedBox(
+                  height: 100,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Spacer(),
+                      Text(noticia.titulo,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -64,8 +60,8 @@ class _NoticiaCardWidgetState extends State<NoticiaCardWidget> {
     ),
   );
 
-  _onTapNoticia() async {
-    final url = widget.noticia.link;
+  _onTapNoticia(BuildContext context) async {
+    final url = noticia.link;
     if (await canLaunchUrl(Uri.parse(url))) {
       AnalyticsService.logEvent("noticia_card_tap");
       await launchUrl(Uri.parse(url));
