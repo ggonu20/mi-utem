@@ -170,7 +170,7 @@ class GradesService {
       asignatura.notasParciales.any((it) => it.nota != null);
 
   void _notifyGradeUpdate(Carrera carrera, Asignatura asignatura, GradeChangeType changeType) {
-    final name = asignatura.nombre ?? asignatura.codigo;
+    final name = asignatura.nombre;
 
     String? title;
     String? body;

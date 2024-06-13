@@ -41,7 +41,7 @@ class BloqueClase extends StatelessWidget {
             HorarioText.classCode("${block.codigo}",
               color: textColor,
             ),
-            HorarioText.className("${block.asignatura?.nombre?.toUpperCase()}",
+            HorarioText.className("${block.asignatura?.nombre.toUpperCase()}",
               color: textColor,
             ),
             HorarioText.classLocation(block.sala ?? "Sin sala",
