@@ -89,35 +89,39 @@ class _MainScreenState extends State<MainScreen> {
       onRefresh: loadData,
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              width: double.infinity,
-              child: FutureBuilder<String?>(
-                future: Preferencia.apodo.get(defaultValue: "N/N"),
-                initialData: _user?.primerNombre ?? "N/N",
-                builder: (ctx, snapshot) => MarkdownBody(
-                  data: _greetingText.replaceAll("%name", snapshot.data ?? "N/N"),
-                  styleSheet: MarkdownStyleSheet(
-                    p: Theme.of(context).textTheme.displayMedium!.copyWith(fontWeight: FontWeight.normal),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const SizedBox(height: 20),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FutureBuilder<String?>(
+                    future: Preferencia.apodo.get(defaultValue: "N/N"),
+                    initialData: _user?.primerNombre ?? "N/N",
+                    builder: (ctx, snapshot) => MarkdownBody(
+                      data: _greetingText.replaceAll("%name", snapshot.data ?? "N/N"),
+                      styleSheet: MarkdownStyleSheet(
+                        p: Theme.of(context).textTheme.displayMedium!.copyWith(fontWeight: FontWeight.normal),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            PermisosCovidSection(),
-            const SizedBox(height: 20),
-            const QuickMenuSection(),
-            const SizedBox(height: 20),
-            if (_banners.isNotEmpty) ...[
-              BannersSection(banners: _banners),
               const SizedBox(height: 20),
+              PermisosCovidSection(),
+              const SizedBox(height: 20),
+              const QuickMenuSection(),
+              const SizedBox(height: 20),
+              if (_banners.isNotEmpty) ...[
+                BannersSection(banners: _banners),
+                const SizedBox(height: 20),
+              ],
+              NoticiasCarruselWidget(),
             ],
-            NoticiasCarruselWidget(),
-          ],
+          ),
         ),
       ),
     ),
