@@ -13,7 +13,6 @@ import 'package:mi_utem/service_manager.dart';
 import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'services/remote_config/remote_config.dart';
@@ -24,7 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
   await GetStorage.init();
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
   await Firebase.initializeApp();
   await RemoteConfigService.initialize();
   await registerServices();
@@ -67,17 +66,6 @@ class _MiUtemState extends State<MiUtem> {
         FlutterUxcamNavigatorObserver()
       ],
       defaultTransition: Transition.native,
-      builder: (context, widget) => ResponsiveWrapper.builder(
-        widget,
-        maxWidth: 1200,
-        minWidth: 360,
-        breakpoints: [
-          ResponsiveBreakpoint.resize(480, name: MOBILE),
-          ResponsiveBreakpoint.autoScale(800, name: TABLET),
-          ResponsiveBreakpoint.resize(1000, name: DESKTOP),
-          ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-        ],
-      ),
     );
   }
 }
