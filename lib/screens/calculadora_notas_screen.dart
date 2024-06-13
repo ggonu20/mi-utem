@@ -46,13 +46,13 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
           ),
         ],
       ),
-      body: ListView(
+      body: SafeArea(child: ListView(
         padding: const EdgeInsets.all(10),
         children: [
           const DisplayNotasWidget(),
           const EditarNotasWidget(),
         ],
-      ),
+      )),
     );
   }
 }

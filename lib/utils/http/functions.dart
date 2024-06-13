@@ -32,11 +32,12 @@ Future<Response> authClientRequest(String path, {
     primaryKey: 'miutem',
     subKey: path,
     maxStale: const Duration(days: 14),
-  ).copyWith(
-    method: method,
-    headers: headers,
-    contentType: contentType,
-    responseType: responseType,
+    options: Options(
+      method: method,
+      headers: headers,
+      contentType: contentType,
+      responseType: responseType,
+    ),
   ),
 );
 

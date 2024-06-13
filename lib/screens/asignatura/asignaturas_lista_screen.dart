@@ -46,7 +46,7 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
         ),
       ] : [],
     ),
-    body: PullToRefresh(
+    body: SafeArea(child: PullToRefresh(
       onRefresh: () async => setState(() => _forceRefresh = true),
       child: FutureBuilder<Pair<Carrera?, List<Asignatura>?>>(
         future: () async {
@@ -88,7 +88,7 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
           );
         },
       ),
-    ),
+    )),
   );
 
   Widget _loadingWidget() => Padding(

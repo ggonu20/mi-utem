@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/widgets/acerca/acerca_screen.dart';
+import 'package:mi_utem/screens/acerca_screen.dart';
 
 class AcercaDialogActionButton extends StatefulWidget {
 

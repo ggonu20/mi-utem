@@ -34,7 +34,7 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
     appBar: CustomAppBar(
       title: Text("Estudiantes"),
     ),
-    body: PullToRefresh(
+    body: SafeArea(child: PullToRefresh(
       onRefresh: () async => setState(() => _forceRefresh = true),
       child: FutureBuilder<List<User>?>(
         future: () async {
@@ -95,6 +95,6 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
           );
         },
       ),
-    ),
+    )),
   );
 }

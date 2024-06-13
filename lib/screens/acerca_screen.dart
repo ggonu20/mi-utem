@@ -18,7 +18,7 @@ class AcercaScreen extends StatelessWidget {
     appBar: CustomAppBar(
       title: const Text("Acerca de Mi UTEM"),
     ),
-    body: SingleChildScrollView(
+    body: SafeArea(child: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -36,6 +36,6 @@ class AcercaScreen extends StatelessWidget {
           ],
         ),
       ),
-    ),
+    )),
   );
 }

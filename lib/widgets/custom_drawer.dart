@@ -7,6 +7,7 @@ import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/pair.dart';
 import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/screens/acerca_screen.dart';
 import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';
@@ -17,7 +18,6 @@ import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/utils/utils.dart';
-import 'package:mi_utem/widgets/acerca/acerca_screen.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
 class CustomDrawer extends StatelessWidget {

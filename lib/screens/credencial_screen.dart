@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/carrera.dart';
@@ -30,6 +31,11 @@ class _CredencialScreenState extends State<CredencialScreen> {
   @override
   void initState() {
     ReviewService.addScreen("CredencialScreen");
+    // Set device orientation to portrait
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     ScreenProtector.preventScreenshotOn();
     ScreenProtector.protectDataLeakageOn();
     ScreenProtector.protectDataLeakageWithBlur();
@@ -40,6 +46,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
   void dispose() {
     ScreenProtector.preventScreenshotOff();
     ScreenProtector.protectDataLeakageOff();
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     super.dispose();
   }
 

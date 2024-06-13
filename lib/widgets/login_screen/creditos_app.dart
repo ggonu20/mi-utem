@@ -3,8 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mi_utem/screens/acerca_screen.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/widgets/acerca/acerca_screen.dart';
 
 class CreditosApp extends StatelessWidget {
 

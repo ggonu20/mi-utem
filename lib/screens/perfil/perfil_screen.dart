@@ -38,7 +38,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
     appBar: CustomAppBar(
       title: Text("Perfil"),
     ),
-    body: FutureBuilder<User?>(
+    body: SafeArea(child: FutureBuilder<User?>(
       future: Get.find<AuthService>().getUser(),
       builder: (ctx, snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting) {
@@ -169,6 +169,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
           ),
         );
       },
-    ),
+    )),
   );
 }

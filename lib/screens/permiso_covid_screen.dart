@@ -24,12 +24,12 @@ class PermisoCovidScreen extends StatefulWidget {
 
 class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
 
-  PermisoIngresoRepository _permisoIngresoRepository = Get.find<PermisoIngresoRepository>();
+  final PermisoIngresoRepository _permisoIngresoRepository = Get.find<PermisoIngresoRepository>();
 
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: CustomAppBar(title: Text("Permiso de ingreso")),
-    body: PullToRefresh(
+    body: SafeArea(child: PullToRefresh(
       onRefresh: () async {
         await _permisoIngresoRepository.getDetallesPermiso(widget.passId, forceRefresh: true);
         setState(() {});
@@ -62,6 +62,6 @@ class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
           );
         },
       ),
-    ),
+    )),
   );
 }

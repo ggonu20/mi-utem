@@ -13,14 +13,14 @@ class OfflineModeInterceptor extends Interceptor {
     bool offlineMode = (await Preferencia.isOffline.getAsBool(defaultValue: false, guardar: true));
     bool _forceRefresh = options.extra.containsKey(DIO_CACHE_KEY_FORCE_REFRESH) && options.extra[DIO_CACHE_KEY_FORCE_REFRESH] == true;
     if(!offlineMode || !_forceRefresh) {
-      return super.onRequest(options, handler);
+      return handler.next(options);
     }
 
     // Revisa si sigue offline realizando solicitud a la API (solo head)
     offlineMode = await isOffline();
 
     if(!offlineMode) { // Si vuelve la conexión
-      return super.onRequest(options, handler);
+      return handler.next(options);
     }
 
     if(_forceRefresh) {
@@ -32,7 +32,7 @@ class OfflineModeInterceptor extends Interceptor {
 
     options.extra[DIO_CACHE_KEY_FORCE_REFRESH] = offlineMode;
 
-    return super.onRequest(options, handler);
+    return handler.next(options);
   }
 
   @override

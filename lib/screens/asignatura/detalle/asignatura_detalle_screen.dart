@@ -4,7 +4,6 @@ import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/asignaturas/detalles/navigation_tab.dart';
 import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/repositories/grades_repository.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_resumen_tab.dart';
@@ -49,12 +48,8 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
         child: AsignaturaNotasTab(
           asignatura: asignatura,
           onRefresh: () async {
-            final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas(widget.carrera.id, forceRefresh: true))?.firstWhere((it) => it.id == this.asignatura.id).copyWith(
-              grades: await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: this.asignatura.id, forceRefresh: true),
-            );
-            if(asignatura != null) {
-              setState(() => this.asignatura = asignatura);
-            }
+            final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: this.asignatura.id, forceRefresh: true);
+            setState(() => this.asignatura = asignatura.copyWith(grades: grades));
           },
         ),
         initial: true,
@@ -79,7 +74,7 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
             tabs: tabs.map((e) => Tab(text: e.label)).toList(),
           ),
         ),
-        body: TabBarView(children: tabs.map((e) => e.child).toList()),
+        body: SafeArea(child: TabBarView(children: tabs.map((e) => e.child).toList())),
       ),
     );
   }
