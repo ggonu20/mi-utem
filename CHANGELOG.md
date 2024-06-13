@@ -33,12 +33,14 @@ Tipos de cambios
 - Se agrega onboarding (con configuración de apodo, solicitud de permiso de notificaciones y bienvenida a la app).
 - Lista de estudiantes al resumen de asignatura.
 - Vista previa de estudiantes y profesores.
-- Vista previa de los datos del profesor
+- Vista previa de los datos del profesor.
 - Se agrega ventana de vista previa de la asignatura desde horario (al mantener presionado un bloque).
 - Se agrega navegación hacia la asignatura desde el horario al presionar un bloque.
 - Botón para limpiar las notas en la calculadora.
 - Sección de `Acerca de la App` en modo depuración.
-- Se agrega métricas y toma de errores de Sentry (esta vez están bien configurados)
+- Se agrega métricas y toma de errores de Sentry (esta vez están bien configurados).
+- Se agrega modo fuera de línea para permitir el uso de la app sin conexión.
+- Se permite cualquier orientación de pantalla (horizontal y vertical).
 
 ### Changed
 - Se actualizaron algunas dependencias.
