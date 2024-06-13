@@ -16,6 +16,7 @@ import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:mi_utem/utils/utils.dart';
 import 'package:mi_utem/widgets/acerca/acerca_screen.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
@@ -44,11 +45,7 @@ class CustomDrawer extends StatelessWidget {
     }
   }
 
-  List? get _menu {
-    return jsonDecode(RemoteConfigService.drawerMenu)
-        .where((e) => e['mostrar'] == true)
-        .toList();
-  }
+  List get _menu => (jsonDecode(RemoteConfigService.drawerMenu).where((e) => e['mostrar'] == true).toList()) ?? [];
 
   @override
   Widget build(BuildContext context) {
@@ -103,35 +100,36 @@ class CustomDrawer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      for (final e in _menu!)
-                        ListTile(
-                          leading: Icon(IconData(e["icono"]["codePoint"],
-                            fontFamily: e["icono"]["fontFamily"],
-                            fontPackage: e["icono"]["fontPackage"],
-                          )),
-                          title: Text(e["nombre"]),
-                          trailing: e["esNuevo"] ? badge.Badge(
-                            shape: badge.BadgeShape.square,
-                            borderRadius: BorderRadius.circular(10),
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                            elevation: 0,
-                            badgeContent: const Text("Nuevo",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
+                      SafeArea(
+                        top: false,
+                        child: Column(
+                          children: _menu.map((e) => ListTile(
+                            leading: Icon(IconData(e["icono"]["codePoint"],
+                              fontFamily: e["icono"]["fontFamily"],
+                              fontPackage: e["icono"]["fontPackage"],
+                            )),
+                            title: Text(e["nombre"]),
+                            trailing: let<bool, Widget>(e["esNuevo"], (esNuevo) => badge.Badge(
+                              showBadge: esNuevo,
+                              shape: badge.BadgeShape.square,
+                              borderRadius: BorderRadius.circular(10),
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                              elevation: 0,
+                              badgeContent: const Text("Nuevo",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          )
-                              : null,
-                          onTap: () {
-                            Widget? route = _getRoute(e["nombre"]);
-                            if (route != null) {
+                            )),
+                            onTap: () => let<Widget, void>(_getRoute(e["nombre"]), (route) {
                               Navigator.push(context, MaterialPageRoute(builder: (ctx) => route));
                               ReviewService.checkAndRequestReview(context);
-                            }
-                          },
+                            }),
+                          )).toList(),
                         ),
+                      ),
                       Expanded(
                         child: SafeArea(
                           child: Column(
