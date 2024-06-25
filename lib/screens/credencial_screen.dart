@@ -67,12 +67,8 @@ class _CredencialScreenState extends State<CredencialScreen> {
         final authService = Get.find<AuthService>();
         final carrerasService = Get.find<CarrerasService>();
 
-        if(carrerasService.selectedCarrera == null) {
-          await carrerasService.getCarreras();
-        }
-
         final user = await authService.getUser();
-        final carrera = carrerasService.selectedCarrera;
+        final carrera = await carrerasService.getCarreras();
 
         return Pair(user, carrera);
       }(),

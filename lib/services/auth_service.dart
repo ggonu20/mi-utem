@@ -25,14 +25,14 @@ class AuthService {
   Future<bool> isLoggedIn({ bool forceRefresh = false }) async {
     final credentials = await _getCredential();
     if(credentials == null) {
-      logger.d("[AuthService#isLoggedIn]: no credential");
+      logger.d("[AuthService#isLoggedIn]: No se encontraron credenciales.");
       return false;
     }
 
     final user = await getUser();
     final userToken = user?.token;
     if(user == null || userToken == null) {
-      logger.d("[AuthService#isLoggedIn]: Usuario o token nulo (user: ${user == null}, token: ${userToken == null})");
+      logger.d("[AuthService#isLoggedIn]: Usuario o token nulo (user?: ${user == null}, token?: ${userToken == null})");
       return false;
     }
 

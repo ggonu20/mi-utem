@@ -1,4 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/screens/main_screen.dart';
@@ -93,13 +92,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     await Preferencia.onboardingStep.set("complete");
                     Navigator.popUntil(context, (route) => route.isFirst);
                     final alias = await Preferencia.apodo.get();
-                    AwesomeNotifications().createNotification(content: NotificationContent(
-                      id: 1,
-                      channelKey: NotificationService.announcementsChannelKey,
-                      actionType: ActionType.Default,
+                    NotificationService.showAnnouncementNotification(
                       title: alias != null ? "¡Hola $alias! 🎉" : "¡Hola! 🎉",
                       body: '¡Te damos la bienvenida a la aplicación Mi UTEM! 🚀',
-                    ));
+                    );
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
                   },
                   style: ElevatedButton.styleFrom(

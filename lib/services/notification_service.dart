@@ -71,6 +71,27 @@ class NotificationService {
     return isAllowed;
   }
 
+  static void showAnnouncementNotification({
+    required String title,
+    required String body,
+    Map<String, dynamic> payload = const {},
+  }) async {
+    if(!await hasAllowedNotifications()) {
+      return;
+    }
+
+    notifications.createNotification(content: NotificationContent(
+      id: payload.hashCode,
+      channelKey: announcementsChannelKey,
+      title: title,
+      body: body,
+      payload: {
+        'type': 'announcement',
+        ...payload,
+      },
+    ));
+  }
+
   static void showGradeChangeNotification({
     required String title,
     required String body,

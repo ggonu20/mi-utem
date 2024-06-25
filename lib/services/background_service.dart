@@ -41,14 +41,13 @@ class BackgroundController {
 }
 
 class BackgroundService {
+
   static Future<void> initAndStart() async {
     BackgroundFetch.registerHeadlessTask(BackgroundController.backgroundFetchHeadlessTask);
-    await BackgroundFetch.configure(_backgroundFetchConfig, (taskId) {
-      Sentry.metrics().timing("BackgroundFetch_$taskId",
-        function: _onFetch(taskId),
-        unit: DurationSentryMeasurementUnit.milliSecond,
-      );
-    }, _onTimeout);
+    await BackgroundFetch.configure(_backgroundFetchConfig, (taskId) => Sentry.metrics().timing("BackgroundFetch_$taskId",
+      function: () async => await _onFetch(taskId),
+      unit: DurationSentryMeasurementUnit.milliSecond,
+    ), _onTimeout);
 
     BackgroundFetch.start().then((_) {}).catchError((e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);
@@ -71,16 +70,52 @@ class BackgroundService {
     now = DateTime.now();
 
     // Refresca las carreras
-    await Get.find<CarrerasRepository>().getCarreras(forceRefresh: true);
-    logger.d("[BackgroundFetch]: Se refrescaron las carreras, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
-    now = DateTime.now();
+    now = await refrescarCarreras(now);
+
+    // Actualiza el horario
+    now = await refrescarHorario(now);
 
     // Revisa si hubo un cambio en las notas
-    await Get.find<GradesService>().lookForGradeUpdates();
-    logger.d("[BackgroundFetch]: Se revisaron las notas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
-    now = DateTime.now();
+    now = await notificarCambiosNotas(now);
 
     // Actualiza los permisos de ingreso
+    now = await refrescarPermisos(now);
+    
+    // Actualiza los datos de las asignaturas
+    now = await refrescarAsignaturasYEstudiantes(now);
+
+    logger.d("[BackgroundFetch]: Se terminó la tarea '$taskId', tomó ${DateTime.now().difference(init).inMilliseconds} ms");
+  }
+
+  static Future<DateTime> refrescarHorario(DateTime now) async {
+    try {
+      final carreraId = (await Get.find<CarrerasService>().getCarreras())?.id;
+      if(carreraId != null) {
+        await Get.find<HorarioRepository>().getHorario(carreraId, forceRefresh: true);
+      }
+    } catch(_){}
+    logger.d("[BackgroundFetch]: Se refrescó el horario, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+    now = DateTime.now();
+    return now;
+  }
+
+  static Future<DateTime> refrescarAsignaturasYEstudiantes(DateTime now) async {
+    try {
+      final carreraId = (await Get.find<CarrerasService>().getCarreras())?.id;
+      if(carreraId != null) {
+        AsignaturasRepository asignaturasRepository = Get.find<AsignaturasRepository>();
+        final asignaturas = await asignaturasRepository.getAsignaturas(carreraId, forceRefresh: true) ?? [];
+        for(final asignatura in asignaturas) {
+          await asignaturasRepository.getEstudiantesAsignatura(asignatura, forceRefresh: true);
+        }
+      }
+    } catch(_){}
+    logger.d("[BackgroundFetch]: Se refrescaron los datos de las carreras y asignaturas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+    now = DateTime.now();
+    return now;
+  }
+
+  static Future<DateTime> refrescarPermisos(DateTime now) async {
     try {
       PermisoIngresoRepository permisoIngresoRepository = Get.find<PermisoIngresoRepository>();
       final permisos = await permisoIngresoRepository.getPermisos(forceRefresh: true);
@@ -92,32 +127,21 @@ class BackgroundService {
     } catch (_){}
     logger.d("[BackgroundFetch]: Se refrescaron los permisos de ingreso, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
     now = DateTime.now();
+    return now;
+  }
 
-    // Actualiza los datos de las carreras y asignaturas
-    try {
-      final carreraId = Get.find<CarrerasService>().selectedCarrera?.id;
-      if(carreraId != null) {
-        AsignaturasRepository asignaturasRepository = Get.find<AsignaturasRepository>();
-        final asignaturas = await asignaturasRepository.getAsignaturas(carreraId, forceRefresh: true) ?? [];
-        for(final asignatura in asignaturas) {
-          await asignaturasRepository.getEstudiantesAsignatura(asignatura, forceRefresh: true);
-        }
-      }
-    } catch(_){}
-    logger.d("[BackgroundFetch]: Se refrescaron los datos de las carreras y asignaturas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+  static Future<DateTime> notificarCambiosNotas(DateTime now) async {
+    await Get.find<GradesService>().lookForGradeUpdates();
+    logger.d("[BackgroundFetch]: Se revisaron las notas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
     now = DateTime.now();
+    return now;
+  }
 
-    // Actualiza el horario
-    try {
-      final carreraId = Get.find<CarrerasService>().selectedCarrera?.id;
-      if(carreraId != null) {
-        await Get.find<HorarioRepository>().getHorario(carreraId, forceRefresh: true);
-      }
-    } catch(_){}
-    logger.d("[BackgroundFetch]: Se refrescó el horario, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
+  static Future<DateTime> refrescarCarreras(DateTime now) async {
+    await Get.find<CarrerasRepository>().getCarreras(forceRefresh: true);
+    logger.d("[BackgroundFetch]: Se refrescaron las carreras, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
     now = DateTime.now();
-
-    logger.d("[BackgroundFetch]: Se terminó la tarea '$taskId', tomó ${DateTime.now().difference(init).inMilliseconds} ms");
+    return now;
   }
 
   static _onTimeout(String taskId) async {
