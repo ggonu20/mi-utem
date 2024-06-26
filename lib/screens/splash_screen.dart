@@ -89,9 +89,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
                       final isLoggedIn = await _authService.isLoggedIn();
                       AnalyticsService.removeUser();
-                      if(isLoggedIn && user != null) {
-                        AnalyticsService.setUser(user);
-                      }
 
                       // Esto nos asegura de que el splash es la única ruta inicial, y resuelve el error de poder volver al login.
                       Navigator.popUntil(context, (route) => route.isFirst);

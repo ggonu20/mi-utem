@@ -54,6 +54,10 @@ class RemoteConfigService {
     try {
       await _firebaseRemoteConfigInstance.setDefaults(defaults);
       await _firebaseRemoteConfigInstance.fetchAndActivate();
+      await _firebaseRemoteConfigInstance.setConfigSettings(RemoteConfigSettings(
+        minimumFetchInterval: Duration(hours: 12),
+        fetchTimeout: Duration(minutes: 1),
+      ));
     } catch (exception) {
       logger.e('Error al descargar la configuración remota. Se usarán los valores guardados en cache o los valores por defecto', exception);
     }

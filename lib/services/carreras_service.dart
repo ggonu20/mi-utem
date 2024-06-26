@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/repositories/carreras_repository.dart';
-import 'package:mi_utem/services/analytics_service.dart';
 
 class CarrerasService {
 
@@ -34,7 +33,6 @@ class CarrerasService {
     carreras.sort((a,b) => estados.indexOf(b.estado!.toLowerCase()).compareTo(estados.indexOf(a.estado!.toLowerCase())));
     final carreraActiva = carreras.first;
 
-    AnalyticsService.setCarreraToUser(carreraActiva);
     changeSelectedCarrera(carreraActiva);
   }
 

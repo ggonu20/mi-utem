@@ -95,7 +95,6 @@ class _LoginButtonState extends State<LoginButton> {
       }
 
       AnalyticsService.logEvent('login');
-      AnalyticsService.setUser(user);
 
       Navigator.of(context).popUntil((route) => route.isFirst); // Esto elimina todas las pantallas anteriores
       // Y esto reemplaza la pantalla actual por la nueva, cosa de que no pueda "volver" al login a menos que cierre la sesión.
