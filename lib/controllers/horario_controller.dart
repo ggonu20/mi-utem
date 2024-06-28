@@ -1,138 +1,175 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/controllers/carreras_controller.dart';
-import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/repositories/horario_repository.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
-import 'package:mi_utem/services/horarios_service.dart';
+import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
+import 'package:mi_utem/utils/utils.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
-class HorarioController extends GetxController {
-  static const daysCount = 6;
-  static const periodsCount = 9;
+class HorarioController {
+  final _storage = GetStorage();
+  final _randomColors = Colors.primaries.toList()..shuffle();
+  final _now = DateTime.now();
 
-  static const startTime = "7:55";
-  static const periodDuration = Duration(minutes: 90);
-  static const periodGap = Duration(minutes: 5);
+  num daysCount = 6;
 
-  static final GetStorage _box = GetStorage();
-  static final List<Color> _randomColors = Colors.primaries.toList()..shuffle();
+  num periodsCount = 9;
 
-  final horario = Rxn<Horario>(null);
-  final loadingHorario = false.obs;
-  final usedColors = <Color>[];
-  final zoom = 0.5.obs;
-  final indicatorIsOpen = false.obs;
-  final isCenteredInCurrentPeriodAndDay = false.obs;
+  String startTime = "7:55";
 
-  final blockContentController = TransformationController();
-  final daysHeaderController = TransformationController();
-  final periodHeaderController = TransformationController();
-  final cornerController = TransformationController();
+  Duration periodDuration = Duration(minutes: 90);
 
-  static HorarioController get to => Get.find();
+  Duration periodGap = Duration(minutes: 5);
+
+  List<Color> usedColors = [];
+
+  RxDouble zoom = 0.5.obs;
+
+  RxBool indicatorIsOpen = false.obs;
+
+  RxBool isCenteredInCurrentPeriodAndDay = false.obs;
+
+  TransformationController blockContentController = TransformationController();
+
+  TransformationController daysHeaderController = TransformationController();
+
+  TransformationController periodHeaderController = TransformationController();
+
+  TransformationController cornerController = TransformationController();
+
+  Function? _onUpdate;
 
   List<Color> get unusedColors {
-    List<Color> availableColors = [..._randomColors];
-    availableColors.retainWhere((Color color) => !usedColors.contains(color));
-    if (availableColors.length == 0) {
-      return [..._randomColors];
-    }
-    return availableColors;
+    List<Color> availableColors = [..._randomColors].where((Color color) => !usedColors.contains(color)).toList();
+    return availableColors.isEmpty ? [..._randomColors] : availableColors;
   }
 
-  DateTime _now = DateTime.now();
+  double get minutesFromStart => _now.difference(DateTime(_now.year, _now.month, _now.day, int.parse(startTime.split(":")[0]), int.parse(startTime.split(":")[1]))).inMinutes.toDouble();
 
-  double get minutesFromStart {
-    final now = _now;
-    final startTimeParts = startTime.split(":");
-    final startDateTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      int.parse(startTimeParts[0]),
-      int.parse(startTimeParts[1]),
-    );
-    return now.difference(startDateTime).inMinutes.toDouble();
-  }
-
-  int? get indexOfCurrentDayStartingAtMonday {
-    final now = _now;
-    final day = now.weekday;
-    return day > daysCount ? null : day - 1;
-  }
+  int? get indexOfCurrentDayStartingAtMonday => _now.weekday > daysCount ? null : _now.weekday - 1;
 
   int? get indexOfCurrentPeriod {
-    final minutes = minutesFromStart;
-    final periodBlockDuration =
-        periodDuration.inMinutes + (periodGap.inMinutes * 2);
+    final periodBlockDuration = periodDuration.inMinutes + (periodGap.inMinutes * 2);
 
-    final period = minutes ~/ periodBlockDuration;
-    final minutesModule = minutes % periodBlockDuration;
+    final minutesModule = minutesFromStart % periodBlockDuration;
 
-    if (minutesModule >= periodGap.inMinutes &&
-        minutesModule <= (periodBlockDuration - periodGap.inMinutes)) {
-      return period;
+    if (minutesModule >= periodGap.inMinutes && minutesModule <= (periodBlockDuration - periodGap.inMinutes)) {
+      return (minutesFromStart ~/ periodBlockDuration); // Periodo actual
     }
 
     return null;
   }
 
-  @override
-  onInit() {
-    if (Get.find<CarrerasController>().selectedCarrera.value != null) {
-      getHorarioData(Get.find<CarrerasController>().selectedCarrera.value);
-    }
-
-    ever<Carrera?>(
-      Get.find<CarrerasController>().selectedCarrera,
-      (carrera) => getHorarioData(carrera),
-    );
-    _init();
-    super.onInit();
-  }
-
-  void _init() {
+  void init(BuildContext context) {
     zoom.value = RemoteConfigService.horarioZoom;
-
-    _initControllers();
+    moveViewportToCurrentPeriodAndDay(context);
+    setZoom(zoom.value);
 
     _setScrollControllerListeners();
   }
 
-  Future<void> getHorarioData(Carrera? carrera) async {
-    log("getHorarioData");
-    final carreraId = carrera?.id;
-    if (carreraId == null) {
+  Future<Horario?> getHorario({ bool forceRefresh = false }) async {
+    final carreraId = (await Get.find<CarrerasService>().getCarreras(forceRefresh: forceRefresh))?.id;
+    if(carreraId == null) {
+      return null;
+    }
+
+    final horario = await Get.find<HorarioRepository>().getHorario(carreraId, forceRefresh: forceRefresh);
+    if(horario != null) _setRandomColorsByHorario(horario);
+    return horario;
+  }
+
+  void moveViewportTo(BuildContext context, double x, double y) {
+    final viewportWidth = MediaQuery.of(context).size.width - MediaQuery.of(context).padding.horizontal;
+    final viewportHeight = MediaQuery.of(context).size.height - MediaQuery.of(context).padding.vertical;
+
+    x = (x + (HorarioMainScroller.periodWidth / 2)) * zoom.value - (viewportWidth / 2);
+    y = (y + (HorarioMainScroller.dayHeight / 2)) * zoom.value - (viewportHeight / 2);
+
+    x = x < 0 ? 0 : x;
+    y = y < 0 ? 0 : y;
+
+    final maxXPosition = (HorarioMainScroller.daysWidth + HorarioMainScroller.periodWidth) * zoom.value - viewportWidth;
+    final maxYPosition = (HorarioMainScroller.periodsHeight + HorarioMainScroller.dayHeight) * zoom.value - viewportHeight + kToolbarHeight;
+
+    x = x > maxXPosition ? maxXPosition : x;
+    y = y > maxYPosition ? maxYPosition : y;
+
+    blockContentController.value = blockContentController.value..setTranslationRaw(-x, -y, 0);
+    periodHeaderController.value = periodHeaderController.value..setTranslationRaw(0, -y, 0);
+    daysHeaderController.value = daysHeaderController.value..setTranslationRaw(-x, 0, 0);
+
+    _onChangeAnyController();
+  }
+
+  void moveViewportToPeriodIndexAndDayIndex(BuildContext context, int periodIndex, int dayIndex) {
+    final blockWidth = HorarioMainScroller.blockWidth;
+    final x = (dayIndex * blockWidth) + (blockWidth / 2);
+
+    final blockHeight = HorarioMainScroller.blockHeight;
+    final y = (periodIndex * blockHeight) + (blockHeight / 2);
+
+    moveViewportTo(context, x, y);
+  }
+
+  void moveViewportToCurrentPeriodAndDay(BuildContext context) {
+    final periodIndex = indexOfCurrentPeriod ?? 0;
+    final dayIndex = indexOfCurrentDayStartingAtMonday ?? 0;
+
+    moveViewportToPeriodIndexAndDayIndex(context, periodIndex, dayIndex);
+
+    isCenteredInCurrentPeriodAndDay.value = true;
+  }
+
+  void setZoom(double zoom) {
+    blockContentController.value = blockContentController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
+    periodHeaderController.value = periodHeaderController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
+    daysHeaderController.value = daysHeaderController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
+    cornerController.value = cornerController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
+
+    _onChangeAnyController();
+  }
+
+  void addAsignaturaAndSetColor(Asignatura asignatura, {Color? color}) {
+    bool hasColor = getColor(asignatura) != null;
+    if (hasColor) {
       return;
     }
-    loadingHorario.value = true;
-    horario.value = await HorarioService.getHorario(carreraId);
-    _setRandomColorsByHorario();
-    loadingHorario.value = false;
+
+    final _newColor = color ?? unusedColors[0];
+    final _key = '${asignatura.codigo}_${asignatura.tipoHora}';
+    usedColors.add(_newColor);
+    _storage.write(_key, _newColor.value);
   }
 
-  void _setRandomColorsByHorario() {
-    if (horario.value?.horario != null) {
-      for (var dia in horario.value!.horario!) {
-        for (var bloque in dia) {
-          if (bloque.asignatura != null) {
-            addAsignaturaAndSetColor(bloque.asignatura!);
-          }
-        }
-      }
-    }
+  Color? getColor(Asignatura? asignatura) {
+    if(asignatura == null) return null;
+    return let(_storage.read('${asignatura.codigo}_${asignatura.tipoHora}'), (dynamic element) => Color(element));
   }
+
+  void setIndicatorIsOpen(bool isOpen) {
+    indicatorIsOpen.value = isOpen;
+  }
+
+  void setOnUpdate(Function? onUpdate) => _onUpdate = onUpdate;
+
+  void _setRandomColorsByHorario(Horario horario) => horario.horario?.forEach((dia) => dia.forEach((bloque) {
+    final _asignatura = bloque.asignatura;
+    if (_asignatura == null) {
+      return;
+    }
+
+    addAsignaturaAndSetColor(bloque.asignatura!);
+  }));
 
   void _onChangeAnyController() {
-    indicatorIsOpen.value = false;
+    setIndicatorIsOpen(true);
     isCenteredInCurrentPeriodAndDay.value = false;
-    update();
+    _onUpdate?.call();
   }
 
   void _setScrollControllerListeners() {
@@ -144,38 +181,24 @@ class HorarioController extends GetxController {
       daysHeaderController.value.setTranslationRaw(xPosition, 0, 0);
       periodHeaderController.value.setTranslationRaw(0, yPosition, 0);
 
-      daysHeaderController.value.setDiagonal(
-        vector.Vector4(currentZoom, currentZoom, currentZoom, 1),
-      );
-      periodHeaderController.value.setDiagonal(
-        vector.Vector4(currentZoom, currentZoom, currentZoom, 1),
-      );
-      cornerController.value.setDiagonal(
-        vector.Vector4(currentZoom, currentZoom, currentZoom, 1),
-      );
+      daysHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1),);
+      periodHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      cornerController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
 
       zoom.value = currentZoom;
       _onChangeAnyController();
     });
 
     daysHeaderController.addListener(() {
-      final xPosition = daysHeaderController.value.getTranslation().x;
       final currentZoom = daysHeaderController.value.getMaxScaleOnAxis();
-
+      final xPosition = daysHeaderController.value.getTranslation().x;
       final contentYPosition = blockContentController.value.getTranslation().y;
 
-      blockContentController.value
-          .setTranslationRaw(xPosition, contentYPosition, 0);
+      blockContentController.value.setTranslationRaw(xPosition, contentYPosition, 0);
 
-      blockContentController.value.setDiagonal(
-        vector.Vector4(currentZoom, currentZoom, currentZoom, 1),
-      );
-      periodHeaderController.value.setDiagonal(
-        vector.Vector4(currentZoom, currentZoom, currentZoom, 1),
-      );
-      cornerController.value.setDiagonal(
-        vector.Vector4(currentZoom, currentZoom, currentZoom, 1),
-      );
+      blockContentController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      periodHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      cornerController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
 
       zoom.value = currentZoom;
       _onChangeAnyController();
@@ -189,115 +212,15 @@ class HorarioController extends GetxController {
 
       periodHeaderController.value.setTranslationRaw(0, yPosition, 0);
 
-      blockContentController.value
-          .setTranslationRaw(contentXPosition, yPosition, 0);
+      blockContentController.value.setTranslationRaw(contentXPosition, yPosition, 0);
 
-      blockContentController.value.setDiagonal(
-        vector.Vector4(currentZoom, currentZoom, currentZoom, 1),
-      );
-      daysHeaderController.value.setDiagonal(
-        vector.Vector4(currentZoom, currentZoom, currentZoom, 1),
-      );
-      cornerController.value.setDiagonal(
-        vector.Vector4(currentZoom, currentZoom, currentZoom, 1),
-      );
+      blockContentController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      daysHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      cornerController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
 
       zoom.value = currentZoom;
       _onChangeAnyController();
     });
   }
 
-  void _initControllers() {
-    moveViewportToCurrentPeriodAndDay();
-
-    setZoom(zoom.value);
-  }
-
-  void moveViewportToCurrentPeriodAndDay() {
-    final periodIndex = indexOfCurrentPeriod ?? 0;
-    final dayIndex = indexOfCurrentDayStartingAtMonday ?? 0;
-
-    moveViewportToPeriodIndexAndDayIndex(periodIndex, dayIndex);
-
-    isCenteredInCurrentPeriodAndDay.value = true;
-  }
-
-  void moveViewportToPeriodIndexAndDayIndex(int periodIndex, int dayIndex) {
-    final blockWidth = HorarioMainScroller.blockWidth;
-    final x = (dayIndex * blockWidth) + (blockWidth / 2);
-
-    final blockHeight = HorarioMainScroller.blockHeight;
-    final y = (periodIndex * blockHeight) + (blockHeight / 2);
-
-    moveViewportTo(x, y);
-  }
-
-  void moveViewportTo(double x, double y) {
-    final viewportWidth = Get.width - Get.mediaQuery.padding.horizontal;
-    final viewportHeight = Get.height - Get.mediaQuery.padding.vertical;
-
-    x = (x + (HorarioMainScroller.periodWidth / 2)) * zoom.value -
-        (viewportWidth / 2);
-    y = (y + (HorarioMainScroller.dayHeight / 2)) * zoom.value -
-        (viewportHeight / 2);
-
-    x = x < 0 ? 0 : x;
-    y = y < 0 ? 0 : y;
-
-    final maxXPosition =
-        (HorarioMainScroller.daysWidth + HorarioMainScroller.periodWidth) *
-                zoom.value -
-            viewportWidth;
-    final maxYPosition =
-        (HorarioMainScroller.periodsHeight + HorarioMainScroller.dayHeight) *
-                zoom.value -
-            viewportHeight +
-            kToolbarHeight;
-
-    x = x > maxXPosition ? maxXPosition : x;
-    y = y > maxYPosition ? maxYPosition : y;
-
-    blockContentController.value.setTranslationRaw(-x, -y, 0);
-    periodHeaderController.value.setTranslationRaw(0, -y, 0);
-    daysHeaderController.value.setTranslationRaw(-x, 0, 0);
-
-    _onChangeAnyController();
-  }
-
-  void setZoom(double zoom) {
-    blockContentController.value.setDiagonal(
-      vector.Vector4(zoom, zoom, zoom, 1),
-    );
-    periodHeaderController.value.setDiagonal(
-      vector.Vector4(zoom, zoom, zoom, 1),
-    );
-    daysHeaderController.value.setDiagonal(
-      vector.Vector4(zoom, zoom, zoom, 1),
-    );
-    cornerController.value.setDiagonal(
-      vector.Vector4(zoom, zoom, zoom, 1),
-    );
-
-    _onChangeAnyController();
-  }
-
-  void addAsignaturaAndSetColor(Asignatura asignatura, {Color? color}) {
-    bool hasColor = getColor(asignatura) != null;
-    if (!hasColor) {
-      Color? newColor = color ?? unusedColors[0];
-      _setColor(asignatura, newColor);
-    }
-  }
-
-  Color? getColor(Asignatura asignatura) {
-    String key = '${asignatura.codigo}_${asignatura.tipoHora}';
-    int? colorValue = _box.read(key);
-    return colorValue != null ? Color(colorValue) : null;
-  }
-
-  void _setColor(Asignatura asignatura, Color color) {
-    String key = '${asignatura.codigo}_${asignatura.tipoHora}';
-    usedColors.add(color);
-    _box.write(key, color.value);
-  }
 }

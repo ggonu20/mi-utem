@@ -1,27 +1,39 @@
-import 'package:dio/dio.dart';
-import 'package:dio_http_cache/dio_http_cache.dart';
+
+import 'package:get/get.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/services/perfil_service.dart';
-import 'package:mi_utem/utils/dio_miutem_client.dart';
+import 'package:mi_utem/repositories/carreras_repository.dart';
 
-class CarreraService {
-  static final Dio _dio = DioMiUtemClient.authDio;
+class CarrerasService {
 
-  static Future<List<Carrera>> getCarreras({bool forceRefresh = false}) async {
-    const uri = "/v1/carreras";
-    final user = PerfilService.getLocalUsuario();
+  final _carrerasRepository = Get.find<CarrerasRepository>();
 
-    Response response = await _dio.get(
-      uri,
-      options: buildCacheOptions(
-        Duration(days: 7),
-        forceRefresh: forceRefresh,
-        subKey: user.rut?.numero.toString(),
-      ),
-    );
+  List<Carrera> carreras = [];
 
-    List<Carrera> carreras = Carrera.fromJsonList(response.data);
+  Carrera? selectedCarrera;
 
-    return carreras;
+  Future<Carrera?> getCarreras({ bool forceRefresh = false }) async {
+    logger.d("[CarrerasService#getCarreras]: Obteniendo carreras...");
+    final _carreras = await _carrerasRepository.getCarreras(forceRefresh: forceRefresh);
+
+    carreras.clear();
+    carreras.addAll(_carreras);
+    autoSelectCarreraActiva();
+    return selectedCarrera;
   }
+
+  void changeSelectedCarrera(Carrera carrera) => selectedCarrera = carrera;
+
+  void autoSelectCarreraActiva() {
+    final estados = ["Regular", "Causal de Eliminacion"]
+        .reversed
+        .map((e) => e.toLowerCase())
+        .toList();
+
+    carreras.sort((a,b) => estados.indexOf(b.estado!.toLowerCase()).compareTo(estados.indexOf(a.estado!.toLowerCase())));
+    final carreraActiva = carreras.first;
+
+    changeSelectedCarrera(carreraActiva);
+  }
+
 }

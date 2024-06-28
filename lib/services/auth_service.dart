@@ -1,150 +1,183 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/perfil_service.dart';
-import 'package:mi_utem/utils/dio_miutem_client.dart';
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/config/secure_storage.dart';
+import 'package:mi_utem/models/preferencia.dart';
+import 'package:mi_utem/models/user/credential.dart';
+import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/repositories/auth_repository.dart';
+import 'package:mi_utem/repositories/credentials_repository.dart';
+import 'package:mi_utem/screens/login_screen/login_screen.dart';
+import 'package:mi_utem/services/notification_service.dart';
+import 'package:mi_utem/utils/http/http_client.dart';
+import 'package:mi_utem/utils/utils.dart';
 
 class AuthService {
-  static final Dio _dio = DioMiUtemClient.initDio;
-  static final GetStorage box = GetStorage();
 
-  static Future<Usuario> login(String? correo, String? contrasenia,
-      [bool guardar = false]) async {
-    String uri = "/v1/auth";
+  AuthRepository _authRepository = Get.find<AuthRepository>();
+  CredentialsRepository _credentialsService = Get.find<CredentialsRepository>();
 
-    try {
-      final FlutterSecureStorage storage = new FlutterSecureStorage();
+  Future<bool> isFirstTime() async => (await Preferencia.lastLogin.exists()) == false;
 
-      dynamic data = {'correo': correo, 'contrasenia': contrasenia};
-
-      Response response = await _dio.post(uri, data: data);
-
-      Usuario usuario = Usuario();
-      if (response.statusCode == 200) {
-        usuario = Usuario.fromJson(response.data);
-        box.write('token', usuario.token!);
-        if (usuario.nombres != null) {
-          box.write('nombres', usuario.nombres!);
-        }
-        if (usuario.apellidos != null) {
-          box.write('apellidos', usuario.apellidos!);
-        }
-        if (usuario.nombre != null) {
-          box.write('nombre', usuario.nombre!);
-        }
-        if (usuario.fotoUrl != null) {
-          box.write('fotoUrl', usuario.fotoUrl!);
-        }
-        if (usuario.correoUtem != null) {
-          box.write('correoUtem', usuario.correoUtem!);
-        }
-        if (usuario.correoPersonal != null) {
-          box.write('correoPersonal', usuario.correoPersonal!);
-        }
-        if (usuario.rut?.numero != null) {
-          box.write('rut', usuario.rut!.numero!);
-        }
-        box.write('esAntiguo', true);
-
-        if (guardar) {
-          await storage.write(key: "contrasenia", value: contrasenia);
-        }
-      }
-      return usuario;
-    } on DioError catch (e) {
-      print(e.message);
-      throw e;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  static Future<bool> esPrimeraVez() async {
-    try {
-      bool? esAntiguo = box.read("esAntiguo");
-      if (esAntiguo == null) {
-        return true;
-      } else {
-        return !esAntiguo;
-      }
-    } catch (e) {
-      print(e);
+  Future<bool> isLoggedIn({ bool forceRefresh = false }) async {
+    final credentials = await _getCredential();
+    if(credentials == null) {
+      logger.d("[AuthService#isLoggedIn]: No se encontraron credenciales.");
       return false;
     }
-  }
 
-  static bool isLoggedIn() {
-    try {
-      String? token = box.read("token");
-      bool isLoggedIn = token != null && token.isNotEmpty;
-
-      return isLoggedIn;
-    } catch (e) {
-      print(e);
+    final user = await getUser();
+    final userToken = user?.token;
+    if(user == null || userToken == null) {
+      logger.d("[AuthService#isLoggedIn]: Usuario o token nulo (user?: ${user == null}, token?: ${userToken == null})");
       return false;
     }
+
+    final now = DateTime.now();
+    final lastLoginDate = let<String, DateTime?>(await Preferencia.lastLogin.get(), (String _lastLogin) => DateTime.tryParse(_lastLogin)) ?? now;
+    final difference = now.difference(lastLoginDate);
+    final offlineMode = (await Preferencia.isOffline.get()) == "true";
+    if((difference.inMinutes < 4 && now != lastLoginDate && !forceRefresh) || offlineMode) {
+      return true;
+    }
+
+    try {
+      final token = await _authRepository.refresh(token: userToken, credentials: credentials);
+      await setUser(user.copyWith(token: token));
+      Preferencia.lastLogin.set(now.toIso8601String());
+      return true;
+    } catch (e) {
+      logger.e("[AuthService#isLoggedIn]: Error al refrescar token", e);
+    }
+
+    return false;
   }
 
-  static Future<void> logOut() async {
-    try {
-      final FlutterSecureStorage storage = new FlutterSecureStorage();
+  Future<void> login() async {
+    final credentials = await _getCredential();
+    if(credentials == null) {
+      return;
+    }
 
-      box.remove("token");
-      box.remove("correo");
-      box.remove("nombres");
-      box.remove("nombre");
-      box.remove("apellidos");
-      box.remove("fotoUrl");
-      box.remove("rut");
-      await storage.deleteAll();
-      try {
-        await PerfilService.deleteFcmToken();
-      } catch (e) {}
-    } catch (e) {
-      print(e.toString());
-      throw e;
+    final user = await _authRepository.auth(credentials: credentials);
+
+    await setUser(user);
+    Preferencia.lastLogin.set(DateTime.now().toIso8601String());
+  }
+
+  Future<void> logout({BuildContext? context}) async {
+    await setUser(null);
+    await _credentialsService.setCredentials(null);
+    await Preferencia.onboardingStep.delete();
+    await Preferencia.lastLogin.delete();
+    await Preferencia.apodo.delete();
+    await HttpClient.clearCache();
+
+    if(context != null) {
+      Navigator.popUntil(context, (route) => route.isFirst);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => LoginScreen()));
     }
   }
 
-  static Future<String> refreshToken() async {
-    String uri = "/v1/auth/refresh";
+  Future<User?> getUser() async {
+    final data = await secureStorage.read(key: "user");
+    if(data == null || data == "null") {
+      return null;
+    }
+
+    return User.fromJson(jsonDecode(data) as Map<String, dynamic>);
+  }
+
+  Future<void> setUser(User? user) async => await secureStorage.write(key: "user", value: user.toString());
+
+  Future<Credentials?> _getCredential() async {
+    final hasCredential = await _credentialsService.hasCredentials();
+    final credential = await _credentialsService.getCredentials();
+    if(!hasCredential || credential == null) {
+      return null;
+    }
+
+    return credential;
+  }
+
+  Future<User?> updateProfilePicture(String image) async {
+    final user = await getUser();
+    if(user == null) {
+      return null;
+    }
+
+    final _fotoUrl = _authRepository.updateProfilePicture(image: image);
+    final jsonUser = user.toJson();
+    jsonUser["fotoUrl"] = _fotoUrl;
+    await setUser(User.fromJson(jsonUser));
+    return user;
+  }
+
+  Future<void> saveFCMToken() async {
+    final user = await this.getUser();
+    if(user == null) {
+      return;
+    }
+
+    String? fcmToken;
+    try {
+      fcmToken = await NotificationService.fcm.requestFirebaseAppToken();
+    } catch (e) {
+      logger.e("[AuthService#saveFCMToken]: Error al obtener FCM Token", e);
+      return;
+    }
+
+    final usersCollection = FirebaseFirestore.instance.collection('usuarios');
 
     try {
-      final FlutterSecureStorage secureStorage = new FlutterSecureStorage();
+      await this.deleteFCMToken();
+    } catch (e) {
+      logger.e("[AuthService#saveFCMToken]: Error al eliminar FCM Token", e);
+    }
 
-      String? correo = box.read("correoUtem");
-      String? contrasenia = await secureStorage.read(key: "contrasenia");
+    try {
+      usersCollection.doc(user.rut?.rut.toString()).set({
+        'fcmTokens': FieldValue.arrayUnion([fcmToken]),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      logger.e("[AuthService#saveFCMToken]: Error al guardar FCM Token", e);
+    }
+  }
 
-      if (correo != null && contrasenia != null) {
-        dynamic data = {'correo': correo, 'contrasenia': contrasenia};
+  Future<void> deleteFCMToken() async {
+    String? fcmToken;
+    try {
+      fcmToken = await NotificationService.fcm.requestFirebaseAppToken();
+    } catch (e) {
+      logger.e("[AuthService#deleteFCMToken]: Error al obtener FCM Token", e);
+      return;
+    }
 
-        Response response = await DioMiUtemClient.authDio.post(uri, data: data);
+    final usersCollection = FirebaseFirestore.instance.collection('usuarios');
 
-        String token = response.data['token'];
-        _storeToken(token);
+    QuerySnapshot<Map<String, dynamic>> snapshotRepeated;
+    try {
+      snapshotRepeated = await usersCollection.where('fcmTokens', arrayContains: fcmToken).get();
+    } on FirebaseException catch(e) {
+      print(e);
+      return;
+    } catch (e) {
+      logger.e("[AuthService#deleteFCMToken]: Error al obtener usuarios con FCM Token", e);
+      return;
+    }
 
-        return token;
+    try {
+      for(final doc in snapshotRepeated.docs) {
+        doc.reference.set({
+          "fcmTokens": FieldValue.arrayRemove([fcmToken]),
+        }, SetOptions(merge: true));
       }
-      throw Exception("No se pudo refrescar el token");
     } catch (e) {
-      print(e.toString());
-      rethrow;
+      logger.e("[AuthService#deleteFCMToken]: Error al eliminar FCM Token", e);
     }
   }
 
-  static void _storeToken(String token) async {
-    box.write('token', token);
-  }
-
-  static String getToken() {
-    final token = box.read('token');
-    if (token == null) throw Exception("No se ha encontrado el token");
-
-    return token;
-  }
-
-  static void invalidateToken() async {
-    box.remove('token');
-  }
 }

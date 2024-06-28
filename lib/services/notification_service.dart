@@ -1,12 +1,9 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:mi_utem/controllers/notification_controller.dart';
-import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/widgets/custom_alert_dialog.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/models/carrera.dart';
 
 class NotificationService {
   static const announcementsChannelKey = 'announcements_channel';
@@ -37,8 +34,7 @@ class NotificationService {
           channelGroupKey: 'grade_changes',
           channelKey: gradeChangesChannelKey,
           channelName: 'Grades changes',
-          channelDescription:
-              'Notification channel to notify you when your grades change',
+          channelDescription: 'Notification channel to notify you when your grades change',
           channelShowBadge: true,
           importance: NotificationImportance.High,
         ),
@@ -58,61 +54,64 @@ class NotificationService {
 
     notifications.setListeners(
       onActionReceivedMethod: NotificationController.onActionReceivedMethod,
-      onNotificationCreatedMethod:
-          NotificationController.onNotificationCreatedMethod,
-      onNotificationDisplayedMethod:
-          NotificationController.onNotificationDisplayedMethod,
-      onDismissActionReceivedMethod:
-          NotificationController.onDismissActionReceivedMethod,
+      onNotificationCreatedMethod: NotificationController.onNotificationCreatedMethod,
+      onNotificationDisplayedMethod: NotificationController.onNotificationDisplayedMethod,
+      onDismissActionReceivedMethod: NotificationController.onDismissActionReceivedMethod,
     );
   }
 
-  static Future<bool> requestUserPermissionIfNecessary() async {
-    bool isAllowed = await notifications.isNotificationAllowed();
+  static Future<bool> hasAllowedNotifications() async => await notifications.isNotificationAllowed();
+
+  static Future<bool> requestUserPermissionIfNecessary(BuildContext context) async {
+    bool isAllowed = await hasAllowedNotifications();
     if (!isAllowed) {
-      isAllowed = await Get.dialog(
-        CustomAlertDialog(
-          titulo: "Activa las notificaciones",
-          emoji: "🔔",
-          descripcion:
-              "Necesitamos tu permiso para poder enviarte notificaciones. Nada de spam, lo prometemos.",
-          onCancelar: () async {
-            bool isAllowed = await notifications.isNotificationAllowed();
-            Get.back(result: isAllowed);
-            Get.back(result: isAllowed);
-          },
-          onConfirmar: () async {
-            await notifications.requestPermissionToSendNotifications();
-            bool isAllowed = await notifications.isNotificationAllowed();
-            Get.back(result: isAllowed);
-            Get.back(result: isAllowed);
-          },
-          cancelarTextoBoton: "No permitir",
-          confirmarTextoBoton: "Permitir",
-        ),
-      );
+      await notifications.requestPermissionToSendNotifications();
+      isAllowed = await notifications.isNotificationAllowed();
     }
     return isAllowed;
   }
 
-  static void showGradeChangeNotification(
-    String title,
-    String body,
-    Asignatura asignatura,
-  ) {
-    final Map<String, String?> payload = {
-      'type': 'grade_change',
-      'asignatura': jsonEncode(asignatura.toJson()),
-    };
+  static void showAnnouncementNotification({
+    required String title,
+    required String body,
+    Map<String, dynamic> payload = const {},
+  }) async {
+    if(!await hasAllowedNotifications()) {
+      return;
+    }
 
-    notifications.createNotification(
-      content: NotificationContent(
-        id: Random().nextInt(1000000),
-        channelKey: gradeChangesChannelKey,
-        title: title,
-        body: body,
-        payload: payload,
-      ),
-    );
+    notifications.createNotification(content: NotificationContent(
+      id: payload.hashCode,
+      channelKey: announcementsChannelKey,
+      title: title,
+      body: body,
+      payload: {
+        'type': 'announcement',
+        ...payload,
+      },
+    ));
+  }
+
+  static void showGradeChangeNotification({
+    required String title,
+    required String body,
+    required Carrera carrera,
+    required Asignatura asignatura,
+  }) async {
+    if(!await hasAllowedNotifications()) {
+      return;
+    }
+
+    notifications.createNotification(content: NotificationContent(
+      id: asignatura.hashCode,
+      channelKey: gradeChangesChannelKey,
+      title: title,
+      body: body,
+      payload: {
+        'type': 'grade_change',
+        'asignatura': asignatura.toString(),
+        'carrera': carrera.toString(),
+      },
+    ));
   }
 }

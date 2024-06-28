@@ -42,40 +42,92 @@ platform :mobile do
     changelog
   end
 
-  lane :test do
-    puts("Testing Fastlane for mobile")
+  lane :test do |options|
+    skip_slack = false
+    skip_android_test = false
+    skip_ios_test = false
+
+    if options[:skip_slack]
+      skip_slack = options[:skip_slack]
+    end
+
+    if options[:skip_android_test]
+      skip_android_test = options[:skip_android_test]
+    end
+
+    if options[:skip_ios_test]
+      skip_ios_test = options[:skip_ios_test]
+    end
+
+    puts "Testing Fastlane for mobile"
 
     changelog = read_changelog
     emojified_changelog = emojify_changelog
-    
+
     changelog = translate_changelog(changelog: changelog)
     emojified_changelog = translate_changelog(changelog: emojified_changelog)
 
     puts "Changelog: #{changelog}"
     puts "Emojified Changelog: #{emojified_changelog}"
 
-    android_test
-    ios_test
+    unless skip_android_test
+      android_test
+    end
 
-    slack(
-      message: "Este es un mensaje de prueba desde Fastlane",
-      slack_url: ENV["SLACK_URL"],
-      channel: "#proy-mi-utem-bots",
-      default_payloads: [],
-      attachment_properties: {
-        fields: [
-          {
-            title: "Campo",
-            value: "Prueba"
+    unless skip_ios_test
+      ios_test
+    end
+
+    unless skip_slack
+        slack(
+          message: "Este es un mensaje de prueba desde Fastlane",
+          channel: "proy-mi-utem-bots",
+          default_payloads: [],
+          attachment_properties: {
+            fields: [
+              {
+                title: "Campo",
+                value: "Prueba"
+              },
+            ]
           },
-        ]
-      },
-    )
+        )
+    end
+  end
+
+  desc "Lee el archivo ../pubspec.yaml, obtiene la version y su numero de compilación"
+  lane :get_pubspec_version do
+    pubspec = File.read("../pubspec.yaml")
+    version = pubspec.match(/version: (.+)/)[1]
+    build_name = version.match(/(\d+\.\d+\.\d+)/)[1]
+    build_number = ((version.match(/(\d+)$/)[1]).to_i + 1).to_s
+
+    {
+        "build_name" => build_name,
+        "build_number" => build_number
+    }
+  end
+
+  desc "Incrementa el numero de compilación en el archivo ../pubspec.yaml"
+  lane :increment_pubspec_build_number do
+    version = get_pubspec_version()
+    build_number = version["build_number"]
+    build_name = version["build_name"]
+
+    puts "Incrementando el numero de compilación en el archivo ../pubspec.yaml"
+    new_version = "version: #{build_name}+#{build_number}"
+
+    pubspec = File.read("../pubspec.yaml")
+    pubspec = pubspec.gsub(/version: (.+)/, new_version)
+    File.write("../pubspec.yaml", pubspec)
+
+    puts "Numero de compilación incrementado en el archivo ../pubspec.yaml"
   end
 
   lane :upload do |options|
-    build_number = options[:build_number]
-    build_name = options[:build_name]
+    version = get_pubspec_version()
+    build_number = version["build_number"]  # Obtiene la version del pubspec.yaml
+    build_name = version["build_name"]      # Obtiene el numero de compilación del pubspec.yaml
     changelog = read_changelog
     emojified_changelog = emojify_changelog
     changelog = translate_changelog(changelog: changelog)
@@ -89,6 +141,17 @@ platform :mobile do
     skip_git_push = false
     skip_slack = false
     is_ci = false
+    increment_build_number = false
+
+    puts "Construyendo app con version #{build_name} (#{build_number})"
+
+    if options[:build_number]
+      build_number = options[:build_number]
+    end
+
+    if options[:build_name]
+      build_name = options[:build_name]
+    end
 
     if options[:type] == "release" || options[:type] == "beta"
       type = options[:type]
@@ -126,6 +189,10 @@ platform :mobile do
       is_ci = options[:is_ci]
     end
 
+    if options[:increment_build_number]
+      increment_build_number = options[:increment_build_number]
+    end
+
     if build_name
       build_name = build_name.tr('v', '')
     end
@@ -154,33 +221,34 @@ platform :mobile do
       )
     end
 
-    stamp_changelog(
-      section_identifier: build_name,
-      git_tag: build_name,
-    )
-
-    unless skip_git_push
-      push_to_git_remote
-      git_add
-      git_commit(path: "*", message: "Stamp changelog for #{build_name} (#{build_number})")
-      push_to_git_remote
-
-      github_release = set_github_release(
-        repository_name: "exdevutem/mi-utem",
-        api_token: ENV["GITHUB_TOKEN"],
-        name: "v#{build_name}",
-        tag_name: "v#{build_name}",
-        description: emojified_changelog,
-        commitish: "dev",
-        upload_assets: ["./build/app/outputs/bundle/release/app-release.aab", "./build/app/outputs/apk/release/app-release.apk"]
+    if options[:type] == "release"
+      stamp_changelog(
+        section_identifier: build_name,
+        git_tag: build_name,
       )
+
+      unless skip_git_push
+        push_to_git_remote
+        git_add
+        git_commit(path: "*", message: "Stamp changelog for #{build_name} (#{build_number})")
+        push_to_git_remote
+
+        github_release = set_github_release(
+          repository_name: "exdevutem/mi-utem",
+          api_token: ENV["GITHUB_TOKEN"],
+          name: "v#{build_name}+#{build_number}",
+          tag_name: "v#{build_name}+#{build_number}",
+          description: emojified_changelog,
+          commitish: "dev",
+          upload_assets: ["./build/app/outputs/bundle/release/app-release.aab", "./build/app/outputs/apk/release/app-release.apk"]
+        )
+      end
     end
 
     unless skip_slack
       slack(
       message: "🚀 Se ha publicado la nueva versión #{build_name} (#{build_number})",
-      slack_url: ENV["SLACK_URL"],
-      channel: "#proy-mi-utem",
+      channel: "proy-mi-utem",
       default_payloads: [],
       attachment_properties: {
         fields: [
@@ -195,6 +263,11 @@ platform :mobile do
         ]
       },
     )
+    end
+
+    puts "App construida y publicada con éxito"
+    unless increment_build_number
+      increment_pubspec_build_number()
     end
   end
 end

@@ -28,9 +28,33 @@ Tipos de cambios
 
 ## [Unreleased]
 
-### Changed
+### Added
+- Apodo para personalizar la aplicación.
+- Se agrega onboarding (con configuración de apodo, solicitud de permiso de notificaciones y bienvenida a la app).
+- Lista de estudiantes al resumen de asignatura.
+- Vista previa de estudiantes y profesores.
+- Vista previa de los datos del profesor.
+- Se agrega ventana de vista previa de la asignatura desde horario (al mantener presionado un bloque).
+- Se agrega navegación hacia la asignatura desde el horario al presionar un bloque.
+- Botón para limpiar las notas en la calculadora.
+- Sección de `Acerca de la App` en modo depuración.
+- Se agrega métricas y toma de errores de Sentry (esta vez están bien configurados).
+- Se agrega modo fuera de línea para permitir el uso de la app sin conexión.
+- Se permite cualquier orientación de pantalla (horizontal y vertical).
 
-- Se actualizan dependecias de Flutter
+### Changed
+- Se actualizaron algunas dependencias.
+- Se ordenan las clases y widgets de la app.
+- Se optimiza el código y la aplicación en general.
+- Se separan clases en formato de repositorios, servicios y controladores.
+- Se mejora la documentación de algunos archivos y métodos.
+- Ahora se cargan las noticias de la página [noticias.utem.cl](https://noticias.utem.cl).
+- Se utiliza navegación de flutter nativa (Usando [`Navigator`](https://docs.flutter.dev/cookbook/navigation/navigation-basics) en lugar de rutas nombradas).
+
+### Removed
+- Se elimina pestaña de estudiantes del detalle de asignatura (a favor del botón de lista de estudiantes en el resumen).
+- Modal de Permitir Notificaciones a favor de modal nativa del sistema. Solo se editará el mensaje de notificaciones, ya que es redundante el botón de permitir y cancelar.
+- Vistas sin uso en la aplicación.
 
 ## [2.11.9] - 2023-10-11Z
 
@@ -134,9 +158,4 @@ Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se 
 ### Removed
 
 - Lista de estudiantes en la pantalla de asignatura
-- Perfil de profesores
-- Perfil de profesores
-- Perfil de profesores
-- Perfil de profesores
-- Perfil de profesores
 - Perfil de profesores

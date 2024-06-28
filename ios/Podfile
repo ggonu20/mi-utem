@@ -34,6 +34,7 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  pod 'GoogleUtilities', :git => 'https://github.com/google/GoogleUtilities.git'
 end
 
 post_install do |installer|
@@ -112,6 +113,7 @@ target 'MiUtemNotificationServiceExtension' do
   use_modular_headers!
   
   install_awesome_fcm_ios_pod_target File.dirname(File.realpath(__FILE__))
+  pod 'GoogleUtilities', :git => 'https://github.com/google/GoogleUtilities.git'
 end
 update_awesome_fcm_service_target('MiUtemNotificationServiceExtension', File.dirname(File.realpath(__FILE__)), flutter_root)
 ################  Awesome Notifications FCM pod mod  ###################

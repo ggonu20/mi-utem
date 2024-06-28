@@ -10,6 +10,8 @@
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		79C1453E2BBDF10B0064A7E0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 79FBEAF12BBDC94D0075EACE /* PrivacyInfo.xcprivacy */; };
+		79FBEAF22BBDC94D0075EACE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 79FBEAF12BBDC94D0075EACE /* PrivacyInfo.xcprivacy */; };
 		8F4ED3CFA3A6AA57DAA4905A /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6121D4E2A474C9DE828CDCAE /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -72,6 +74,7 @@
 		6DE503BB399A91B6C5520D76 /* Pods-Runner.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-dev.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		79FBEAF12BBDC94D0075EACE /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		7FE2002C76C7F77E5A50737A /* Pods-MiUtemNotificationServiceExtension.debug-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiUtemNotificationServiceExtension.debug-dev.xcconfig"; path = "Target Support Files/Pods-MiUtemNotificationServiceExtension/Pods-MiUtemNotificationServiceExtension.debug-dev.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -159,6 +162,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				79FBEAF12BBDC94D0075EACE /* PrivacyInfo.xcprivacy */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				EBE5B6BC29D4D890005924AB /* MiUtemNotificationServiceExtension */,
@@ -256,7 +260,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					97C146ED1CF9000F007C117D = {
@@ -298,6 +302,7 @@
 				EBCDF3152A08916400C04BA3 /* prod.xcconfig in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				79FBEAF22BBDC94D0075EACE /* PrivacyInfo.xcprivacy in Resources */,
 				EBBC93162A9CF30F00452092 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -306,6 +311,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79C1453E2BBDF10B0064A7E0 /* PrivacyInfo.xcprivacy in Resources */,
 				EBCDF3192A0891B800C04BA3 /* dev.xcconfig in Resources */,
 				EBCDF3162A08916400C04BA3 /* prod.xcconfig in Resources */,
 			);
@@ -848,7 +854,7 @@
 				INFOPLIST_FILE = MiUtemNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MiUtemNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -980,7 +986,7 @@
 				INFOPLIST_FILE = MiUtemNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MiUtemNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1104,7 +1110,7 @@
 				INFOPLIST_FILE = MiUtemNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MiUtemNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1142,7 +1148,7 @@
 				INFOPLIST_FILE = MiUtemNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MiUtemNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1185,7 +1191,7 @@
 				INFOPLIST_FILE = MiUtemNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MiUtemNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1225,7 +1231,7 @@
 				INFOPLIST_FILE = MiUtemNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MiUtemNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

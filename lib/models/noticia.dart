@@ -1,67 +1,15 @@
-import 'package:html/parser.dart';
-
 class Noticia {
-  int? id, featuredMediaId;
-  String? titulo, subtitulo, link;
-  FeaturedMedia? featuredMedia;
-    
-    
-  Noticia(
-    this.id,
-    this.titulo,
-    this.subtitulo,
-    this.link,
-    this.featuredMediaId
+  int id;
+  String titulo, link, imagen;
+
+  Noticia({required this.id, required this.titulo, required this.link, required this.imagen});
+
+  factory Noticia.fromJson(Map<String, dynamic> json) => Noticia(
+    id: json["id"],
+    titulo: json['yoast_head_json']['title'],
+    imagen: json['yoast_head_json']['og_image'][0]['url'],
+    link: "https://noticias.utem.cl/?p=${json['id']}",
   );
 
-  Noticia.empty()
-    : id = null,
-      titulo = "",
-      subtitulo = "",
-      link = "",
-      featuredMedia = FeaturedMedia.empty(),
-      featuredMediaId = null;
-
-  factory Noticia.fromJson(Map<String, dynamic> json) {
-    return Noticia(
-      json['id'],
-      parse(json['title']['rendered']).body!.text.trim(),
-      parse(json['excerpt']['rendered']).body!.text.trim(),
-      json['link'],
-      json['featured_media']
-    );
-  }
-
-  static List<Noticia> fromJsonList(List<dynamic> json) {
-    List<Noticia> lista = [];
-    for (var elemento in json) {
-      lista.add(Noticia.fromJson(elemento));
-    }
-    return lista;
-  }
-}
-
-class FeaturedMedia {
-  int? id;
-  String? guid;
-    
-    
-  FeaturedMedia({
-    this.id,
-    this.guid
-  });
-
-  factory FeaturedMedia.empty() {
-    return FeaturedMedia(
-    id: null,
-    guid: "https://noticias.utem.cl/wp-content/uploads/2017/07/en-preparacion.jpg"
-    );
-  }
-
-  factory FeaturedMedia.fromJson(Map<String, dynamic> json) {
-    return FeaturedMedia(
-      id: json['id'],
-      guid: json['guid'] != null && json['guid']['rendered'] != null && json['guid']['rendered'] != "" ? json['guid']['rendered'] : "https://noticias.utem.cl/wp-content/uploads/2017/07/en-preparacion.jpg"
-    );
-  }
+  static List<Noticia> fromJsonList(List<dynamic> json) => json.map((e) => Noticia.fromJson(e)).toList();
 }

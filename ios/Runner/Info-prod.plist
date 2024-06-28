@@ -26,6 +26,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -37,6 +39,8 @@
 	<string>Mi UTEM quiere acceder a tu cámara para que puedas subir contenido</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Mi UTEM quiere acceder a tus fotos para que puedas subir contenido</string>
+	<key>NSUserNotificationsUsageDescription</key>
+    <string>Queremos avisarte cuando existan cambios en tus notas, o sobre otras novedades.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

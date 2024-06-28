@@ -1,9 +1,9 @@
-import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/models/grades.dart';
+import 'package:mi_utem/models/evaluacion/evaluacion.dart';
+import 'package:mi_utem/models/evaluacion/grades.dart';
 
-class CalculatorController extends GetxController {
+class CalculatorController {
   static const maxPercentage = 100;
   static const maxGrade = 7;
   static const minimumGradeForExam = 2.95;
@@ -17,8 +17,6 @@ class CalculatorController extends GetxController {
   final examGrade = Rxn<double>();
   final examGradeTextFieldController = MaskedTextController(mask: "0.0");
   final freeEditable = false.obs;
-
-  static CalculatorController get to => Get.find();
 
   double? get calculatedFinalGrade {
     if (calculatedPresentationGrade != null) {
@@ -127,45 +125,51 @@ class CalculatorController extends GetxController {
   double? get suggestedGrade {
     if (hasMissingPartialGrade && percentageWithoutGrade > 0) {
       final weightOfMissingGrades = percentageWithoutGrade / maxPercentage;
-      final requiredGradeValue =
-          passingGrade - (suggestedPresentationGrade ?? 0);
-      final missingGradesValue = requiredGradeValue / weightOfMissingGrades;
-      return missingGradesValue;
+      final requiredGradeValue = passingGrade - (suggestedPresentationGrade ?? 0);
+      return requiredGradeValue / weightOfMissingGrades;
     }
     return null;
   }
 
-  void makeEditable() {
-    freeEditable.value = true;
+  bool get hasGrades => partialGrades.isNotEmpty;
+
+  void makeEditable() => freeEditable.value = true;
+
+  void makeNonEditable() => freeEditable.value = false;
+
+  void clearGrades() {
+    partialGrades.clear();
+    percentageTextFieldControllers.clear();
+    gradeTextFieldControllers.clear();
+    clearExamGrade();
   }
 
-  void makeNonEditable() {
-    freeEditable.value = false;
-  }
-
-  void loadGrades(Grades grades) {
+  void updateWithGrades(Grades? grades) {
     partialGrades.clear();
     percentageTextFieldControllers.clear();
     gradeTextFieldControllers.clear();
 
-    for (var evaluacion in grades.notasParciales) {
-      final partialGrade = IEvaluacion.fromRemote(evaluacion);
-      addGrade(partialGrade);
+    if(grades == null) {
+      return;
+    }
+
+    for(final grade in grades.notasParciales) {
+      addGrade(IEvaluacion.fromRemote(grade));
     }
 
     setExamGrade(grades.notaExamen);
   }
 
-  void changeGradeAt(int index, IEvaluacion changedGrade) {
+  void updateGradeAt(int index, IEvaluacion updatedGrade) {
     final grade = partialGrades[index];
-    if (grade.editable || freeEditable.value) {
-      partialGrades[index] = changedGrade;
+    if(!(grade.editable || freeEditable.value)) {
+      return;
+    }
 
-      if (hasMissingPartialGrade) {
-        clearExamGrade();
-      }
-    } else {
-      throw Exception("No se puede editar una nota que está asignada");
+    partialGrades[index] = updatedGrade;
+
+    if (hasMissingPartialGrade) {
+      clearExamGrade();
     }
   }
 
@@ -174,26 +178,17 @@ class CalculatorController extends GetxController {
     examGradeTextFieldController.text = "";
   }
 
-  void setExamGrade(num? grade) {
+  void setExamGrade(num? grade, { bool updateTextController = true }) {
     examGrade.value = grade?.toDouble();
-    examGradeTextFieldController.text =
-        grade?.toDouble().toStringAsFixed(1) ?? "";
+    if(updateTextController) {
+      examGradeTextFieldController.updateText(grade?.toDouble().toStringAsFixed(1) ?? "");
+    }
   }
 
   void addGrade(IEvaluacion grade) {
     partialGrades.add(grade);
-    percentageTextFieldControllers.add(
-      MaskedTextController(
-        mask: "000",
-        text: grade.porcentaje?.toDouble().toStringAsFixed(0) ?? "",
-      ),
-    );
-    gradeTextFieldControllers.add(
-      MaskedTextController(
-        mask: "0.0",
-        text: grade.nota?.toDouble().toStringAsFixed(1) ?? "",
-      ),
-    );
+    percentageTextFieldControllers.add(MaskedTextController(mask: "000", text: grade.porcentaje?.toStringAsFixed(0) ?? ""));
+    gradeTextFieldControllers.add(MaskedTextController(mask: "0.0", text: grade.nota?.toStringAsFixed(1) ?? ""));
   }
 
   void removeGradeAt(int index) {
