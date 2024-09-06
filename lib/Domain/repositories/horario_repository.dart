@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/Domain/models/horario.dart';
 import 'package:mi_utem/utils/http/functions.dart';
 
 class HorarioRepository {

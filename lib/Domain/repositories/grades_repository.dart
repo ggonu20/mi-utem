@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/evaluacion/grades.dart';
+import 'package:mi_utem/Domain/models/evaluacion/grades.dart';
 import 'package:mi_utem/utils/http/functions.dart';
 
 class GradesRepository {

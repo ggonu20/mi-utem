@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/preferencia.dart';
+import 'package:mi_utem/Domain/models/preferencia.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/gradient_background.dart';
+import 'package:mi_utem/Features/Login/Widget/gradient_background.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});

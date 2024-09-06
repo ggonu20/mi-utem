@@ -6,9 +6,9 @@ import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/main.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/repositories/grades_repository.dart';
+import 'package:mi_utem/Domain/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/Domain/models/carrera.dart';
+import 'package:mi_utem/Domain/repositories/grades_repository.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 

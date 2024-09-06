@@ -1,9 +1,9 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/preferencia.dart';
-import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/Domain/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/Domain/models/preferencia.dart';
+import 'package:mi_utem/Domain/models/user/user.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';

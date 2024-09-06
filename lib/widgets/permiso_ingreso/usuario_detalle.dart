@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/Domain/models/user/user.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
 class UsuarioDetalle extends StatelessWidget {

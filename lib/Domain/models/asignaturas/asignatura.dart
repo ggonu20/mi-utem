@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/asignaturas/asistencia.dart';
-import 'package:mi_utem/models/evaluacion/grades.dart';
-import 'package:mi_utem/models/user/persona.dart';
-import 'package:mi_utem/models/user/rut.dart';
-import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/Domain/models/asignaturas/asistencia.dart';
+import 'package:mi_utem/Domain/models/evaluacion/grades.dart';
+import 'package:mi_utem/Domain/models/user/persona.dart';
+import 'package:mi_utem/Domain/models/user/rut.dart';
+import 'package:mi_utem/Domain/models/user/user.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/utils/string_utils.dart';
 import 'package:mi_utem/utils/utils.dart';

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/preferencia.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/repositories/horario_repository.dart';
-import 'package:mi_utem/repositories/permiso_ingreso_repository.dart';
+import 'package:mi_utem/Domain/models/preferencia.dart';
+import 'package:mi_utem/Domain/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/Domain/repositories/horario_repository.dart';
+import 'package:mi_utem/Domain/repositories/permiso_ingreso_repository.dart';
 import 'package:mi_utem/screens/main_screen.dart';
-import 'package:mi_utem/screens/onboarding/set_alias_screen.dart';
+import 'package:mi_utem/Features/Login/Screen/set_alias_screen.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/gradient_background.dart';
+import 'package:mi_utem/Features/Login/Widget/gradient_background.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});

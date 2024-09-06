@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/Domain/models/asignaturas/asignatura.dart';
 
 class Horario {
   List<Asignatura>? asignaturas;

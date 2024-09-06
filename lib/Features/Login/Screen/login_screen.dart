@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/widgets/login_screen/background.dart';
-import 'package:mi_utem/widgets/login_screen/login_form.dart';
+import 'package:mi_utem/Features/Login/Widget/login_screen/background.dart';
+import 'package:mi_utem/Features/Login/Widget/login_screen/login_form.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

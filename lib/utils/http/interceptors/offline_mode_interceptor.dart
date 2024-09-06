@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/preferencia.dart';
+import 'package:mi_utem/Domain/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/Domain/models/preferencia.dart';
 import 'package:mi_utem/utils/http/functions.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/repositories/grades_repository.dart';
+import 'package:mi_utem/Domain/models/horario.dart';
+import 'package:mi_utem/Domain/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/Domain/repositories/grades_repository.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';

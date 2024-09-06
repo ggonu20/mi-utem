@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/Domain/models/horario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/horario/bloque_ramo_card.dart';
 

@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/user/rut.dart';
+import 'package:mi_utem/Domain/models/user/rut.dart';
 import 'package:mi_utem/utils/string_utils.dart';
 
 class Persona {

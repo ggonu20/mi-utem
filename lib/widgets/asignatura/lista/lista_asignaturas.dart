@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/Domain/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/Domain/models/carrera.dart';
 import 'package:mi_utem/widgets/asignatura/lista/asignatura_list_tile.dart';
 
 class ListaAsignaturas extends StatelessWidget {

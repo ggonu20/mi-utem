@@ -1,5 +1,5 @@
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/Domain/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/Domain/models/user/user.dart';
 import 'package:mi_utem/utils/http/functions.dart';
 import 'package:mi_utem/utils/utils.dart';
 

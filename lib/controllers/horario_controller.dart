@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/repositories/horario_repository.dart';
+import 'package:mi_utem/Domain/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/Domain/models/horario.dart';
+import 'package:mi_utem/Domain/repositories/horario_repository.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';

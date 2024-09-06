@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/Domain/models/carrera.dart';
 import 'package:mi_utem/utils/http/functions.dart';
 
 class CarrerasRepository {

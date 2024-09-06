@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:mi_utem/config/secure_storage.dart';
-import 'package:mi_utem/models/user/credential.dart';
+import 'package:mi_utem/Domain/models/user/credential.dart';
 
 class CredentialsRepository {
 

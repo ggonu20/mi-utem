@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/Domain/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/Domain/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/Domain/models/user/user.dart';
+import 'package:mi_utem/Domain/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/widgets/asignatura/modals/user_modal.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';

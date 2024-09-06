@@ -1,8 +1,8 @@
 
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/repositories/carreras_repository.dart';
+import 'package:mi_utem/Domain/models/carrera.dart';
+import 'package:mi_utem/Domain/repositories/carreras_repository.dart';
 
 class CarrerasService {
 

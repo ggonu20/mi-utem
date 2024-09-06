@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/permiso_ingreso.dart';
+import 'package:mi_utem/Domain/models/permiso_ingreso.dart';
 import 'package:mi_utem/utils/http/functions.dart';
 
 class PermisoIngresoRepository {

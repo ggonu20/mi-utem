@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/models/user/credential.dart';
-import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/Domain/models/user/credential.dart';
+import 'package:mi_utem/Domain/models/user/user.dart';
 import 'package:mi_utem/utils/http/functions.dart';
 import 'package:mi_utem/utils/http/http_client.dart';
 

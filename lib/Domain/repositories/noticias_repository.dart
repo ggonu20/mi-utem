@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
-import 'package:mi_utem/models/noticia.dart';
+import 'package:mi_utem/Domain/models/noticia.dart';
 import 'package:mi_utem/utils/http/http_client.dart';
 import 'package:mi_utem/utils/http/interceptors/headers_interceptor.dart';
 import 'package:mi_utem/utils/http/interceptors/log_interceptor.dart';

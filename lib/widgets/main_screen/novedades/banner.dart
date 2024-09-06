@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/novedades/ibanner.dart';
+import 'package:mi_utem/Domain/models/novedades/ibanner.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 

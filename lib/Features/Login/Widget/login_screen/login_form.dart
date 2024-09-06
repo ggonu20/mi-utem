@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/repositories/credentials_repository.dart';
+import 'package:mi_utem/Domain/repositories/credentials_repository.dart';
 import 'package:mi_utem/services/update_service.dart';
-import 'package:mi_utem/widgets/login_screen/creditos_app.dart';
-import 'package:mi_utem/widgets/login_screen/formulario_credenciales.dart';
-import 'package:mi_utem/widgets/login_screen/login_button.dart';
+import 'package:mi_utem/Features/Login/Widget/login_screen/creditos_app.dart';
+import 'package:mi_utem/Features/Login/Widget/login_screen/formulario_credenciales.dart';
+import 'package:mi_utem/Features/Login/Widget/login_screen/login_button.dart';
 
 class LoginForm extends StatefulWidget {
   final BoxConstraints constraints;

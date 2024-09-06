@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/Domain/models/user/user.dart';
 
 class DocentesService {
 

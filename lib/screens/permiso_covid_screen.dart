@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/permiso_ingreso.dart';
-import 'package:mi_utem/repositories/permiso_ingreso_repository.dart';
+import 'package:mi_utem/Domain/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/Domain/models/permiso_ingreso.dart';
+import 'package:mi_utem/Domain/repositories/permiso_ingreso_repository.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading/loading_indicator.dart';

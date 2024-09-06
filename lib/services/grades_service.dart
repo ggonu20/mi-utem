@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:mi_utem/config/secure_storage.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/models/evaluacion/grades.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/repositories/grades_repository.dart';
+import 'package:mi_utem/Domain/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/Domain/models/carrera.dart';
+import 'package:mi_utem/Domain/models/evaluacion/grades.dart';
+import 'package:mi_utem/Domain/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/Domain/repositories/grades_repository.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
